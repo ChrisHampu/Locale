@@ -15,7 +15,8 @@ require.config({
 		Locale: 'Locale',
 		LocaleRouter: 'LocaleRouter',
 		LocaleView: 'views/LocaleView',
-		LocaleAuthView: 'views/LocaleAuthView'
+		LocaleAuthView: 'views/LocaleAuthView',
+		LocaleMapView: 'views/LocaleMapView'
 	}
 });
 
