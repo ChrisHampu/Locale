@@ -72,7 +72,7 @@ define([
 			{
 				console.log("User did not authenticate");
 			}
-		}, { scope: 'public_profile' });
+		}, { scope: 'public_profile, user_interests' });
 	}
 
 	var LoginGooglePlus = function() {
