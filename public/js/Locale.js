@@ -23,9 +23,6 @@ define([
 	var Initialize = function (AppRouter) {
 	
 		LocaleSocket.Initialize();
-		LocaleSocket.Handle('connect', function () {
-			console.log("connected to websocket");
-		});
 
 		LocaleUtilities.Initialize();
 
