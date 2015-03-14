@@ -73,6 +73,21 @@ define([
 	var LoginGooglePlus = function() {
 
 	}
+
+	var LogoutFacebook = function() {
+	   FB.logout(function(response) {
+	        // Person is now logged out
+	    });
+	}
+
+	var LogoutGooglePlus = function() {
+		
+	}
+
+	var Logout = function() {
+		LogoutFacebook();
+		LogoutGooglePlus();
+	}
 	
 	// Map public API functions to internal functions
 	return {

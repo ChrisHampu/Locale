@@ -20,7 +20,8 @@ define([
 
 		routes: {
 			'': 'index', // Auth page
-			'home': 'home'
+			'home': 'home',
+			'logout': 'logout'
 		},
 
 		index: function() {
@@ -29,6 +30,10 @@ define([
 
 		home: function() {
 
+		},
+
+		logout: function() {
+			AuthView.logout();
 		},
 
 		default: function(action) {

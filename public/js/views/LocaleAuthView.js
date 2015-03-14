@@ -28,6 +28,10 @@ define([
 
 		loginGoogle: function() {
 			LocaleAuth.LoginGooglePlus();
+		},
+
+		logout: function() {
+			LocaleAuth.Logout();
 		}
 	});
 
