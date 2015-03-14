@@ -13,11 +13,16 @@ define([
 		},
 
 		routes: {
-			'': 'index'
+			'': 'index', // Auth page
+			'home': 'home'
 		},
 
 		index: function() {
 			
+		},
+
+		home: function() {
+
 		},
 
 		default: function(action) {
