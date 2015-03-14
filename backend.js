@@ -54,18 +54,6 @@ app.get('/chat_connect', function (req, res) {
 	res.sendFile(__dirname + '/index.html');
 });
 
-/*
- * Given a request object with Latitude and Longitude parameters
- * return the list of rooms that a user at this location can join
- */
-app.get('/get_rooms', function(req, res){
-	var lat = req.query.lat;
-	var lon = req.query.lon;
-	World.getValidRooms(lat, lon, function (err, rooms) {  
-		res.send(rooms);
-	});
-});
-
 app.get('/add_room', function(req, res){
 	var name = req.query.name;
 	World.addRoom(name, function(err, response){
@@ -87,7 +75,7 @@ var world = new World(db);
 var worldRooms = null;
 
 // usernames which are currently connected to the chat
-var usernames = {};
+var usersLookingAtList = {};
 
 var roomNames = null;
 
@@ -98,39 +86,36 @@ io.sockets.on('connection', function (socket) {
 		roomNames = rooms.map(function(obj){
 			return obj["name"];
 		})
-		// console.log(worldRooms);
 	});
 
 
-	// when the client emits 'adduser', this listens and executes
-	socket.on('adduser', function(userRoom){
+	// when the client emits 'join', this listens and executes
+	socket.on('join', function(user){
 
-		console.log(userRoom);
+		// Create or update the user's db entry
+		console.log(user);
 
-		// Get the user's list of nearby rooms
-		world.getValidRooms(userRoom.location.lat, userRoom.location.lon, function(worldRooms) {
-			rooms = worldRooms; 
-			roomNames = rooms.map(function(obj){
-				return obj["name"];
-			})
+		// Store the username in the socket session for this client
+		socket.username = user.firstName;
+		socket.user = user;
 
-			// store the username in the socket session for this client
-			socket.username = userRoom.username;
-			// store the room name in the socket session for this client
-			socket.room = userRoom.room;
-			// add the client's username to the global list
-			usernames[userRoom.username] = userRoom.username;
-			// send client to room 1
-			socket.join('Room1');
-			// echo to client they've connected
-			socket.emit('updatechat', 'SERVER', 'you have connected to room1');
-			// echo to room 1 that a person has connected to their room
-			socket.broadcast.to('room1').emit('updatechat', 'SERVER', userRoom.username + ' has connected to this room');
-			socket.emit('updaterooms', roomNames, 'room1');
+		// Calculate the active rooms for this user and push them
+		world.getValidRooms(user.location.lat, user.location.lon, function(worldRooms) {
+			var usersRooms = worldRooms; 
+			
+			socket.emit('updaterooms', usersRooms);
 		});
-
-		
 	});
+
+	// listener, client asks for updaterooms, server sends back the list of rooms
+	socket.on('updaterooms', function (data) {
+		// Calculate the active rooms for this user and push them
+		world.getValidRooms(userRoom.location.lat, userRoom.location.lon, function(worldRooms) {
+			var usersRooms = worldRooms; 
+			
+			socket.emit('updaterooms', usersRooms);
+		});
+	})
 	
 	// when the client emits 'sendchat', this listens and executes
 	socket.on('sendchat', function (data) {
@@ -148,9 +133,9 @@ io.sockets.on('connection', function (socket) {
 	// when the user disconnects.. perform this
 	socket.on('disconnect', function(){
 		// remove the username from global usernames list
-		delete usernames[socket.username];
+		//delete usernames[socket.username];
 		// update list of users in chat, client-side
-		io.sockets.emit('updateusers', usernames);
+		//io.sockets.emit('updateusers', usernames);
 		// echo globally that this client has left
 		socket.broadcast.emit('updatechat', 'SERVER', socket.username + ' has disconnected');
 		socket.leave(socket.room);
@@ -161,12 +146,18 @@ io.sockets.on('connection', function (socket) {
 function switchRoom(socket, newroom){
 	socket.leave(socket.room);
 	socket.join(newroom);
-	socket.emit('updatechat', 'SERVER', 'you have connected to '+ newroom);
+	socket.emit('updatechat', 'SERVER', 'you have connected to ' + newroom);
 	// sent message to OLD room
 	socket.broadcast.to(socket.room).emit('updatechat', 'SERVER', socket.username+' has left this room');
 	// update socket session room title
 	socket.room = newroom;
 	socket.broadcast.to(newroom).emit('updatechat', 'SERVER', socket.username+' has joined this room');
-	socket.emit('updaterooms', rooms, newroom);
+	
+	// Calculate the new active rooms for this user and push them
+	world.getValidRooms(socket.user.location.lat, socket.user.location.lon, function(worldRooms) {
+		var usersRooms = worldRooms; 
+		
+		socket.emit('updaterooms', usersRooms);
+	});
 }
 

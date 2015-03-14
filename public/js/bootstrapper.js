@@ -25,7 +25,9 @@ require.config({
 		LocaleProfileView: 'views/LocaleProfileView',
 		LocaleUserAuthModel: 'models/LocaleUserAuthModel',
 		LocaleUtilities: 'LocaleUtilities',
-		sidr: 'libs/sidr/jquery.sidr.min'
+		sidr: 'libs/sidr/jquery.sidr.min',
+		socketio: '/socket.io/socket.io.js',
+		LocaleSocket: 'LocaleSocket'
 	}
 });
 

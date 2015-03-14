@@ -39,7 +39,7 @@ World.prototype.getValidRooms = function (lat, lon, callback){
     var rooms = null;
 
     // Search for all rooms within 10km of the passed lat/long
-    this.db.newSearchBuilder().collection("rooms").query("value.location:NEAR:{lat:" + lat + " lon:" + lon + " dist:10km}").then(function (result) {
+    this.db.newSearchBuilder().collection("rooms").query("value.location:NEAR:{lat:" + lat + " lon:" + lon + " dist:10000000km}").then(function (result) {
         var roomObjects = result.body.results;
 
         var rooms = roomObjects.map(function(obj){ 
@@ -48,8 +48,24 @@ World.prototype.getValidRooms = function (lat, lon, callback){
 
         callback(rooms);
     })
-
 }
+
+// Return the last 10 messages for a room
+World.prototype.getRoomHistory = function (room, callback){
+    var rooms = null;
+
+    // Search for all rooms within 10km of the passed lat/long
+    this.db.newSearchBuilder().collection("messages").query("value.location:NEAR:{lat:" + lat + " lon:" + lon + " dist:10000000km}").then(function (result) {
+        var roomObjects = result.body.results;
+
+        var rooms = roomObjects.map(function(obj){ 
+            return obj["value"];
+        });
+
+        callback(rooms);
+    })
+}
+
 
 
 module.exports = World;
