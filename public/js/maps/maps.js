@@ -9,7 +9,8 @@ function initialize() {
   map = new google.maps.Map(document.getElementById('map-canvas'),
       mapOptions);
 
-
+  /*var myLatlng = new google.maps.LatLng(position.coords.latitude,
+                                       position.coords.longitude);*/
 
   // Try HTML5 geolocation
   if(navigator.geolocation) {
@@ -17,11 +18,11 @@ function initialize() {
       var pos = new google.maps.LatLng(position.coords.latitude,
                                        position.coords.longitude);
 
-      var infowindow = new google.maps.InfoWindow({
-        map: map,
-        position: pos,
-        content: 'Locaion found using HTML5.'
-      });
+      var marker = new google.maps.Marker({
+	      position: pos,
+	      map: map,
+	      title: 'You are here'
+	  });
 
       map.setCenter(pos);
     }, function() {
