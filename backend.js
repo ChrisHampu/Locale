@@ -18,6 +18,7 @@ app.use(express.static(__dirname + '/public'));
 var connectToRoom;
 
 app.get('', function (req, res) {
+	//Loads index file.
 	res.sendFile(__dirname + '/locale.html');
 });
 
