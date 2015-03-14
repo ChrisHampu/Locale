@@ -18,7 +18,7 @@ define([
 
 		if(response.status === 'connected')
 		{
-			console.log("connected to fb");
+			console.log("connected to fb by cache");
 
 			IsAuthed = true;
 
@@ -59,6 +59,7 @@ define([
 	var LoginFacebook = function() {
 		FB.login(function(response) {
 			if(response.authResponse) {
+				console.log("connected to fb by login");
 				IsAuthed = true;
 				LocaleRouter.navigate("home", {trigger: true});
 			}
