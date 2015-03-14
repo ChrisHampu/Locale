@@ -1,12 +1,27 @@
-//var db = require("./db.js");
 var schemas = require("./schemas.js");
 var _ = require("lodash");
+var Room = require("./room.js")
 
-Room = require("./room.js")
+/**
+ * Creates an instance of World which can be used to access
+ * the application World
+ *
+ * @constructor
+ * @param {db} Orchestrate DB instance
+ */
+function World (db) {
+  if (!(this instanceof World)) {
+    return new World(db)
+  }
 
-var World = function (data) {
-    this.data = this.sanitize(data);
+  /**
+   * Orchestrate DB used for datastore
+   * @type {db}
+   * @protected
+   */
+  this._db = db
 }
+
 
 World.prototype.data = {}
 
@@ -28,7 +43,9 @@ World.prototype.sanitize = function (data) {
     return _.pick(_.defaults(data, schema), _.keys(schema)); 
 }
 
-World.getRooms = function (callback) {
+World.prototype.getRooms = function (callback) {
+
+    console.log(this._db);
 
     // These will come from the DB, hardcoded for dev
     var room1 = new Room();
