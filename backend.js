@@ -6,7 +6,7 @@ var express = require('express')
 
 var db = require('orchestrate')('f3258a30-bca3-4567-9e60-d05422f4745f');
 
-server.listen(8080, function(){
+server.listen(80, function(){
 	var host = server.address().address;
     var port = server.address().port;
 
@@ -36,16 +36,26 @@ app.get('/valid_rooms', function(req, res){
 	});
 });
 
-app.get('add_room', function(req, res){
+app.get('/add_room', function(req, res){
 	var name = req.query.name;
 	World.addRoom(name, function(err, response){
 		res.send(response);
 	});
 });
 
+<<<<<<< HEAD
+app.get('/main', function(req, res){
+	res.sendFile(__dirname + '/mapview.html');
+});
+
+// usernames which are currently connected to the chat
+var usernames = {};
+
+=======
 //
 // "SUPERGLOBALS"
 //
+>>>>>>> 05d06ac146382fd34159fab830622220085aba92
 var World = require("./Model/world.js");
 var world = new World(db);
 

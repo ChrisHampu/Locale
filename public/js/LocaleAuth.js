@@ -11,19 +11,22 @@ define([
 		AuthToken,
 		CachedResponse,
 		AppToken = 616102381854407,
-		RedirectURL = "http://getlocale.me";
+		RedirectURL = "http://getlocale.me",
+		Router = LocaleRouter;
 
 	var FBAuthStateChanged = function(response) {
 		CachedResponse = response;
 
 		if(response.status === 'connected')
 		{
+			AuthToken = response.authResponse.accessToken;
+
 			console.log("connected to fb by cache");
 
 			IsAuthed = true;
 
 			// Navigate to actual site
-			LocaleRouter.navigate("home", {trigger: true});
+			Router.loggedin();
 		}
 		else if(response.status === 'not_authorized')
 		{
@@ -60,8 +63,9 @@ define([
 		FB.login(function(response) {
 			if(response.authResponse) {
 				console.log("connected to fb by login");
+				AuthToken = response.authResponse.accessToken;
 				IsAuthed = true;
-				LocaleRouter.navigate("home", {trigger: true});
+				Router.loggedin();
 			}
 			else
 			{
@@ -75,9 +79,8 @@ define([
 	}
 
 	var LogoutFacebook = function() {
-	   FB.logout(function(response) {
-	        // Person is now logged out
-	    });
+		if(IsAuthed === true)
+			window.location.href = "https://api.facebook.com/restserver.php?method=auth.expireSession&format=json&access_token=" + AuthToken;
 	}
 
 	var LogoutGooglePlus = function() {
