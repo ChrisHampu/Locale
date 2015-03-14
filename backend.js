@@ -6,7 +6,12 @@ var express = require('express')
 
 var db = require('orchestrate')('f3258a30-bca3-4567-9e60-d05422f4745f');
 
-server.listen(8080);
+server.listen(8080, function(){
+	var host = server.address().address;
+    var port = server.address().port;
+
+    console.log('Locale webserver launched at http://%s:%s', host, port);
+});
 
 // routing
 app.get('/', function (req, res) {
@@ -55,15 +60,7 @@ io.sockets.on('connection', function (socket) {
 	});
 	
 	socket.on('switchRoom', function(newroom){
-		socket.leave(socket.room);
-		socket.join(newroom);
-		socket.emit('updatechat', 'SERVER', 'you have connected to '+ newroom);
-		// sent message to OLD room
-		socket.broadcast.to(socket.room).emit('updatechat', 'SERVER', socket.username+' has left this room');
-		// update socket session room title
-		socket.room = newroom;
-		socket.broadcast.to(newroom).emit('updatechat', 'SERVER', socket.username+' has joined this room');
-		socket.emit('updaterooms', rooms, newroom);
+		switchRoom(socket, newroom);
 	});
 	
 
@@ -77,4 +74,41 @@ io.sockets.on('connection', function (socket) {
 		socket.broadcast.emit('updatechat', 'SERVER', socket.username + ' has disconnected');
 		socket.leave(socket.room);
 	});
+
+	app.get('/add_room', function(req,res){
+		var roomName = req.query.room;
+		if(rooms.indexOf(roomName) != -1){
+			res.send("Sorry name already exists");
+		} else {
+			rooms.push(roomName);
+			switchRoom(socket, roomName);
+			res.send("added room " + roomName);
+		}
+	});
+});
+
+function switchRoom(socket, newroom){
+	socket.leave(socket.room);
+	socket.join(newroom);
+	socket.emit('updatechat', 'SERVER', 'you have connected to '+ newroom);
+	// sent message to OLD room
+	socket.broadcast.to(socket.room).emit('updatechat', 'SERVER', socket.username+' has left this room');
+	// update socket session room title
+	socket.room = newroom;
+	socket.broadcast.to(newroom).emit('updatechat', 'SERVER', socket.username+' has joined this room');
+	socket.emit('updaterooms', rooms, newroom);
+}
+
+app.get('/add_room', function(req,res){
+	var roomName = req.query.room;
+	rooms.push(roomName);
+	socket.emit('updaterooms', rooms, roomName);
+	res.send("added Room" + roomName);
+});
+
+app.get('/join_chat', function(req,res){
+	/*var roomName = req.query.room;
+	rooms.push(roomName);
+	socket.emit('updaterooms', rooms, roomName);
+	res.send("added Room" + roomName);*/
 });
