@@ -21,7 +21,7 @@ define([
 		},
 
 		search: function() {
-			console.log(this.$el.find("search-content").val);
+			console.log(this.$el.find("#search-content").val());
 		}
 	});
 
