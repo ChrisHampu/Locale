@@ -40,6 +40,19 @@ function initialize() {
 	});
 
 
+	var circle = new google.maps.Circle({
+		center: pos,
+		radius: 2000, //Measured in meters
+		fillColor: "#758ff9",
+		fillOpacity: 0.5,
+		strokeOpacity: 0.0,
+		strokeWidth: 0,
+		map: map
+	});
+
+
+
+
 
       map.setCenter(pos);
     }, function() {
