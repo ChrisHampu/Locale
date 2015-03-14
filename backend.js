@@ -4,6 +4,8 @@ var express = require('express')
   , server = http.createServer(app)
   , io = require('socket.io').listen(server);
 
+var db = require('orchestrate')('f3258a30-bca3-4567-9e60-d05422f4745f');
+
 server.listen(8080);
 
 // routing
@@ -13,6 +15,14 @@ app.get('/', function (req, res) {
 
 // usernames which are currently connected to the chat
 var usernames = {};
+
+Room = require("./Model/room.js")
+
+var room1 = new Room({name: "Room1"});
+
+Room.findById(42, function (err, room) {  
+    room.changeName("Room2");
+});
 
 // rooms which are currently available in chat
 var rooms = ['room1','room2','room3'];
