@@ -21,9 +21,6 @@ define([
 	}
 
 	var Initialize = function (AppRouter) {
-	
-		LocaleSocket.Initialize();
-
 		LocaleUtilities.Initialize();
 
 		Router = AppRouter;

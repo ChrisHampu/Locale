@@ -4,10 +4,11 @@ define([
 	'backbone',
 	'bootstrapjs',
 	'Locale',
+	'LocaleSocket',
 	'LocaleAuthView',
 	'LocaleView',
 	'LocaleMapView'
-], function($, _, Backbone, Bootstrap, Locale, LocaleAuthView, LocaleView){
+], function($, _, Backbone, Bootstrap, Locale, LocaleSocket, LocaleAuthView, LocaleView){
 
 	var AuthView,
 		LocaleView;
@@ -15,6 +16,8 @@ define([
 	var LocaleRouter = Backbone.Router.extend({
 
 		initialize: function() {
+
+			LocaleSocket.Initialize();
 
 			AuthView = new LocaleAuthView();
 			LocaleView = new LocaleView();
