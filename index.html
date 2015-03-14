@@ -12,11 +12,15 @@
 	// On connection to server, get the location and send it to the server
 	navigator.geolocation.getCurrentPosition(function(loc){
 		socket.emit('join', {
-			"username": "User1", 
-			"location": {
-				"lat": loc.coords.latitude,
-				"lon": loc.coords.longitude
-			}
+			id: 1, 
+			location: { 
+				lat: loc.coords.latitude, 
+				lon: loc.coords.longitude 
+			}, 
+			firstName: "John", 
+			lastName: "Doe", 
+			token: '123', 
+			email: "email@email.com" 
 		});
 	});
 
@@ -30,8 +34,8 @@
 	});
 
 	// listener, whenever the server emits 'updatechat', this updates the chat body
-	socket.on('updatechat', function (username, data) {
-		chatMessages.push(data);
+	socket.on('updatechat', function (data) {
+		chatMessages.push(data['message']);
 
 		console.log(chatMessages);
 	});

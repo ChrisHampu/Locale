@@ -146,7 +146,7 @@ io.sockets.on('connection', function (socket) {
 function switchRoom(socket, newroom){
 	socket.leave(socket.room);
 	socket.join(newroom);
-	socket.emit('updatechat', 'SERVER', 'you have connected to ' + newroom);
+	socket.emit('updatechat', {"user": "system", "message": "Welcome to " + newroom});
 	// sent message to OLD room
 	socket.broadcast.to(socket.room).emit('updatechat', 'SERVER', socket.username+' has left this room');
 	// update socket session room title
