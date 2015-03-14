@@ -10,12 +10,17 @@ var Room = require("./room.js")
  * @constructor
  * @param {db} Orchestrate DB instance
  */
-function World (db) {
+ function World (db) {
     this.db = db;
 }
 
-World.prototype.getRooms = function (callback) {
+World.prototype.addRoom = function(room, callback) {
 
+    this.db.put('rooms', room.name, room)
+
+}
+
+World.prototype.getRooms = function (callback) {
     var rooms = null;
 
     this.db.list('rooms').then(function (result) {
@@ -30,16 +35,19 @@ World.prototype.getRooms = function (callback) {
 
 }
 
-World.prototype.addRoom = function(room, callback) {
+World.prototype.getValidRooms = function (lat, lon, callback){
+    var rooms = null;
 
-    this.db.put('rooms', room.name, room)
+    // Search for all rooms within 10km of the passed lat/long
+    this.db.newSearchBuilder().collection("rooms").query("value.location:NEAR:{lat:" + lat + " lon:" + lon + " dist:10km}").then(function (result) {
+        var roomObjects = result.body.results;
 
-}
+        var rooms = roomObjects.map(function(obj){ 
+            return obj["value"];
+        });
 
-
-World.prototype.getValidRooms = function (lat, long, callback){
-
-
+        callback(rooms);
+    })
 
 }
 
