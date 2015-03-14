@@ -3,16 +3,15 @@ define([
 	'underscore',
 	'backbone',
 	'bootstrapjs',
-	'LocaleRouter',
 	'facebook'
-], function($, _, Backbone, Bootstrap, LocaleRouter){
+], function($, _, Backbone, Bootstrap){
 
 	var IsAuthed = false,
 		AuthToken,
 		CachedResponse,
 		AppToken = 616102381854407,
 		RedirectURL = "http://getlocale.me",
-		Router = LocaleRouter;
+		Locale;
 
 	var FBAuthStateChanged = function(response) {
 		CachedResponse = response;
@@ -26,7 +25,7 @@ define([
 			IsAuthed = true;
 
 			// Navigate to actual site
-			Router.loggedin();
+			Locale.OnLoggedIn();
 		}
 		else if(response.status === 'not_authorized')
 		{
@@ -39,7 +38,7 @@ define([
 
 	}
 
-	var Initialize = function () {
+	var Initialize = function (LocaleApp) {
 		FB.init( {
 			appId      : '616102381854407',
       		xfbml      : true,
@@ -48,7 +47,9 @@ define([
 
       	FB.getLoginStatus(function(response) {
       		FBAuthStateChanged(response);
-      	})
+      	});
+
+      	Locale = LocaleApp;
 	}
 
 	var GetAuthState = function() {
@@ -65,7 +66,7 @@ define([
 				console.log("connected to fb by login");
 				AuthToken = response.authResponse.accessToken;
 				IsAuthed = true;
-				Router.loggedin();
+				Locale.OnLoggedIn();
 			}
 			else
 			{
