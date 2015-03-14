@@ -3,9 +3,10 @@ define([
 	'underscore',
 	'backbone',
 	'bootstrapjs',
+	'LocaleUserAuthModel',
+	'LocaleUtilities',
 	'facebook',
-	'LocaleUserAuthModel'
-], function($, _, Backbone, Bootstrap, LocaleUserAuthModel){
+], function($, _, Backbone, Bootstrap, LocaleUserAuthModel, LocaleUtilities){
 
 	var IsAuthed = false,
 		AuthToken,
@@ -14,6 +15,25 @@ define([
 		RedirectURL = "http://getlocale.me",
 		Locale,
 		UserModel;
+
+	var SendAuthModel = function(useFB) {
+
+		if(useFB === true)
+		{
+			FB.api('/me', function(response) {
+			    UserModel = new LocaleUserAuthModel({ id: response.id, location: MapView.getLocation(), name: response.first_name + " " + response.last_name, token: AuthToken, email: response.email });
+				// Send model
+			});
+		}
+		else
+		{
+			UserModel = new LocaleUserAuthModel({ location: LocaleUtilities.GetCurrentLocation(), name: "John Doe", token: AuthToken, email: "email@email.com"});
+			// Send model
+		}
+
+		// Navigate to actual site
+		Locale.OnLoggedIn(UserModel);
+	}
 
 	var FBAuthStateChanged = function(response) {
 		CachedResponse = response;
@@ -26,8 +46,7 @@ define([
 
 			IsAuthed = true;
 
-			// Navigate to actual site
-			Locale.OnLoggedIn(UserModel);
+			SendAuthModel();
 		}
 		else if(response.status === 'not_authorized')
 		{
@@ -37,7 +56,14 @@ define([
 	}
 
 	var GPlusAuthStateChanged = function() {
+		AuthToken = "override";
 
+		console.log("connected by G+ override");
+
+		IsAuthed = true;
+
+		// Navigate to actual site
+		SendAuthModel();
 	}
 
 	var Initialize = function (LocaleApp) {
@@ -68,7 +94,7 @@ define([
 				console.log("connected to fb by login");
 				AuthToken = response.authResponse.accessToken;
 				IsAuthed = true;
-				Locale.OnLoggedIn();
+				SendAuthModel();
 			}
 			else
 			{
@@ -78,7 +104,7 @@ define([
 	}
 
 	var LoginGooglePlus = function() {
-
+		GPlusAuthStateChanged();
 	}
 
 	var LogoutFacebook = function() {
@@ -87,7 +113,7 @@ define([
 	}
 
 	var LogoutGooglePlus = function() {
-		
+		IsAuthed = false;
 	}
 
 	var Logout = function() {

@@ -3,10 +3,11 @@ define([
 	'underscore',
 	'backbone',
 	'bootstrapjs',
+	'LocaleUtilities',
 	'LocaleAuth',
 	'LocaleView',
 	'LocaleAuthView'
-], function($, _, Backbone, Bootstrap, LocaleAuth, LocaleView, LocaleAuthView){
+], function($, _, Backbone, Bootstrap, LocaleUtilities, LocaleAuth, LocaleView, LocaleAuthView){
 
 	var Router;
 
@@ -20,6 +21,8 @@ define([
 
 	var Initialize = function (AppRouter) {
 	
+		LocaleUtilities.Initialize();
+
 		Router = AppRouter;
 
 		LocaleAuth.Initialize(this);

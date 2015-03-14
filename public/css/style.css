@@ -29,22 +29,70 @@ body
 
 #menubar
 {
+    position: fixed;
     margin:30px;
     width:40%;
+    z-index: 2;
+}
+
+#profilepic
+{
+    background: url('../assets/profilepic/placeholder.png') no-repeat;
+    background-size: contain;
+    position: fixed;
+    z-index: 10;
+    left:30px;
+    cursor: pointer;
+    height: 60px;
+    width: 60px;
+    -webkit-transition:0.5s ease;
+    -moz-transition:0.5s ease;
+    -o-transition:0.5s ease;
+    -ms-transition:0.5s ease;
+    transition:0.5s ease;
+}
+
+#profilepic:hover
+{
+    box-shadow: 0px 2px 2px #888888;
+    -webkit-transition:0.5s ease;
+    -moz-transition:0.5s ease;
+    -o-transition:0.5s ease;
+    -ms-transition:0.5s ease;
+    transition:0.5s ease;
 }
 
 #searchbar
 {
     /*display:none;*/
-    position:fixed;
-    width:50%;
-    padding: 10px;
+    position:relative;
+    width: 80%;
+    left: 75px;
+    margin: 10px;
+}
+
+@media (max-width: 400px)
+{
+    #searchbar .input-group-btn .btn
+    {
+        width: 40px;
+    }
+}
+
+
+@media (min-width: 400px)
+{
+    #searchbar .input-group-btn .btn
+    {
+        width: 70px;
+    }
 }
 
 
 /* Login Stuff */
 
-@media (max-width: 400px) {
+@media (max-width: 400px) 
+{
     #centerlogin
     {
         width: 160px;
@@ -68,7 +116,7 @@ body
     width: 100%;
     height: 100%;
     position: absolute;
-    background: url('../assets/forest-dim.jpg') no-repeat;
+    background: url('../assets/backgrounds/forest-dim.jpg') no-repeat;
     background-size: cover;
     z-index: 5;
 }
@@ -79,10 +127,16 @@ body
     left: 50%;
     position:absolute;
     text-align: center;
+    display: block;
 }
 
-#centerlogin img
+#localelogo
 {
+    position: relative;
+    background: url('../assets/logo/Locale-Logo.png') no-repeat 50% 50%;
+    background-size: contain;
+    display: block;
+    height:170px;
     width: 100%;
 }
 
@@ -205,5 +259,33 @@ footer
    height: 100%;
    width: 100%;
    position: absolute;
+}
+
+#map-wrapper {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	z-index: 1;
+}
+
+#profile-content-sidr {
+    font-size:;
+    padding: 20px;
+    padding-top: 50px;
+    float: right;
+    right: 50px;
+    position: absolute;
+}
+
+#room-header {
+    top:125px;
+    position:relative;
+    left: 80px;
+    font-size: 20px;
+}
+
+#room-container{
+    top: 150px;
+    position:relative;
 }
 
