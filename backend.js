@@ -4,7 +4,12 @@ var express = require('express')
   , server = http.createServer(app)
   , io = require('socket.io').listen(server);
 
-server.listen(8080);
+server.listen(8080, function(){
+	var host = server.address().address;
+    var port = server.address().port;
+
+    console.log('Locale webserver launched at http://%s:%s', host, port);
+});
 
 // routing
 app.get('/', function (req, res) {
@@ -13,6 +18,11 @@ app.get('/', function (req, res) {
 
 // usernames which are currently connected to the chat
 var usernames = {};
+
+var room = function(name){
+	this.name = name;
+	this.users = 0;
+}
 
 // rooms which are currently available in chat
 var rooms = ['room1','room2','room3'];
@@ -43,15 +53,7 @@ io.sockets.on('connection', function (socket) {
 	});
 	
 	socket.on('switchRoom', function(newroom){
-		socket.leave(socket.room);
-		socket.join(newroom);
-		socket.emit('updatechat', 'SERVER', 'you have connected to '+ newroom);
-		// sent message to OLD room
-		socket.broadcast.to(socket.room).emit('updatechat', 'SERVER', socket.username+' has left this room');
-		// update socket session room title
-		socket.room = newroom;
-		socket.broadcast.to(newroom).emit('updatechat', 'SERVER', socket.username+' has joined this room');
-		socket.emit('updaterooms', rooms, newroom);
+		switchRoom(socket, newroom);
 	});
 	
 
@@ -65,4 +67,41 @@ io.sockets.on('connection', function (socket) {
 		socket.broadcast.emit('updatechat', 'SERVER', socket.username + ' has disconnected');
 		socket.leave(socket.room);
 	});
+
+	app.get('/add_room', function(req,res){
+		var roomName = req.query.room;
+		if(rooms.indexOf(roomName) != -1){
+			res.send("Sorry name already exists");
+		} else {
+			rooms.push(roomName);
+			switchRoom(socket, roomName);
+			res.send("added room " + roomName);
+		}
+	});
+});
+
+function switchRoom(socket, newroom){
+	socket.leave(socket.room);
+	socket.join(newroom);
+	socket.emit('updatechat', 'SERVER', 'you have connected to '+ newroom);
+	// sent message to OLD room
+	socket.broadcast.to(socket.room).emit('updatechat', 'SERVER', socket.username+' has left this room');
+	// update socket session room title
+	socket.room = newroom;
+	socket.broadcast.to(newroom).emit('updatechat', 'SERVER', socket.username+' has joined this room');
+	socket.emit('updaterooms', rooms, newroom);
+}
+
+app.get('/add_room', function(req,res){
+	var roomName = req.query.room;
+	rooms.push(roomName);
+	socket.emit('updaterooms', rooms, roomName);
+	res.send("added Room" + roomName);
+});
+
+app.get('/join_chat', function(req,res){
+	/*var roomName = req.query.room;
+	rooms.push(roomName);
+	socket.emit('updaterooms', rooms, roomName);
+	res.send("added Room" + roomName);*/
 });
