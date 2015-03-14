@@ -31,7 +31,7 @@ World.prototype.get = function (name) {
 
 World.prototype.set = function (name, value) {
     if(Array.isArray(this.data[name])){
-        this.data[name].append(name);
+        this.data[name].append(value);
     } else {
         this.data[name] = value;
     }
