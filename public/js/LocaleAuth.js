@@ -11,7 +11,8 @@ define([
 		AuthToken,
 		CachedResponse,
 		AppToken = 616102381854407,
-		RedirectURL = "http://getlocale.me";
+		RedirectURL = "http://getlocale.me",
+		Router = LocaleRouter;
 
 	var FBAuthStateChanged = function(response) {
 		CachedResponse = response;
@@ -25,7 +26,7 @@ define([
 			IsAuthed = true;
 
 			// Navigate to actual site
-			LocaleRouter.loggedin();
+			Router.loggedin();
 		}
 		else if(response.status === 'not_authorized')
 		{
@@ -64,7 +65,7 @@ define([
 				console.log("connected to fb by login");
 				AuthToken = response.authResponse.accessToken;
 				IsAuthed = true;
-				LocaleRouter.loggedin();
+				Router.loggedin();
 			}
 			else
 			{
