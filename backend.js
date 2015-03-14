@@ -21,11 +21,13 @@ app.get('/', function (req, res) {
 // usernames which are currently connected to the chat
 var usernames = {};
 
-World = require("./Model/world.js")
+var World = require("./Model/world.js");
+
+var world = new World(db);
 
 var activeRooms = null;
 
-World.getRooms(function (err, rooms) {  
+world.getRooms(function (err, rooms) {  
     activeRooms = rooms;
 });
 
