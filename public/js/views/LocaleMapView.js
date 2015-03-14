@@ -35,46 +35,45 @@ define([
 
 		render: function() {
 			// Failed to get position, do nothing
-			LocaleUtilities.GetCurrentPosition(function(position) {
+			LocaleUtilities.GetCurrentLocation(function(position) {
 				CurrentPosition = position;
-				this.render();
+
+			      var pos = new google.maps.LatLng(CurrentPosition.coords.latitude,
+			                                       CurrentPosition.coords.longitude);
+
+			      var marker = new google.maps.Marker({
+				      position: pos,
+				      map: Map
+				  });
+
+				  google.maps.event.addListener(marker, 'mouseover', function() {
+				    //display info about the room if it is a room, or if it is you, display your info.
+				    console.log("hovered");
+				});
+
+				  google.maps.event.addListener(marker, 'mouseout', function() {
+				    //remove whatever info was displayed
+				    console.log("unhovered");
+				});
+
+				  google.maps.event.addListener(marker, 'click', function() {
+				   	//Pan to and do hovered
+				    Map.panTo(marker.getPosition());
+				    console.log("clicked");
+				});
+
+				var circle = new google.maps.Circle({
+					center: pos,
+					radius: 2000, //Measured in meters
+					fillColor: "#758ff9",
+					fillOpacity: 0.5,
+					strokeOpacity: 0.0,
+					strokeWidth: 0,
+					map: Map
+				});
+
+	      		Map.setCenter(pos);
 			});
-
-		      var pos = new google.maps.LatLng(CurrentPosition.coords.latitude,
-		                                       CurrentPosition.coords.longitude);
-
-		      var marker = new google.maps.Marker({
-			      position: pos,
-			      map: Map
-			  });
-
-			  google.maps.event.addListener(marker, 'mouseover', function() {
-			    //display info about the room if it is a room, or if it is you, display your info.
-			    console.log("hovered");
-			});
-
-			  google.maps.event.addListener(marker, 'mouseout', function() {
-			    //remove whatever info was displayed
-			    console.log("unhovered");
-			});
-
-			  google.maps.event.addListener(marker, 'click', function() {
-			   	//Pan to and do hovered
-			    Map.panTo(marker.getPosition());
-			    console.log("clicked");
-			});
-
-			var circle = new google.maps.Circle({
-				center: pos,
-				radius: 2000, //Measured in meters
-				fillColor: "#758ff9",
-				fillOpacity: 0.5,
-				strokeOpacity: 0.0,
-				strokeWidth: 0,
-				map: Map
-			});
-
-      		Map.setCenter(pos);
 		},
 
 		search: function() {
