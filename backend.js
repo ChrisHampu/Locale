@@ -6,7 +6,7 @@ var express = require('express')
 
 var db = require('orchestrate')('f3258a30-bca3-4567-9e60-d05422f4745f');
 
-server.listen(80, function(){
+server.listen(8080, function(){
 	var host = server.address().address;
     var port = server.address().port;
 
@@ -44,7 +44,7 @@ app.get('/add_room', function(req, res){
 });
 
 app.get('/main', function(req, res){
-	res.sendFile(__dirname + '/mapview.html');
+	res.sendFile(__dirname + '/main.html');
 });
 
 //
