@@ -30,8 +30,13 @@ define([
 		}
 		else
 		{
-			UserModel = new LocaleUserAuthModel({ id: 1, location: { lat: LocaleUtilities.GetCurrentLocation().coords.latitude, lon: LocaleUtilities.GetCurrentLocation().coords.longitude }, 
-				firstName: "John", lastName: "Doe", token: AuthToken, email: "email@email.com"});
+			UserModel = new LocaleUserAuthModel({
+				id: 1, location: { lat: LocaleUtilities.GetCurrentLocation().coords.latitude, 
+				lon: LocaleUtilities.GetCurrentLocation().coords.longitude }, 
+				firstName: "John", lastName: "Doe", token: AuthToken, email: "email@email.com" 
+			});
+
+
 			LocaleSocket.Emit('join', JSON.stringify(UserModel));
 		}
 

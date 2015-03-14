@@ -5,12 +5,14 @@ define([
 	'bootstrapjs',
 	'LocaleUtilities',
 	'LocaleProfileView',
+	'LocaleChatroomListView',
 	'LocaleSearchModel',
 	'LocaleSocket',
 	'async!http://maps.google.com/maps/api/js?sensor=false!callback'
-], function($, _, Backbone, Bootstrap, LocaleUtilities, LocaleProfileView, LocaleSearchModel, LocaleSocket, GMaps){
+], function($, _, Backbone, Bootstrap, LocaleUtilities, LocaleProfileView, LocaleChatroomListView, LocaleSearchModel, LocaleSocket, GMaps){
 
-	var ProfileView;
+	var ProfileView,
+		ChatroomListView;
 
 	var Map,
 		CurrentPosition = undefined;
@@ -30,6 +32,7 @@ define([
 
 		initialize: function() {
 			ProfileView = new LocaleProfileView();
+			ChatroomListView = new LocaleChatroomListView();
 			
 			Map = new google.maps.Map(this.$el.find("#map-wrapper")[0], mapOptions);
 
