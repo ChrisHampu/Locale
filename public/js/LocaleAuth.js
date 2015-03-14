@@ -9,19 +9,28 @@ define([
 
 	var IsAuthed = false,
 		AuthToken,
-		CachedResponse;
+		CachedResponse,
+		AppToken = 616102381854407,
+		RedirectURL = "http://getlocale.me";
 
 	var FBAuthStateChanged = function(response) {
 		CachedResponse = response;
 
 		if(response.status === 'connected')
 		{
-			console.log("connected to fb");
+			AuthToken = response.authResponse.accessToken;
+
+			console.log("connected to fb by cache");
 
 			IsAuthed = true;
 
 			// Navigate to actual site
-			LocaleRouter.navigate("home", {trigger: true});
+			LocaleRouter.loggedin();
+		}
+		else if(response.status === 'not_authorized')
+		{
+			// Attempt to authenticate
+			window.location.href = "https://www.facebook.com/dialog/oauth?client_id=" + AppToken + "&redirect_uri=" + RedirectURL;
 		}
 	}
 
@@ -50,11 +59,36 @@ define([
 	}
 
 	var LoginFacebook = function() {
-
+		FB.login(function(response) {
+			if(response.authResponse) {
+				console.log("connected to fb by login");
+				AuthToken = response.authResponse.accessToken;
+				IsAuthed = true;
+				LocaleRouter.loggedin();
+			}
+			else
+			{
+				console.log("User did not authenticate");
+			}
+		}, { scope: 'public_profile' });
 	}
 
 	var LoginGooglePlus = function() {
 
+	}
+
+	var LogoutFacebook = function() {
+		if(IsAuthed === true)
+			window.location.href = "https://api.facebook.com/restserver.php?method=auth.expireSession&format=json&access_token=" + AuthToken;
+	}
+
+	var LogoutGooglePlus = function() {
+		
+	}
+
+	var Logout = function() {
+		LogoutFacebook();
+		LogoutGooglePlus();
 	}
 	
 	// Map public API functions to internal functions
@@ -63,6 +97,7 @@ define([
 		GetAuthState: GetAuthState,
 		GetAuthToken: GetAuthToken,
 		LoginFacebook: LoginFacebook,
-		LoginGooglePlus: LoginGooglePlus
+		LoginGooglePlus: LoginGooglePlus,
+		Logout: Logout
 	};
 });

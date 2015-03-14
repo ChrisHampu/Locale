@@ -11,36 +11,48 @@ html
   
 body
 {
-    background: url('../assets/forest-dim.jpg') no-repeat;
-    background-size: cover;
     position:relative;
     min-height: 100%;
-    padding:20px;
+    font-family: "Roboto";
+    background: url('../assets/forest-dim.jpg') no-repeat;
+    background-size: cover;
 } 
 
+
 @media (max-width: 400px) {
-    #loginform
+    #centerlogin
     {
         width: 160px;
         margin-left: -90px;
-        margin-top: -180px;
+        margin-top: -270px;
         position:absolute;
     }
 }
 
 @media (min-width: 400px) {
-    #loginform
+    #centerlogin
     {
+        width: 360px;
         margin-left: -180px;
-        margin-top: -90px;
+        margin-top: -180px;
     }
 }
 
 #loginform
 {
+}
+
+#centerlogin
+{
     top: 50%;
     left: 50%;
     position:absolute;
+    text-align: center;
+}
+
+#centerlogin img
+{
+    width: 100%;
 }
 
 #facebook
@@ -139,23 +151,22 @@ margin-left:5px;
 transition:0.5s ease;
 }
 
-#mainlogin
-{
-float:left;
-width:250px;
-height:170px;
-padding:10px 15px;
-position:relative;
-background:#555555;
-border-radius:3px;
-}
 
 #connect
 {
-color: #fff;
-font-size: 13px;
-text-align: left;
-font-family: "Roboto";
-padding-top:10px;
+    color: #fff;
+    font-weight: 700;
+    font-size: 13px;
+    text-align: left;
+    padding-top:10px;
+}
+
+footer
+{
+    color: #fff;
+    position: fixed;
+    width: 100%;
+    text-align: center;
+    bottom: 0;
 }
 

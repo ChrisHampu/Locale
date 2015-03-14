@@ -4,8 +4,9 @@ define([
 	'backbone',
 	'bootstrapjs',
 	'Locale',
-	'LocaleAuthView'
-], function($, _, Backbone, Bootstrap, Locale, LocaleAuthView){
+	'LocaleAuthView',
+	'LocaleView'
+], function($, _, Backbone, Bootstrap, Locale, LocaleAuthView, LocaleView){
 
 	var AuthView;
 
@@ -20,7 +21,8 @@ define([
 
 		routes: {
 			'': 'index', // Auth page
-			'home': 'home'
+			'home': 'home',
+			'logout': 'logout'
 		},
 
 		index: function() {
@@ -28,7 +30,15 @@ define([
 		},
 
 		home: function() {
+			LocaleView.render();
+		},
 
+		logout: function() {
+			AuthView.logout();
+		},
+
+		loggedin: function() {
+			AuthView.loggedin();
 		},
 
 		default: function(action) {

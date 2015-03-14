@@ -44,6 +44,7 @@ app.get('/add_room', function(req, res){
 	});
 });
 
+<<<<<<< HEAD
 app.get('/main', function(req, res){
 	res.sendFile(__dirname + '/mapview.html');
 });
@@ -51,25 +52,28 @@ app.get('/main', function(req, res){
 // usernames which are currently connected to the chat
 var usernames = {};
 
+=======
+//
+// "SUPERGLOBALS"
+//
+>>>>>>> 05d06ac146382fd34159fab830622220085aba92
 var World = require("./Model/world.js");
-
 var world = new World(db);
 
-var activeRooms = null;
+var worldRooms = null;
 
-world.getRooms(function (err, rooms) {  
-    activeRooms = rooms;
-});
+// usernames which are currently connected to the chat
+var usernames = {};
 
-console.log(activeRooms);
-
-rooms = ['room1', 'room2', 'room3'];
-
-// rooms which are currently available in chat
-//var rooms = ['room1','room2','room3'];
+var roomNames = null;
 
 io.sockets.on('connection', function (socket) {
 	
+	world.getRooms(function(worldRooms) {
+		rooms = worldRooms; 
+		console.log(worldRooms);
+	});
+
 	// when the client emits 'adduser', this listens and executes
 	socket.on('adduser', function(username){
 		// store the username in the socket session for this client
