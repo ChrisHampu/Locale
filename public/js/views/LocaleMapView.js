@@ -3,9 +3,12 @@ define([
 	'underscore',
 	'backbone',
 	'bootstrapjs',
+	'LocaleProfileView',
 	'LocaleSearchModel',
 	'async!http://maps.google.com/maps/api/js?sensor=false!callback'
-], function($, _, Backbone, Bootstrap, LocaleSearchModel, GMaps){
+], function($, _, Backbone, Bootstrap, LocaleProfileView, LocaleSearchModel, GMaps){
+
+	var ProfileView;
 
 	var Map,
 		CurrentPosition = undefined;
@@ -16,7 +19,7 @@ define([
 		  disableDefaultUI: true
 	};
 
-	var LocaleAuthView = Backbone.View.extend({
+	var LocaleMapView = Backbone.View.extend({
 		el: '#mappage',
 
 		events: {
@@ -24,7 +27,8 @@ define([
 		},
 
 		initialize: function() {
-
+			ProfileView = new LocaleProfileView();
+			
 			Map = new google.maps.Map(this.$el.find("#map-wrapper")[0], mapOptions);
 
 			if(navigator.geolocation)
@@ -84,5 +88,5 @@ define([
 		}
 	});
 
-	return LocaleAuthView;
+	return LocaleMapView;
 });
