@@ -6,7 +6,7 @@ var express = require('express')
 
 var db = require('orchestrate')('f3258a30-bca3-4567-9e60-d05422f4745f');
 
-server.listen(8080, function(){
+server.listen(80, function(){
 	var host = server.address().address;
 	var port = server.address().port;
 
