@@ -15,7 +15,6 @@ server.listen(8080, function(){
 
 app.use(express.static(__dirname + '/public'));
 
-var connectToRoom;
 
 app.get('', function (req, res) {
 	//Loads index file.
@@ -61,24 +60,27 @@ io.sockets.on('connection', function (socket) {
 	
 	world.getRooms(function(worldRooms) {
 		rooms = worldRooms; 
+		roomNames = rooms.map(function(obj){
+			return obj["name"];
+		})
 		console.log(worldRooms);
 	});
 
 	// when the client emits 'adduser', this listens and executes
-	socket.on('adduser', function(username){
+	socket.on('adduser', function(userRoom){
 		// store the username in the socket session for this client
-		socket.username = username;
+		socket.username = userRoom.username;
 		// store the room name in the socket session for this client
-		socket.room = 'room1';
+		socket.room = userRoom.room;
 		// add the client's username to the global list
-		usernames[username] = username;
+		usernames[userRoom.username] = userRoom.username;
 		// send client to room 1
 		socket.join('room1');
 		// echo to client they've connected
 		socket.emit('updatechat', 'SERVER', 'you have connected to room1');
 		// echo to room 1 that a person has connected to their room
-		socket.broadcast.to('room1').emit('updatechat', 'SERVER', username + ' has connected to this room');
-		socket.emit('updaterooms', rooms, 'room1');
+		socket.broadcast.to('room1').emit('updatechat', 'SERVER', userRoom.username + ' has connected to this room');
+		socket.emit('updaterooms', roomNames, 'room1');
 	});
 	
 	// when the client emits 'sendchat', this listens and executes
