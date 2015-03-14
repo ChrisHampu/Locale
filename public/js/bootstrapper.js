@@ -24,6 +24,7 @@ require.config({
 		LocaleChatroomListView: 'views/LocaleChatroomListView',
 		LocaleProfileView: 'views/LocaleProfileView',
 		LocaleUserAuthModel: 'models/LocaleUserAuthModel',
+		LocaleUtilities: 'LocaleUtilities',
 		sidr: 'libs/sidr/jquery.sidr.min'
 	}
 });

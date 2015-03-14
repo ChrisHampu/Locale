@@ -3,10 +3,11 @@ define([
 	'underscore',
 	'backbone',
 	'bootstrapjs',
+	'LocaleUtilities',
 	'LocaleProfileView',
 	'LocaleSearchModel',
 	'async!http://maps.google.com/maps/api/js?sensor=false!callback'
-], function($, _, Backbone, Bootstrap, LocaleProfileView, LocaleSearchModel, GMaps){
+], function($, _, Backbone, Bootstrap, LocaleUtilities, LocaleProfileView, LocaleSearchModel, GMaps){
 
 	var ProfileView;
 
@@ -30,21 +31,14 @@ define([
 			ProfileView = new LocaleProfileView();
 			
 			Map = new google.maps.Map(this.$el.find("#map-wrapper")[0], mapOptions);
-
-			if(navigator.geolocation)
-			{
-				navigator.geolocation.getCurrentPosition(function(position) {
-					CurrentPosition = position;
-				}, function() {
-			      handleNoGeolocation(true);
-			    });
-			}
 		},
 
 		render: function() {
 			// Failed to get position, do nothing
-			if(CurrentPosition === undefined)
-				return;
+			LocaleUtilities.GetCurrentPosition(function(position) {
+				CurrentPosition = position;
+				this.render();
+			});
 
 		      var pos = new google.maps.LatLng(CurrentPosition.coords.latitude,
 		                                       CurrentPosition.coords.longitude);
@@ -85,6 +79,10 @@ define([
 
 		search: function() {
 			console.log(this.$el.find("#search-content").val());
+		},
+
+		getLocation: function() {
+			return CurrentPosition;
 		}
 	});
 

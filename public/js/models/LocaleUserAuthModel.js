@@ -5,7 +5,6 @@ define([
 ], function($, _, Backbone){
 
 	/**
-	  * This model will hold a row of log message text
 	  * @extends BackBone.Model
 	  */
 	var LocaleUserAuthModel = Backbone.Model.extend({
@@ -16,7 +15,11 @@ define([
 
 		// Default values if they aren't provided during initialization of the object
 		defaults: {
-
+			id: undefined,
+			location: undefined,
+			name: "John Doe",
+			token: undefined,
+			email: ""
 		}
 	});
 
