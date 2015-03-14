@@ -47,6 +47,7 @@ define([
 
 		dismiss: function(){
 			console.log("clicked a dismiss");
+			console.log($(this));
 		}
 	});
 
