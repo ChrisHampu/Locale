@@ -3,15 +3,17 @@ define([
 	'underscore',
 	'backbone',
 	'bootstrapjs',
-	'facebook'
-], function($, _, Backbone, Bootstrap){
+	'facebook',
+	'LocaleUserAuthModel'
+], function($, _, Backbone, Bootstrap, LocaleUserAuthModel){
 
 	var IsAuthed = false,
 		AuthToken,
 		CachedResponse,
 		AppToken = 616102381854407,
 		RedirectURL = "http://getlocale.me",
-		Locale;
+		Locale,
+		UserModel;
 
 	var FBAuthStateChanged = function(response) {
 		CachedResponse = response;
@@ -25,7 +27,7 @@ define([
 			IsAuthed = true;
 
 			// Navigate to actual site
-			Locale.OnLoggedIn();
+			Locale.OnLoggedIn(UserModel);
 		}
 		else if(response.status === 'not_authorized')
 		{
@@ -92,6 +94,13 @@ define([
 		LogoutFacebook();
 		LogoutGooglePlus();
 	}
+
+	var EnsureAuthed = function() {
+		if(IsAuthed === false)
+		{
+			Locale.RedirectLogin();
+		}
+	}
 	
 	// Map public API functions to internal functions
 	return {
@@ -100,6 +109,7 @@ define([
 		GetAuthToken: GetAuthToken,
 		LoginFacebook: LoginFacebook,
 		LoginGooglePlus: LoginGooglePlus,
-		Logout: Logout
+		Logout: Logout,
+		EnsureAuthed: EnsureAuthed
 	};
 });

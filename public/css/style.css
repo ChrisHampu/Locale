@@ -32,7 +32,7 @@ body
     position: fixed;
     margin:30px;
     width:40%;
-    z-index: 5;
+    z-index: 2;
 }
 
 #profilepic
@@ -102,6 +102,7 @@ body
     position: absolute;
     background: url('../assets/backgrounds/forest-dim.jpg') no-repeat;
     background-size: cover;
+    z-index: 5;
 }
 
 #centerlogin
@@ -238,7 +239,9 @@ footer
     bottom: 0;
 }
 
-#map-canvas {
-   height: 800px;
+#mappage {
+   height: 100%;
+   width: 100%;
+   position: absolute;
 }
 

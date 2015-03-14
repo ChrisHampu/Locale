@@ -6,12 +6,16 @@ define([
 	'LocaleAuth',
 	'LocaleView',
 	'LocaleAuthView'
-], function($, _, Backbone, Bootstrap, LocaleAuth, LocaleView){
+], function($, _, Backbone, Bootstrap, LocaleAuth, LocaleView, LocaleAuthView){
 
 	var Router;
 
 	var OnLoggedIn = function() {
 		Router.loggedin();
+	}
+
+	var RedirectLogin = function() {
+		Router.navigate("", { trigger: true} );
 	}
 
 	var Initialize = function (AppRouter) {
@@ -28,6 +32,7 @@ define([
 	// Map public API functions to internal functions
 	return {
 		Initialize: Initialize,
-		OnLoggedIn: OnLoggedIn
+		OnLoggedIn: OnLoggedIn,
+		RedirectLogin: RedirectLogin
 	};
 });

@@ -20,9 +20,39 @@ function initialize() {
 
       var marker = new google.maps.Marker({
 	      position: pos,
-	      map: map,
-	      title: 'You are here'
+	      map: map
 	  });
+
+	  google.maps.event.addListener(marker, 'mouseover', function() {
+	    //display info about the room if it is a room, or if it is you, display your info.
+	    console.log("hovered");
+	});
+
+	  google.maps.event.addListener(marker, 'mouseout', function() {
+	    //remove whatever info was displayed
+	    console.log("unhovered");
+	});
+
+	  google.maps.event.addListener(marker, 'click', function() {
+	   	//Pan to and do hovered
+	    map.panTo(marker.getPosition());
+	    console.log("clicked");
+	});
+
+
+	var circle = new google.maps.Circle({
+		center: pos,
+		radius: 2000, //Measured in meters
+		fillColor: "#758ff9",
+		fillOpacity: 0.5,
+		strokeOpacity: 0.0,
+		strokeWidth: 0,
+		map: map
+	});
+
+
+
+
 
       map.setCenter(pos);
     }, function() {
@@ -52,3 +82,4 @@ function handleNoGeolocation(errorFlag) {
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
+

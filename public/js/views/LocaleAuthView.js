@@ -35,7 +35,7 @@ define([
 		},
 
 		loggedin: function() {
-			this.$el.css("visibility", "hidden");
+			this.$el.css("z-index", -5);
 		}
 	});
 
