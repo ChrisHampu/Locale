@@ -57,7 +57,16 @@ define([
 	}
 
 	var LoginFacebook = function() {
-		FB.login(FBAuthStateChanged, { scope: 'public_profile, user_interests' });
+		FB.login(function(response) {
+			if(response.authResponse) {
+				IsAuthed = true;
+				LocaleRouter.navigate("home", {trigger: true});
+			}
+			else
+			{
+				console.log("User did not authenticate");
+			}
+		}, { scope: 'public_profile, user_interests' });
 	}
 
 	var LoginGooglePlus = function() {
