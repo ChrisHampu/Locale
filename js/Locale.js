@@ -2,12 +2,18 @@ define([
 	'jquery',
 	'underscore',
 	'backbone',
-	'bootstrapjs'
-], function($, _, Backbone, Bootstrap){
+	'bootstrapjs',
+	'LocaleAuth',
+	'LocaleView'
+], function($, _, Backbone, Bootstrap, LocaleAuth, LocaleView){
 
 	var Initialize = function () {
 	
-		console.log("Running locale");
+		LocaleAuth.Initialize();
+
+		var Authed = LocaleAuth.GetAuthState();
+
+		console.log("Locale authenticated is " + Authed);
 	}
 	
 	// Map public API functions to internal functions

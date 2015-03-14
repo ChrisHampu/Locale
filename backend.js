@@ -13,9 +13,20 @@ server.listen(8080, function(){
     console.log('Locale webserver launched at http://%s:%s', host, port);
 });
 
+var connectToRoom;
+
 // routing
-app.get('/', function (req, res) {
-  res.sendFile(__dirname + '/index.html');
+app.get('/chatconnect', function (req, res) {
+	connectToRoom = req.query.room_id;
+  	res.sendFile(__dirname + '/index.html');
+});
+
+app.get('/validRooms', function(req, res){
+	var lat = req.query.lat;
+	var lon = req.query.lon;
+	World.getValidRooms(lat, lon, function (err, rooms) {  
+    	res.send(rooms);
+	});
 });
 
 // usernames which are currently connected to the chat
@@ -32,6 +43,8 @@ world.getRooms(function (err, rooms) {
 });
 
 console.log(activeRooms);
+
+rooms = activeRooms;
 
 // rooms which are currently available in chat
 //var rooms = ['room1','room2','room3'];
@@ -77,16 +90,6 @@ io.sockets.on('connection', function (socket) {
 		socket.leave(socket.room);
 	});
 
-	app.get('/add_room', function(req,res){
-		var roomName = req.query.room;
-		if(rooms.indexOf(roomName) != -1){
-			res.send("Sorry name already exists");
-		} else {
-			rooms.push(roomName);
-			switchRoom(socket, roomName);
-			res.send("added room " + roomName);
-		}
-	});
 });
 
 function switchRoom(socket, newroom){
@@ -101,7 +104,18 @@ function switchRoom(socket, newroom){
 	socket.emit('updaterooms', rooms, newroom);
 }
 
-app.get('/add_room', function(req,res){
+/*app.get('/add_room', function(req,res){
+	var roomName = req.query.room;
+	if(rooms.indexOf(roomName) != -1){
+		res.send("Sorry name already exists");
+	} else {
+		rooms.push(roomName);
+		switchRoom(socket, roomName);
+		res.send("added room " + roomName);
+	}
+});*/
+
+/*app.get('/add_room', function(req,res){
 	var roomName = req.query.room;
 	rooms.push(roomName);
 	socket.emit('updaterooms', rooms, roomName);
@@ -109,8 +123,8 @@ app.get('/add_room', function(req,res){
 });
 
 app.get('/join_chat', function(req,res){
-	/*var roomName = req.query.room;
+	var roomName = req.query.room;
 	rooms.push(roomName);
 	socket.emit('updaterooms', rooms, roomName);
-	res.send("added Room" + roomName);*/
-});
+	res.send("added Room" + roomName);
+});*/
