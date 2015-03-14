@@ -14,20 +14,17 @@
 	<!-- Bootstrap CSS file -->
 	<link href="css/bootstrap.min.css" rel="stylesheet">
 
-    <link href="css/sidr-package-1.2.1/stylesheets/jquery.sidr.dark">
+    <link href="css/jquery.sidr.dark.css" rel="stylesheet">
 	<!-- Locale CSS file -->
 	<link href="css/style.css" rel="stylesheet">
     <!-- App entry point bootstrapping -->
 	<script data-main="js/bootstrapper" src="js/libs/require/require.js"></script>
-    <script src="js/jquery.sidr.min.js"></script>
 </head>
 <body>
     <div id='loginpage'>
         <div id='loginwrapper'>
             <div id="centerlogin">
                 <div id='localelogo'></div>
-                
-                
                 <div id="loginform">
                     <div id="facebook">
                         <i class="fa fa-facebook"></i>
@@ -44,6 +41,15 @@
     <div id='mappage'>
 		<div id="map-wrapper"></div>
         <div id='menubar'>
+            <div id="#sidebar-div">
+                <div id="sidr">
+                    <ul>
+                        <li><a href="#">List 1</a></li>
+                        <li class="active"><a href="#">List 2</a></li>
+                        <li><a href="#">List 3</a></li>
+                      </ul>
+                </div>
+            </div>
             <div id='profilepic' class="img-circle" href='#'></div>
             <div id='searchbar' class="input-group">
                 <input id="search-content" type="text" class="form-control" placeholder="Search for...">

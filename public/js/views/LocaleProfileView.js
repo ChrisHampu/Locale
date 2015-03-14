@@ -2,8 +2,9 @@ define([
 	'jquery',
 	'underscore',
 	'backbone',
-	'bootstrapjs'
-], function($, _, Backbone, Bootstrap){
+	'bootstrapjs',
+	'sidr'
+], function($, _, Backbone, Bootstrap, sidr){
 
 
 	var LocaleProfileView = Backbone.View.extend({
@@ -14,7 +15,7 @@ define([
 		},
 
 		initialize: function() {
-
+			$('#profilepic').sidr();
 		},
 
 		render: function() {
@@ -22,7 +23,7 @@ define([
 
 		profile: function() {
 			// get sidebar:
-			var sidebar = this.$el.find("#sidebar-div");
+			/*var sidebar = this.$el.find("#sidebar-div");*/
 
 			//sidebar.css("", "");
 
