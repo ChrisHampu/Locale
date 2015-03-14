@@ -11,13 +11,13 @@ define([
 		el: '#menubar',
 
 		events: {
-			'click #profilepic' : 'profile',
+			'click #profile-thumbnail' : 'profile',
 			'click .toggle-delete' : 'toggle',
 			'click .exit-room' : 'dismiss'
 		},
 
 		initialize: function() {
-			$('#profilepic').sidr();
+			$('#profile-thumbnail').sidr();
 		},
 
 		render: function() {
