@@ -25,7 +25,7 @@ define([
 
 		initialize: function() {
 
-			Map = new google.maps.Map(this.$el, mapOptions);
+			Map = new google.maps.Map(this.$el[0], mapOptions);
 
 			if(navigator.geolocation)
 			{
