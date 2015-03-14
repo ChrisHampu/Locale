@@ -37,11 +37,15 @@ app.get('/valid_rooms', function(req, res){
 	});
 });
 
-app.get('add_room', function(req, res){
+app.get('/add_room', function(req, res){
 	var name = req.query.name;
 	World.addRoom(name, function(err, response){
 		res.send(response);
 	});
+});
+
+app.get('/main', function(req, res){
+	res.sendFile(__dirname + '/mapview.html');
 });
 
 // usernames which are currently connected to the chat
