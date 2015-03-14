@@ -5,7 +5,7 @@ define([
 	'bootstrapjs',
 	'LocaleSearchModel',
 	'async!http://maps.google.com/maps/api/js?sensor=false!callback'
-], function($, _, Backbone, Bootstrap, LocaleSearchModel){
+], function($, _, Backbone, Bootstrap, LocaleSearchModel, GMaps){
 
 	var Map,
 		CurrentPosition = undefined;
@@ -24,6 +24,7 @@ define([
 		},
 
 		initialize: function() {
+
 			Map = new google.maps.Map(this.$el, mapOptions);
 
 			if(navigator.geolocation)
@@ -61,7 +62,7 @@ define([
 
 			  google.maps.event.addListener(marker, 'click', function() {
 			   	//Pan to and do hovered
-			    map.panTo(marker.getPosition());
+			    Map.panTo(marker.getPosition());
 			    console.log("clicked");
 			});
 
@@ -75,7 +76,7 @@ define([
 				map: Map
 			});
 
-      		map.setCenter(pos);
+      		Map.setCenter(pos);
 		},
 
 		search: function() {
