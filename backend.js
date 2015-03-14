@@ -26,8 +26,10 @@ var usernames = {};
 	this.users = 0;
 }*/
 Room = require("./Model/room.js")
+/*for(var i=0; i < 5; i++){
+	var room = new Room({name: "Room1"});
+}*/
 
-var room1 = new Room({name: "Room1"});
 
 Room.findById(42, function (err, room) {  
     room.changeName("Room2");
@@ -77,16 +79,6 @@ io.sockets.on('connection', function (socket) {
 		socket.leave(socket.room);
 	});
 
-	app.get('/add_room', function(req,res){
-		var roomName = req.query.room;
-		if(rooms.indexOf(roomName) != -1){
-			res.send("Sorry name already exists");
-		} else {
-			rooms.push(roomName);
-			switchRoom(socket, roomName);
-			res.send("added room " + roomName);
-		}
-	});
 });
 
 function switchRoom(socket, newroom){
@@ -101,7 +93,18 @@ function switchRoom(socket, newroom){
 	socket.emit('updaterooms', rooms, newroom);
 }
 
-app.get('/add_room', function(req,res){
+/*app.get('/add_room', function(req,res){
+	var roomName = req.query.room;
+	if(rooms.indexOf(roomName) != -1){
+		res.send("Sorry name already exists");
+	} else {
+		rooms.push(roomName);
+		switchRoom(socket, roomName);
+		res.send("added room " + roomName);
+	}
+});*/
+
+/*app.get('/add_room', function(req,res){
 	var roomName = req.query.room;
 	rooms.push(roomName);
 	socket.emit('updaterooms', rooms, roomName);
@@ -109,8 +112,8 @@ app.get('/add_room', function(req,res){
 });
 
 app.get('/join_chat', function(req,res){
-	/*var roomName = req.query.room;
+	var roomName = req.query.room;
 	rooms.push(roomName);
 	socket.emit('updaterooms', rooms, roomName);
-	res.send("added Room" + roomName);*/
-});
+	res.send("added Room" + roomName);
+});*/
