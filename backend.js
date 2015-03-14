@@ -6,7 +6,7 @@ var express = require('express')
 
 var db = require('orchestrate')('f3258a30-bca3-4567-9e60-d05422f4745f');
 
-server.listen(80, function(){
+server.listen(8080, function(){
 	var host = server.address().address;
     var port = server.address().port;
 
@@ -44,28 +44,26 @@ app.get('add_room', function(req, res){
 	});
 });
 
+//
+// "SUPERGLOBALS"
+//
+var World = require("./Model/world.js");
+var world = new World(db);
+
+var worldRooms = null;
+
 // usernames which are currently connected to the chat
 var usernames = {};
 
-var World = require("./Model/world.js");
-
-var world = new World(db);
-
-var activeRooms = null;
-
-world.getRooms(function (err, rooms) {  
-    activeRooms = rooms;
-});
-
-console.log(activeRooms);
-
-rooms = ['room1', 'room2', 'room3'];
-
-// rooms which are currently available in chat
-//var rooms = ['room1','room2','room3'];
+var roomNames = null;
 
 io.sockets.on('connection', function (socket) {
 	
+	world.getRooms(function(worldRooms) {
+		rooms = worldRooms; 
+		console.log(worldRooms);
+	});
+
 	// when the client emits 'adduser', this listens and executes
 	socket.on('adduser', function(username){
 		// store the username in the socket session for this client
