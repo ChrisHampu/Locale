@@ -32,6 +32,10 @@ define([
 
 		logout: function() {
 			LocaleAuth.Logout();
+		},
+
+		loggedin: function() {
+			$el.css("visibility", "hidden");
 		}
 	});
 

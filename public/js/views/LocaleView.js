@@ -9,15 +9,15 @@ define([
 		el: '#wrapper',
 
 		initialize: function() {
-			//this.render();
+			this.render();
 		},
 
 		render: function() {
 
 		},
 
-		add: function(model) {
-
+		loggedin: function() {
+			$el.find("#loginform").css("visibility", "hidden");
 		}
 	});
 

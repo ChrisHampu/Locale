@@ -25,7 +25,7 @@ define([
 			IsAuthed = true;
 
 			// Navigate to actual site
-			LocaleRouter.navigate("home", {trigger: true});
+			LocaleRouter.loggedin();
 		}
 		else if(response.status === 'not_authorized')
 		{
@@ -64,7 +64,7 @@ define([
 				console.log("connected to fb by login");
 				AuthToken = response.authResponse.accessToken;
 				IsAuthed = true;
-				LocaleRouter.navigate("home", {trigger: true});
+				LocaleRouter.loggedin();
 			}
 			else
 			{
