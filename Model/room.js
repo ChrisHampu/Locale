@@ -1,8 +1,11 @@
 
+var db = null;
 
 //var db = require("./db.js");
 var schemas = require("./schemas.js");
 var _ = require("lodash");
+
+var db2 = db;
 
 var Room = function (data) {
     this.data = this.sanitize(data);
@@ -42,6 +45,7 @@ Room.findById = function (id, callback) {
     //     if (err) return callback(err);
     //     callback(null, new Room(data));
     // });
+	console.log('a');
 }
 
-module.exports = Room;
+module.exports = Room

@@ -16,16 +16,18 @@ app.get('/', function (req, res) {
 // usernames which are currently connected to the chat
 var usernames = {};
 
-Room = require("./Model/room.js")
+World = require("./Model/world.js")
 
-var room1 = new Room({name: "Room1"});
+var activeRooms = null;
 
-Room.findById(42, function (err, room) {  
-    room.changeName("Room2");
+World.getRooms(function (err, rooms) {  
+    activeRooms = rooms;
 });
 
+console.log(activeRooms);
+
 // rooms which are currently available in chat
-var rooms = ['room1','room2','room3'];
+//var rooms = ['room1','room2','room3'];
 
 io.sockets.on('connection', function (socket) {
 	
