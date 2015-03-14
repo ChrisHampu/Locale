@@ -14,10 +14,12 @@ body
     position:relative;
     min-height: 100%;
     font-family: "Roboto";
-    background: url('../assets/forest-dim.jpg') no-repeat;
-    background-size: cover;
 } 
 
+<!-- Home Page Stuff -->
+
+
+<!-- Login Stuff  -->
 
 @media (max-width: 400px) {
     #centerlogin
@@ -38,8 +40,13 @@ body
     }
 }
 
-#loginform
+#loginpage
 {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background: url('../assets/forest-dim.jpg') no-repeat;
+    background-size: cover;
 }
 
 #centerlogin
