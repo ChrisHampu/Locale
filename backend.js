@@ -96,7 +96,7 @@ io.sockets.on('connection', function (socket) {
 		console.log(user);
 
 		// Store the username in the socket session for this client
-		socket.username = user.username;
+		socket.username = user.firstName;
 		socket.user = user;
 
 		// Calculate the active rooms for this user and push them
@@ -105,10 +105,6 @@ io.sockets.on('connection', function (socket) {
 			
 			socket.emit('updaterooms', usersRooms);
 		});
-
-
-		// echo to client they've connected
-		socket.emit('updatechat', 'SERVER', 'You have joined the server (not in a room yet)');
 	});
 
 	// listener, client asks for updaterooms, server sends back the list of rooms
@@ -157,7 +153,7 @@ function switchRoom(socket, newroom){
 	socket.room = newroom;
 	socket.broadcast.to(newroom).emit('updatechat', 'SERVER', socket.username+' has joined this room');
 	
-	// Calculate the active rooms for this user and push them
+	// Calculate the new active rooms for this user and push them
 	world.getValidRooms(socket.user.location.lat, socket.user.location.lon, function(worldRooms) {
 		var usersRooms = worldRooms; 
 		

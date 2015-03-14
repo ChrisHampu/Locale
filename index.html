@@ -6,7 +6,7 @@
 	var activeRooms = [];
 	var currentRoom = null;
 
-	// chatMessages is a key-value array of room->messages
+	// chatMessages is an array of the chat messages currently being displayed
 	var chatMessages = [];
 
 	// On connection to server, get the location and send it to the server
@@ -31,20 +31,22 @@
 
 	// listener, whenever the server emits 'updatechat', this updates the chat body
 	socket.on('updatechat', function (username, data) {
-		chatMessages.push({
-		    key:   "keyName",
-		    value: "the value"
-		});
+		chatMessages.push(data);
 
-		$('#conversation').append('<b>'+username + ':</b> ' + data + '<br>');
+		console.log(chatMessages);
 	});
 
-	function askForRooms() {
-		socket.emit('updaterooms');
-	}
+	// The server will send an initial loadroom packet with the room's most recent messages when a user joins
+	socket.on('loadroom', function(messages) {
+		// Render the historical room messages
+		console.log(messages);
+		renderMessages();
+	})
 
 	function switchRoom(room) {
 		socket.emit('switchRoom', room);
+		currentRoom = room;
+		chatMessages = [];
 	}
 	
 	// on load of page
@@ -73,7 +75,7 @@
 		$('#rooms').empty();
 		
 		$.each(activeRooms, function(key, value) {
-			if(value == currentRoom){
+			if(value["name"] == currentRoom){
 				$('#rooms').append('<div>' + value["name"] + '</div>');
 			}
 			else {
@@ -83,8 +85,14 @@
 
 	}
 
-	function renderChatMessage(message) {
+	// Render the chat messages that were handled elsewhere
+	function renderMessages() {
+		$('#conversation').empty();
 
+		$.each(chatMessages, function(key, value) {
+			$('#conversation').append('<b>'+ "User" + ':</b> ' + value + '<br>');
+		});
+	
 	}
 
 </script>
