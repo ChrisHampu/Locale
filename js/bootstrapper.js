@@ -1,7 +1,8 @@
 require.config({
 	baseUrl: "js/", // Base directory for this application
 	shim: {
-		bootstrapjs: { "deps" : ['jquery'] }
+		bootstrapjs: { "deps" : ['jquery'] },
+		facebook: { exports: 'FB' }
 	},
 	paths: {
 		// Load all of the common modules
@@ -9,6 +10,7 @@ require.config({
 		underscore: 'libs/underscore/underscore',
 		backbone: 'libs/backbone/backbone',
 		async: 'libs/require/async',
+		facebook : 'http://connect.facebook.net/en_US/sdk',
 		bootstrapjs: 'libs/bootstrap/bootstrap.min',
 		Locale: 'Locale',
 		LocaleRouter: 'LocaleRouter',

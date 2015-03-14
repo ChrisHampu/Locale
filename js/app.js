@@ -7,7 +7,6 @@ define([
 ], function($, _, Backbone, Bootstrap, LocaleRouter){
 
 	var Router;
-	var AppEvents;
 
 	var Initialize = function () {
 		Router = new LocaleRouter();
