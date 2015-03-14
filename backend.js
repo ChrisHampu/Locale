@@ -16,16 +16,23 @@ server.listen(8080, function(){
 var connectToRoom;
 
 // routing
-app.get('/chatconnect', function (req, res) {
+app.get('/chat_connect', function (req, res) {
 	connectToRoom = req.query.room_id;
   	res.sendFile(__dirname + '/index.html');
 });
 
-app.get('/validRooms', function(req, res){
+app.get('/valid_rooms', function(req, res){
 	var lat = req.query.lat;
 	var lon = req.query.lon;
 	World.getValidRooms(lat, lon, function (err, rooms) {  
     	res.send(rooms);
+	});
+});
+
+app.get('add_room', function(req, res){
+	var name = req.query.name;
+	World.addRoom(name, function(err, response){
+		res.send(response);
 	});
 });
 

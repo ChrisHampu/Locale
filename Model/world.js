@@ -15,7 +15,11 @@ World.prototype.get = function (name) {
 }
 
 World.prototype.set = function (name, value) {
-    this.data[name] = value;
+    if(Array.isArray(this.data[name])){
+        this.data[name].append(name);
+    } else {
+        this.data[name] = value;
+    }
 }
 
 World.prototype.sanitize = function (data) {
@@ -36,6 +40,21 @@ World.getRooms = function (callback) {
     room3.set('name', 'Room3');
 
     callback(null, [room1, room2, room3]);
+}
+
+World.addRoom = function(name, callback) {
+    this.getRooms(function(err, rooms){
+        if(rooms.indexOf(name) != -1){
+           callback("Sorry name already exists");
+        } else {
+            this.set(rooms, name);
+            callback("added room " + name);
+        }
+    });
+}
+
+World.getValidRooms = function (lat, long, callback){
+
 }
 
 module.exports = World;
