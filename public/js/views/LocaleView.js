@@ -27,7 +27,8 @@ define([
 			}
 			else
 			{
-				this.navigate("", { trigger: true });
+				console.log("Cannot render map. Not authed.")
+				LocaleAuth.EnsureAuthed();
 			}
 		}
 	});
