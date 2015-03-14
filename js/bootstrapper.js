@@ -14,7 +14,8 @@ require.config({
 		bootstrapjs: 'libs/bootstrap/bootstrap.min',
 		Locale: 'Locale',
 		LocaleRouter: 'LocaleRouter',
-		LocaleView: 'views/LocaleView'
+		LocaleView: 'views/LocaleView',
+		LocaleAuthView: 'views/LocaleAuthView'
 	}
 });
 

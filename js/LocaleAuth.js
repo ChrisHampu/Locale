@@ -48,11 +48,21 @@ define([
 	var GetAuthToken = function() {
 		return AuthToken;
 	}
+
+	var LoginFacebook = function() {
+
+	}
+
+	var LoginGooglePlus = function() {
+
+	}
 	
 	// Map public API functions to internal functions
 	return {
 		Initialize: Initialize,
 		GetAuthState: GetAuthState,
-		GetAuthToken: GetAuthToken
+		GetAuthToken: GetAuthToken,
+		LoginFacebook: LoginFacebook,
+		LoginGooglePlus: LoginGooglePlus
 	};
 });
