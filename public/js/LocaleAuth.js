@@ -9,7 +9,9 @@ define([
 
 	var IsAuthed = false,
 		AuthToken,
-		CachedResponse;
+		CachedResponse,
+		AppToken = 616102381854407,
+		RedirectURL = "http://getlocale.me";
 
 	var FBAuthStateChanged = function(response) {
 		CachedResponse = response;
@@ -22,6 +24,11 @@ define([
 
 			// Navigate to actual site
 			LocaleRouter.navigate("home", {trigger: true});
+		}
+		else if(response.status === 'not_authorized')
+		{
+			// Attempt to authenticate
+			window.location.href = "https://www.facebook.com/dialog/oauth?client_id=" + AppToken + "&redirect_uri=" + RedirectURL;
 		}
 	}
 
@@ -50,7 +57,7 @@ define([
 	}
 
 	var LoginFacebook = function() {
-
+		FB.login(FBAuthStateChanged);
 	}
 
 	var LoginGooglePlus = function() {
