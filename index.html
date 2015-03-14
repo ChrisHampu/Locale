@@ -3,40 +3,47 @@
 <script>
 	var socket = io.connect('http://' + window.location.host + '/');
 
-	// on connection to server, ask for user's name with an anonymous callback
-	socket.on('connect', function(){
-		// call the server-side function 'adduser' and send one parameter (value of prompt)
-		navigator.geolocation.getCurrentPosition(function(loc){
-			socket.emit('adduser', {
-				"username": "User1", 
-				"room": "Room1",
-				"location": {
-					"lat": loc.coords.latitude,
-					"lon": loc.coords.longitude
-				}
-			});
+	var activeRooms = [];
+	var currentRoom = null;
+
+	// chatMessages is a key-value array of room->messages
+	var chatMessages = [];
+
+	// On connection to server, get the location and send it to the server
+	navigator.geolocation.getCurrentPosition(function(loc){
+		socket.emit('join', {
+			"username": "User1", 
+			"location": {
+				"lat": loc.coords.latitude,
+				"lon": loc.coords.longitude
+			}
 		});
+	});
+
+	// listener, whenever the server emits 'updaterooms', update the client's room list
+	socket.on('updaterooms', function(rooms, current_room) {		
+		// Update the global list of available rooms
+		activeRooms = rooms;
+
+		// Call whatever we need to call to update the UI from that glboal list
+		renderRooms();
 	});
 
 	// listener, whenever the server emits 'updatechat', this updates the chat body
 	socket.on('updatechat', function (username, data) {
+		chatMessages.push({
+		    key:   "keyName",
+		    value: "the value"
+		});
+
 		$('#conversation').append('<b>'+username + ':</b> ' + data + '<br>');
 	});
 
-	// listener, whenever the server emits 'updaterooms', this updates the room the client is in
-	socket.on('updaterooms', function(rooms, current_room) {
-		$('#rooms').empty();
-		$.each(rooms, function(key, value) {
-			if(value == current_room){
-				$('#rooms').append('<div>' + value + '</div>');
-			}
-			else {
-				$('#rooms').append('<div><a href="#" onclick="switchRoom(\''+value+'\')">' + value + '</a></div>');
-			}
-		});
-	});
+	function askForRooms() {
+		socket.emit('updaterooms');
+	}
 
-	function switchRoom(room){
+	function switchRoom(room) {
 		socket.emit('switchRoom', room);
 	}
 	
@@ -58,6 +65,27 @@
 			}
 		});
 	});
+
+	/*
+	 * Render the rooms section of the page with the last received data
+	 */
+	function renderRooms() {
+		$('#rooms').empty();
+		
+		$.each(activeRooms, function(key, value) {
+			if(value == currentRoom){
+				$('#rooms').append('<div>' + value["name"] + '</div>');
+			}
+			else {
+				$('#rooms').append('<div><a href="#" onclick="switchRoom(\''+ value["name"] +'\')">' + value["name"] + '</a></div>');
+			}
+		});
+
+	}
+
+	function renderChatMessage(message) {
+
+	}
 
 </script>
 <div style="float:left;width:100px;border-right:1px solid black;height:300px;padding:10px;overflow:scroll-y;">

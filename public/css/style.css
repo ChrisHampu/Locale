@@ -40,6 +40,8 @@ body
     background: url('../assets/profilepic/placeholder.png') no-repeat;
     background-size: contain;
     position: fixed;
+    z-index: 10;
+    left:30px;
     cursor: pointer;
     height: 60px;
     width: 60px;
@@ -63,9 +65,9 @@ body
 #searchbar
 {
     /*display:none;*/
-    position:fixed;
-    width: 40%;
-    left: 100px;
+    position:relative;
+    width: 80%;
+    left: 75px;
     margin: 10px;
 }
 
@@ -267,7 +269,6 @@ footer
 	z-index: 1;
 }
 
-
 #chatarea {
     z-index: 2;
     position: fixed;
@@ -379,3 +380,25 @@ footer
 .chatbox-content {
 /*    display: none;*/
 }
+
+#profile-content-sidr {
+    font-size:;
+    padding: 20px;
+    padding-top: 50px;
+    float: right;
+    right: 50px;
+    position: absolute;
+}
+
+#room-header {
+    top:125px;
+    position:relative;
+    left: 80px;
+    font-size: 20px;
+}
+
+#room-container{
+    top: 150px;
+    position:relative;
+}
+

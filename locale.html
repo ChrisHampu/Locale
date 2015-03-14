@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 	<!-- Bootstrap CSS file -->
 	<link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="css/jquery.sidr.dark.css" rel="stylesheet">
 	<!-- Locale CSS file -->
 	<link href="css/style.css" rel="stylesheet">
     <!-- App entry point bootstrapping -->
@@ -23,8 +25,6 @@
         <div id='loginwrapper'>
             <div id="centerlogin">
                 <div id='localelogo'></div>
-                
-                
                 <div id="loginform">
                     <div id="facebook">
                         <i class="fa fa-facebook"></i>
@@ -41,12 +41,25 @@
     <div id='mappage'>
 		<div id="map-wrapper"></div>
         <div id='menubar'>
+            <div id="#sidebar-div">
+                <div id="sidr">
+                    <div id="profile-content-sidr">Jake Cooper</div>
+                    <div id="room-header">
+                        My Rooms
+                    </div>
+                    <ul id="room-container">
+                        <li><a href="#">Room 1</a></li>
+                        <li class="active"><a href="#">Room 2</a></li>
+                        <li><a href="#">Room 3</a></li>
+                    </ul>
+                </div>
+            </div>
             <div id='profilepic' class="img-circle" href='#'></div>
             <div id='searchbar' class="input-group">
                 <input id="search-content" type="text" class="form-control" placeholder="Search for...">
-      <span class="input-group-btn">
-        <button id="do-search" class="btn btn-default" type="button"><i class='fa fa-search'></i></button>
-      </span>
+                <span class="input-group-btn">
+                    <button id="do-search" class="btn btn-default" type="button"><i class='fa fa-search'></i></button>
+                </span>
             </div>
         </div>
         <div id='chatarea'>
