@@ -25,6 +25,10 @@ define([
 				MapView.render();
 				console.log("Rendered map view");
 			}
+			else
+			{
+				this.navigate("", { trigger: true; });
+			}
 		}
 	});
 
