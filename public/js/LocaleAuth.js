@@ -95,6 +95,7 @@ define([
 		GetAuthState: GetAuthState,
 		GetAuthToken: GetAuthToken,
 		LoginFacebook: LoginFacebook,
-		LoginGooglePlus: LoginGooglePlus
+		LoginGooglePlus: LoginGooglePlus,
+		Logout: Logout
 	};
 });
