@@ -13,9 +13,20 @@ server.listen(8080, function(){
     console.log('Locale webserver launched at http://%s:%s', host, port);
 });
 
+var connectToRoom;
+
 // routing
-app.get('/', function (req, res) {
-  res.sendFile(__dirname + '/index.html');
+app.get('/chatconnect', function (req, res) {
+	connectToRoom = req.query.room_id;
+  	res.sendFile(__dirname + '/index.html');
+});
+
+app.get('/validRooms', function(req, res){
+	var lat = req.query.lat;
+	var lon = req.query.lon;
+	World.getValidRooms(lat, lon, function (err, rooms) {  
+    	res.send(rooms);
+	});
 });
 
 // usernames which are currently connected to the chat
@@ -30,6 +41,8 @@ World.getRooms(function (err, rooms) {
 });
 
 console.log(activeRooms);
+
+rooms = activeRooms;
 
 // rooms which are currently available in chat
 //var rooms = ['room1','room2','room3'];
