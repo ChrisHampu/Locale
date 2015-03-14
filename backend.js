@@ -29,10 +29,9 @@ app.get('/chat_connect', function (req, res) {
 	res.sendFile(__dirname + '/index.html');
 });
 
-
-app.get('/chat_connect', function (req, res) {
-	connectToRoom = req.query.room_id;
-	res.sendFile(__dirname + '/index.html');
+app.get('/privacy', function (req, res) {
+	//Loads index file.
+	res.sendFile(__dirname + '/privacy.html');
 });
 
 /*
