@@ -5,9 +5,10 @@ define([
 ], function($, _, Backbone){
 
 	/**
+	  * This model will hold a row of log message text
 	  * @extends BackBone.Model
 	  */
-	var LocaleChatUserModel = Backbone.Model.extend({
+	var LocaleUserAuthModel = Backbone.Model.extend({
 
 		initialize: function() {
 
@@ -23,5 +24,5 @@ define([
 	  * Returns the object containing our extended Model
 	  * @return
 	  */
-	return LocaleChatUserModel;
+	return LocaleUserAuthModel;
 });

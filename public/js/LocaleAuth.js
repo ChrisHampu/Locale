@@ -3,8 +3,9 @@ define([
 	'underscore',
 	'backbone',
 	'bootstrapjs',
-	'facebook'
-], function($, _, Backbone, Bootstrap){
+	'facebook',
+	'LocaleUserAuthModel'
+], function($, _, Backbone, Bootstrap, LocaleUserAuthModel){
 
 	var IsAuthed = false,
 		AuthToken,

@@ -2,7 +2,8 @@ define([
 	'jquery',
 	'underscore',
 	'backbone',
-	'bootstrapjs'
+	'bootstrapjs',
+	'LocaleSearchModel'
 ], function($, _, Backbone, Bootstrap){
 
 	var LocaleAuthView = Backbone.View.extend({
