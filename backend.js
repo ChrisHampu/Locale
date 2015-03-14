@@ -43,19 +43,13 @@ app.get('/add_room', function(req, res){
 	});
 });
 
-<<<<<<< HEAD
 app.get('/main', function(req, res){
 	res.sendFile(__dirname + '/mapview.html');
 });
 
-// usernames which are currently connected to the chat
-var usernames = {};
-
-=======
 //
 // "SUPERGLOBALS"
 //
->>>>>>> 05d06ac146382fd34159fab830622220085aba92
 var World = require("./Model/world.js");
 var world = new World(db);
 
