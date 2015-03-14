@@ -39,7 +39,6 @@ body
 {
     background: url('../assets/profilepic/placeholder.png') no-repeat;
     background-size: contain;
-    box-shadow: 0px 2px 2px #888888;
     position: fixed;
     cursor: pointer;
     height: 60px;
