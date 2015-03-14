@@ -52,6 +52,7 @@ app.get('/privacy', function (req, res) {
 app.get('/chat_connect', function (req, res) {
 	connectToRoom = req.query.room_id;
 	res.sendFile(__dirname + '/index.html');
+});
 
 /*
  * Given a request object with Latitude and Longitude parameters
