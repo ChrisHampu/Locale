@@ -15,8 +15,6 @@ define([
 		initialize: function() {
 
 			MapView = new LocaleMapView();
-
-			this.render();
 		},
 
 		render: function() {
