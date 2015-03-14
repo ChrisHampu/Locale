@@ -5,8 +5,9 @@ define([
 	'bootstrapjs',
 	'LocaleUserAuthModel',
 	'LocaleUtilities',
+	'LocaleSocket',
 	'facebook',
-], function($, _, Backbone, Bootstrap, LocaleUserAuthModel, LocaleUtilities){
+], function($, _, Backbone, Bootstrap, LocaleUserAuthModel, LocaleUtilities, LocaleSocket){
 
 	var IsAuthed = false,
 		AuthToken,
@@ -22,13 +23,14 @@ define([
 		{
 			FB.api('/me', function(response) {
 			    UserModel = new LocaleUserAuthModel({ id: response.id, location: MapView.getLocation(), name: response.first_name + " " + response.last_name, token: AuthToken, email: response.email });
-				// Send model
+				
+				//LocaleSocket.Emit('user', JSON.stringify(UserModel);
 			});
 		}
 		else
 		{
 			UserModel = new LocaleUserAuthModel({ location: LocaleUtilities.GetCurrentLocation(), name: "John Doe", token: AuthToken, email: "email@email.com"});
-			// Send model
+			//LocaleSocket.Emit('user', JSON.stringify(UserModel);
 		}
 
 		// Navigate to actual site

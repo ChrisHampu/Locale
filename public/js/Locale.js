@@ -6,8 +6,9 @@ define([
 	'LocaleUtilities',
 	'LocaleAuth',
 	'LocaleView',
-	'LocaleAuthView'
-], function($, _, Backbone, Bootstrap, LocaleUtilities, LocaleAuth, LocaleView, LocaleAuthView){
+	'LocaleAuthView',
+	'LocaleSocket'
+], function($, _, Backbone, Bootstrap, LocaleUtilities, LocaleAuth, LocaleView, LocaleAuthView, LocaleSocket){
 
 	var Router;
 
@@ -21,6 +22,11 @@ define([
 
 	var Initialize = function (AppRouter) {
 	
+		LocaleSocket.Initialize();
+		LocaleSocket.Handle('connect', function () {
+			console.log("connected to websocket");
+		});
+
 		LocaleUtilities.Initialize();
 
 		Router = AppRouter;
