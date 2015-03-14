@@ -16,7 +16,7 @@ define([
 
 			AuthView = new LocaleAuthView();
 
-			Locale.Initialize();
+			Locale.Initialize(this);
 		},
 
 		routes: {

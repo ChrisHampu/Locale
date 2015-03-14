@@ -7,7 +7,7 @@ define([
 ], function($, _, Backbone, Bootstrap, LocaleAuth){
 
 	var LocaleAuthView = Backbone.View.extend({
-		el: '#loginform',
+		el: '#loginpage',
 
 		events: {
 			'click #facebook' : 'loginFB',
@@ -35,7 +35,7 @@ define([
 		},
 
 		loggedin: function() {
-			$el.css("visibility", "hidden");
+			this.$el.css("visibility", "hidden");
 		}
 	});
 
