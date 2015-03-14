@@ -57,7 +57,7 @@ define([
 	}
 
 	var LoginFacebook = function() {
-		FB.login(FBAuthStateChanged);
+		FB.login(FBAuthStateChanged, { scope: 'public_profile, user_interests' });
 	}
 
 	var LoginGooglePlus = function() {
