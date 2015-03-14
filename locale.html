@@ -16,7 +16,7 @@
 	<!-- Locale CSS file -->
 	<link href="css/style.css" rel="stylesheet">
     <!-- App entry point bootstrapping -->
-	<script data-main="js/bootstrapper" src="js/libs/require/require.js"></script>
+	<script data-main="public.js/bootstrapper" src="js/libs/require/require.js"></script>
 </head>
 <body>
     <div id='loginpage'>
@@ -47,6 +47,31 @@
       <span class="input-group-btn">
         <button id="do-search" class="btn btn-default" type="button"><i class='fa fa-search'></i></button>
       </span>
+            </div>
+        </div>
+        <div id='chatarea'>
+            <div class='chatbox'>
+                <div class='chatbox-header'>
+                    <div class='chatbox-icon'></div>
+                    <div class='chatbox-title'>
+                        <div class='h1'>nwHacks</div> 
+                        <div class='h2'>University of British Columbia</div> 
+                    </div>
+                    <div class="chatbox-controls">
+                        <div class="chatbox-exit btn" href='#'><i class="fa fa-close"></i></div>
+                        <div class="chatbox-minimize btn" href='#'><i class="fa fa-minus"></i></div>
+                    </div>
+                </div>
+                <div class='chatbox-content'>
+                    <div class='chatbox-messages'>Hello World
+                    </div>
+                    <div class='chatbox-input input-group'>
+                        <input type="text" class="form-control message-box" placeholder="Enter Message">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button"><i class='fa fa-paper-plane'></i></button>
+                        </span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
