@@ -13,6 +13,8 @@ server.listen(80, function(){
     console.log('Locale webserver launched at http://%s:%s', host, port);
 });
 
+app.use(express.static(__dirname + '/public'));
+
 var connectToRoom;
 
 app.get('', function (req, res) {
