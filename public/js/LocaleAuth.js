@@ -94,6 +94,13 @@ define([
 		LogoutFacebook();
 		LogoutGooglePlus();
 	}
+
+	var EnsureAuthed = function() {
+		if(IsAuthed === false)
+		{
+			Locale.RedirectLogin();
+		}
+	}
 	
 	// Map public API functions to internal functions
 	return {
@@ -102,6 +109,7 @@ define([
 		GetAuthToken: GetAuthToken,
 		LoginFacebook: LoginFacebook,
 		LoginGooglePlus: LoginGooglePlus,
-		Logout: Logout
+		Logout: Logout,
+		EnsureAuthed: EnsureAuthed
 	};
 });

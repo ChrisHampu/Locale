@@ -14,6 +14,10 @@ define([
 		Router.loggedin();
 	}
 
+	var RedirectLogin = function() {
+		Router.navigate("", { trigger: true} );
+	}
+
 	var Initialize = function (AppRouter) {
 	
 		Router = AppRouter;
@@ -28,6 +32,7 @@ define([
 	// Map public API functions to internal functions
 	return {
 		Initialize: Initialize,
-		OnLoggedIn: OnLoggedIn
+		OnLoggedIn: OnLoggedIn,
+		RedirectLogin: RedirectLogin
 	};
 });
