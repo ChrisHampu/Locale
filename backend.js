@@ -15,6 +15,11 @@ server.listen(80, function(){
 
 var connectToRoom;
 
+app.get('', function (req, res) {
+	res.sendFile(__dirname + '/locale.html');
+});
+
+
 // routing
 app.get('/chat_connect', function (req, res) {
 	connectToRoom = req.query.room_id;
@@ -51,7 +56,7 @@ world.getRooms(function (err, rooms) {
 
 console.log(activeRooms);
 
-rooms = activeRooms;
+rooms = ['room1', 'room2', 'room3'];
 
 // rooms which are currently available in chat
 //var rooms = ['room1','room2','room3'];
