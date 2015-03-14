@@ -13,7 +13,7 @@ define([
 
 		initialize: function() {
 
-			//AuthView = new LocaleAuthView();
+			AuthView = new LocaleAuthView();
 
 			Locale.Initialize();
 		},
