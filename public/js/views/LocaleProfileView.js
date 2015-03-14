@@ -6,7 +6,7 @@ define([
 	'sidr'
 ], function($, _, Backbone, Bootstrap, sidr){
 
-
+	var sidrOpened = false;
 	var LocaleProfileView = Backbone.View.extend({
 		el: '#menubar',
 
@@ -22,12 +22,16 @@ define([
 		},
 
 		profile: function() {
-			// get sidebar:
-			/*var sidebar = this.$el.find("#sidebar-div");*/
+			sidrOpened ? sidrOpened = false : sidrOpened = true;
+			console.log(sidrOpened);
+			if(sidrOpened){
+				//$('#searchbar').css("left", "-20px")
+				$('#searchbar').stop().animate({ left: "-20px"});
+			} else {
+				//$('#searchbar').css("left", "75px")
+				$('#searchbar').stop().animate({ left: "75px"});
+			}
 
-			//sidebar.css("", "");
-
-			console.log("clicked profile");
 		}
 	});
 
