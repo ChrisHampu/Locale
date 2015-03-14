@@ -12,7 +12,8 @@ define([
 		CachedResponse,
 		AppToken = 616102381854407,
 		RedirectURL = "http://getlocale.me",
-		Locale;
+		Locale,
+		UserModel;
 
 	var FBAuthStateChanged = function(response) {
 		CachedResponse = response;
@@ -26,7 +27,7 @@ define([
 			IsAuthed = true;
 
 			// Navigate to actual site
-			Locale.OnLoggedIn();
+			Locale.OnLoggedIn(UserModel);
 		}
 		else if(response.status === 'not_authorized')
 		{

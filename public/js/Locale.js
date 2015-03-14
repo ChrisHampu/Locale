@@ -6,7 +6,7 @@ define([
 	'LocaleAuth',
 	'LocaleView',
 	'LocaleAuthView'
-], function($, _, Backbone, Bootstrap, LocaleAuth, LocaleView){
+], function($, _, Backbone, Bootstrap, LocaleAuth, LocaleView, LocaleAuthView){
 
 	var Router;
 

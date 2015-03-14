@@ -6,11 +6,11 @@ define([
 	'LocaleChatUserModel'
 ], function($, _, Backbone, Bootstrap){
 
-	var LocaleAuthView = Backbone.View.extend({
-		el: '#mappage',
+	var LocaleChatroomView = Backbone.View.extend({
+		el: '',
 
 		events: {
-			'click #do-search' : 'search',
+
 		},
 
 		initialize: function() {
@@ -19,12 +19,8 @@ define([
 
 		render: function() {
 
-		},
-
-		search: function() {
-			console.log(this.$el.find("#search-content").val());
 		}
 	});
 
-	return LocaleAuthView;
+	return LocaleChatroomView;
 });
