@@ -92,15 +92,17 @@ io.sockets.on('connection', function (socket) {
 	// when the client emits 'join', this listens and executes
 	socket.on('join', function(user){
 
+		var newUser = JSON.parse(user);
+	
 		// Create or update the user's db entry
-		console.log(user);
+		console.log(newUser);
 
 		// Store the username in the socket session for this client
-		socket.username = user.firstName;
-		socket.user = user;
+		socket.username = newUser.firstName;
+		socket.user = newUser;
 
 		// Calculate the active rooms for this user and push them
-		world.getValidRooms(user.location.lat, user.location.lon, function(worldRooms) {
+		world.getValidRooms(newUser.location.lat, newUser.location.lon, function(worldRooms) {
 			var usersRooms = worldRooms; 
 			
 			socket.emit('updaterooms', usersRooms);
@@ -146,7 +148,7 @@ io.sockets.on('connection', function (socket) {
 function switchRoom(socket, newroom){
 	socket.leave(socket.room);
 	socket.join(newroom);
-	socket.emit('updatechat', 'SERVER', 'you have connected to ' + newroom);
+	socket.emit('updatechat', {"user": "system", "message": "Welcome to " + newroom});
 	// sent message to OLD room
 	socket.broadcast.to(socket.room).emit('updatechat', 'SERVER', socket.username+' has left this room');
 	// update socket session room title

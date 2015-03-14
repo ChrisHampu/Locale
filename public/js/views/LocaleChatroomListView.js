@@ -7,7 +7,7 @@ define([
 ], function($, _, Backbone, Bootstrap, LocaleChatroomView){
 
 	var LocaleChatroomListView = Backbone.View.extend({
-		el: '',
+		el: '#room-container',
 
 		events: {
 		},

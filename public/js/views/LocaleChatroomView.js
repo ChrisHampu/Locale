@@ -7,18 +7,20 @@ define([
 ], function($, _, Backbone, Bootstrap){
 
 	var LocaleChatroomView = Backbone.View.extend({
-		el: '',
+		tagName: 'li',
 
 		events: {
 
 		},
 
 		initialize: function() {
-			this.render();
+			this.listenTo(this.model, "change", this.render);
 		},
 
 		render: function() {
-
+			this.$el.html("");
+			
+			return this;
 		}
 	});
 
