@@ -4,12 +4,21 @@ define([
 	'backbone',
 	'bootstrapjs',
 	'LocaleAuth',
-	'LocaleView'
+	'LocaleView',
+	'LocaleAuthView'
 ], function($, _, Backbone, Bootstrap, LocaleAuth, LocaleView){
 
-	var Initialize = function () {
+	var Router;
+
+	var OnLoggedIn = function() {
+		Router.loggedin();
+	}
+
+	var Initialize = function (AppRouter) {
 	
-		LocaleAuth.Initialize();
+		Router = AppRouter;
+
+		LocaleAuth.Initialize(this);
 
 		var Authed = LocaleAuth.GetAuthState();
 
@@ -18,6 +27,7 @@ define([
 	
 	// Map public API functions to internal functions
 	return {
-		Initialize: Initialize
+		Initialize: Initialize,
+		OnLoggedIn: OnLoggedIn
 	};
 });
