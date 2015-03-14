@@ -24,6 +24,7 @@ body
     {
         width: 160px;
         margin-left: -90px;
+        margin-top: -270px;
         position:absolute;
     }
 }
@@ -33,6 +34,7 @@ body
     {
         width: 360px;
         margin-left: -180px;
+        margin-top: -180px;
     }
 }
 
@@ -42,7 +44,7 @@ body
 
 #centerlogin
 {
-    top: 20%;
+    top: 50%;
     left: 50%;
     position:absolute;
     text-align: center;
