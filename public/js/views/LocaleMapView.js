@@ -6,8 +6,9 @@ define([
 	'LocaleUtilities',
 	'LocaleProfileView',
 	'LocaleSearchModel',
+	'LocaleSocket',
 	'async!http://maps.google.com/maps/api/js?sensor=false!callback'
-], function($, _, Backbone, Bootstrap, LocaleUtilities, LocaleProfileView, LocaleSearchModel, GMaps){
+], function($, _, Backbone, Bootstrap, LocaleUtilities, LocaleProfileView, LocaleSearchModel, LocaleSocket, GMaps){
 
 	var ProfileView;
 
@@ -31,6 +32,11 @@ define([
 			ProfileView = new LocaleProfileView();
 			
 			Map = new google.maps.Map(this.$el.find("#map-wrapper")[0], mapOptions);
+
+			LocaleSocket.Handle('updaterooms', function(rooms, current) {
+				LocaleMapView.renderRooms(rooms, current);
+				console.log("update rooms");
+			});
 		},
 
 		render: function() {
@@ -41,7 +47,27 @@ define([
 			      var pos = new google.maps.LatLng(CurrentPosition.coords.latitude,
 			                                       CurrentPosition.coords.longitude);
 
-			      var marker = new google.maps.Marker({
+	      		Map.setCenter(pos);
+			});
+		},
+
+		renderRooms: function(rooms, current) {
+			console.log(rooms);
+
+			$.each(rooms, function(key, value) {
+
+				var pos = { latitude: value.location.latitude, longitude: value.location.longitude };
+				console.log(pos);
+
+				if(value == current) {
+
+				}
+				else
+				{
+
+				}
+
+			     var marker = new google.maps.Marker({
 				      position: pos,
 				      map: Map
 				  });
@@ -64,15 +90,13 @@ define([
 
 				var circle = new google.maps.Circle({
 					center: pos,
-					radius: 2000, //Measured in meters
+					radius: value.radius, //Measured in meters
 					fillColor: "#758ff9",
 					fillOpacity: 0.5,
 					strokeOpacity: 0.0,
 					strokeWidth: 0,
 					map: Map
 				});
-
-	      		Map.setCenter(pos);
 			});
 		},
 

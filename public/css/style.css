@@ -268,6 +268,118 @@ footer
 	z-index: 1;
 }
 
+#chatarea {
+    z-index: 2;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+}
+
+.chatbox {
+    z-index: 2;
+    background: #fff;
+    margin: 0px 5px;
+    border: 2px solid #234C47;
+    border-radius: 3px 3px 0px 0px;
+    width: 220px;
+}
+
+.chatbox-input {
+    position: relative;
+    width: 216px;
+    padding: 3px 1px 1px 1px;
+    background:#234C47;
+}
+
+.chatbox-input .message-box
+{
+    border: none;
+}
+
+.chatbox-input .input-group-btn
+{
+    border: none;
+}
+
+.chatbox-input .input-group-btn .btn
+{
+    border: 1px solid #FFF;
+}
+
+.chatbox-input .input-group-btn .btn:hover
+{
+    color: #234C47;
+}
+
+.chatbox-header {
+    height: 40px;
+    background: #234C47;
+}
+
+.chatbox-controls {
+    float: right;
+    position: relative;
+    width: 50px;
+    z-index: 4;
+}
+
+.chatbox-controls div {
+    float: right;
+    padding: 0px 5px;
+    margin: 1px;
+    color: #FFF;
+}
+
+.chatbox-controls .btn:hover {
+    color: #888888;
+}
+
+.chatbox-icon {
+    background: url('../assets/demo/nwhacks.png') no-repeat;
+    background-size: cover;
+    border-radius: 2px;
+    float: left;
+    position: relative;
+    margin: 5px;
+    width: 30px;
+    height: 30px;
+}
+
+.chatbox-title {
+    float: left;
+    position: relative;
+    width: 120px;
+    padding: 5px;
+    color: #FFF;
+}
+
+.chatbox-title div
+{
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0px;
+    margin: 0px;
+}
+
+.chatbox-title .h1 {
+    font-size: 14px;
+    font-weight: 700;
+}
+.chatbox-title .h2 {
+    font-size: 11px;
+    color: #888888;
+}
+
+.chatbox-messages {
+    position: relative;
+    height: 300px;
+}
+
+.chatbox-content {
+/*    display: none;*/
+}
+
 #profile-content-sidr {
     font-size:;
     padding: 20px;

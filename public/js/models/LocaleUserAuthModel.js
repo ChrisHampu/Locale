@@ -17,7 +17,8 @@ define([
 		defaults: {
 			id: undefined,
 			location: undefined,
-			name: "John Doe",
+			firstName: "John",
+			lastName: "Doe",
 			token: undefined,
 			email: ""
 		}
