@@ -16,7 +16,14 @@ require.config({
 		LocaleRouter: 'LocaleRouter',
 		LocaleView: 'views/LocaleView',
 		LocaleAuthView: 'views/LocaleAuthView',
-		LocaleMapView: 'views/LocaleMapView'
+		LocaleMapView: 'views/LocaleMapView',
+		LocaleSearchModel: 'models/LocaleSearchModel',
+		LocaleUserModel: 'models/LocaleUserModel',
+		LocaleChatUserModel: 'models/LocaleChatUserModel',
+		LocaleChatroomView: 'views/LocaleChatroomView',
+		LocaleChatroomListView: 'views/LocaleChatroomListView',
+		LocaleProfileView: 'views/LocaleProfileView',
+		LocaleUserAuthModel: 'models/LocaleUserAuthModel'
 	}
 });
 
