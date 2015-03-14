@@ -11,7 +11,7 @@ define([
 		CurrentPosition = undefined;
 
 	var mapOptions = {
-		  zoom: 8,
+		  zoom: 13,
 		  mapTypeId: google.maps.MapTypeId.ROADMAP,
 		  disableDefaultUI: true
 	};
@@ -25,7 +25,7 @@ define([
 
 		initialize: function() {
 
-			Map = new google.maps.Map(this.$el[0], mapOptions);
+			Map = new google.maps.Map(this.$el.find("#map-wrapper")[0], mapOptions);
 
 			if(navigator.geolocation)
 			{

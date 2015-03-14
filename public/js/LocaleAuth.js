@@ -37,7 +37,14 @@ define([
 	}
 
 	var GPlusAuthStateChanged = function() {
+		AuthToken = "override";
 
+		console.log("connected by G+ override");
+
+		IsAuthed = true;
+
+		// Navigate to actual site
+		Locale.OnLoggedIn(UserModel);
 	}
 
 	var Initialize = function (LocaleApp) {
@@ -78,7 +85,9 @@ define([
 	}
 
 	var LoginGooglePlus = function() {
-
+		AuthToken = "override";
+		IsAuthed = true;
+		Locale.OnLoggedIn();
 	}
 
 	var LogoutFacebook = function() {
@@ -87,7 +96,7 @@ define([
 	}
 
 	var LogoutGooglePlus = function() {
-		
+		IsAuthed = false;
 	}
 
 	var Logout = function() {
