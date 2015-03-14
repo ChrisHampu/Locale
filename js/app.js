@@ -3,14 +3,16 @@ define([
 	'underscore',
 	'backbone',
 	'bootstrapjs',
-	'Locale'
-], function($, _, Backbone, Bootstrap, Locale){
+	'LocaleRouter'
+], function($, _, Backbone, Bootstrap, LocaleRouter){
+
+	var Router;
+	var AppEvents;
 
 	var Initialize = function () {
-	
-		console.log("All systems go");
+		Router = new LocaleRouter();
 
-		Locale.Initialize();
+		Backbone.history.start();
 	}
 	
 	// Map public API functions to internal functions
