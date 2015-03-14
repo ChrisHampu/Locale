@@ -42,6 +42,7 @@ define([
 
 		loggedin: function() {
 			AuthView.loggedin();
+			this.navigate("home", { trigger: true });
 		},
 
 		default: function(action) {

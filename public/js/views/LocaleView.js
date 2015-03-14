@@ -15,8 +15,6 @@ define([
 		initialize: function() {
 
 			MapView = new LocaleMapView();
-
-			this.render();
 		},
 
 		render: function() {
@@ -24,6 +22,11 @@ define([
 			if(LocaleAuth.GetAuthState() === true) {
 				MapView.render();
 				console.log("Rendered map view");
+			}
+			else
+			{
+				console.log("Cannot render map. Not authed.")
+				LocaleAuth.EnsureAuthed();
 			}
 		}
 	});

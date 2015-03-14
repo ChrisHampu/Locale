@@ -47,6 +47,14 @@ app.get('/privacy', function (req, res) {
 });
 
 /*
+ * Open the main chat connection page
+ */
+app.get('/chat_connect', function (req, res) {
+	connectToRoom = req.query.room_id;
+	res.sendFile(__dirname + '/index.html');
+});
+
+/*
  * Given a request object with Latitude and Longitude parameters
  * return the list of rooms that a user at this location can join
  */

@@ -202,7 +202,9 @@ footer
     bottom: 0;
 }
 
-#map-canvas {
-   height: 800px;
+#mappage {
+   height: 100%;
+   width: 100%;
+   position: absolute;
 }
 
