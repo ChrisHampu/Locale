@@ -12,19 +12,19 @@
 	<!-- Bootstrap CSS file -->
 	<link href="css/bootstrap.min.css" rel="stylesheet">
 	<!-- Locale CSS file -->
-	<!-- <link href="css/style.css" rel="stylesheet"> -->
+	<link href="css/style.css" rel="stylesheet">
     <!-- App entry point bootstrapping -->
 	<script data-main="js/bootstrapper" src="js/libs/require/require.js"></script>
-     <style>
-      #map-canvas {
-        width: 500px;
-        height: 400px;
-      }
-    </style>
     <script src="https://maps.googleapis.com/maps/api/js"></script>
     <script src="/js/maps/maps.js"></script>
 </head>
 <body>
+  <div id='searchbar' class="input-group">
+                <input type="text" class="form-control" placeholder="Search for...">
+      <span class="input-group-btn">
+        <button class="btn btn-default" type="button">Search</button>
+      </span>
+            </div>
  <div id="map-canvas"></div>
 </body>
 </html>
