@@ -11,7 +11,7 @@ define([
 		CurrentPosition = undefined;
 
 	var mapOptions = {
-		  zoom: 8,
+		  zoom: 13,
 		  mapTypeId: google.maps.MapTypeId.ROADMAP,
 		  disableDefaultUI: true
 	};
