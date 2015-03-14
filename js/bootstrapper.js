@@ -10,7 +10,9 @@ require.config({
 		backbone: 'libs/backbone/backbone',
 		async: 'libs/require/async',
 		bootstrapjs: 'libs/bootstrap/bootstrap.min',
-		Locale: 'Locale'
+		Locale: 'Locale',
+		LocaleRouter: 'LocaleRouter',
+		LocaleView: 'views/LocaleView'
 	}
 });
 
@@ -20,5 +22,7 @@ require([
 	'app',
 ], function(App){
 	// App entry point
-	App.Initialize();
+	$(function() {
+		App.Initialize();
+	});
 });
