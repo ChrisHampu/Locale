@@ -24,9 +24,21 @@ app.get('', function (req, res) {
 // 
 // ROUTING
 //
-app.get('/chat_connect', function (req, res) {
-	connectToRoom = req.query.room_id;
-	res.sendFile(__dirname + '/index.html');
+app.post('/api/user_auth', function (req, res){
+
+	var user = {
+		email: req.body.email,
+		name: req.body.name,
+		fbToken: req.body.fbToken,
+		location: {
+			lat: req.body.location.lat,
+			long: req.body.location.long,
+		}
+	};
+
+	db.put('users', user.email, user).then(function (result) {
+		return res.send(user);
+	});
 });
 
 app.get('/privacy', function (req, res) {
