@@ -37,7 +37,6 @@ body
 {
     /*display:none;*/
     position:fixed;
-    z-index: 5;
     width:50%;
     padding: 10px;
 }
@@ -71,6 +70,7 @@ body
     position: absolute;
     background: url('../assets/forest-dim.jpg') no-repeat;
     background-size: cover;
+    z-index: 5;
 }
 
 #centerlogin
