@@ -11,15 +11,33 @@ html
   
 body
 {
+    color: #FFF;
     position:relative;
     min-height: 100%;
+    background: #3c3d42;
     font-family: "Roboto";
 } 
 
-<!-- Home Page Stuff -->
+/* Map Page Stuff */
+
+#mappage
+{
+    
+}
+
+#menubar
+{
+    margin:30px;
+    width:40%;
+}
+
+#searchbar
+{
+    
+}
 
 
-<!-- Login Stuff  -->
+/* Login Stuff */
 
 @media (max-width: 400px) {
     #centerlogin
