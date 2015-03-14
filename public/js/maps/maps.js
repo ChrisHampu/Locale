@@ -1,12 +1,15 @@
 var map;
 
 function initialize() {
+
   var mapOptions = {
     zoom: 13,
     disableDefaultUI: true
   };
   map = new google.maps.Map(document.getElementById('map-canvas'),
       mapOptions);
+
+
 
   // Try HTML5 geolocation
   if(navigator.geolocation) {
@@ -17,7 +20,7 @@ function initialize() {
       var infowindow = new google.maps.InfoWindow({
         map: map,
         position: pos,
-        content: 'Location found using HTML5.'
+        content: 'Locaion found using HTML5.'
       });
 
       map.setCenter(pos);

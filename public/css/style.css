@@ -11,7 +11,6 @@ html
   
 body
 {
-    color: #FFF;
     position:relative;
     min-height: 100%;
     background: #3c3d42;
@@ -36,7 +35,7 @@ body
 
 #searchbar
 {
-    
+    display:none;
 }
 
 
