@@ -27,7 +27,7 @@ define([
 			}
 			else
 			{
-				this.navigate("", { trigger: true; });
+				this.navigate("", { trigger: true });
 			}
 		}
 	});
