@@ -425,7 +425,7 @@ footer
 }
 
 #my-room-container .fa-wrench{
-    margin: 13px 4px;
+    margin: 13px 0px;
 }
 
 .chatbox-messages {
@@ -616,4 +616,5 @@ footer
 
 .sidebar-content {
     padding: 0px;
+	overflow-y: auto;
 }
