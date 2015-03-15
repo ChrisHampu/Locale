@@ -14,7 +14,8 @@ define([
 
 		events: {
 			'click #profile-thumbnail' : 'profile',
-			'click .toggle-delete' : 'toggle'
+			'click .toggle-delete' : 'toggle',
+			'click .toggle-pencil' : 'expandUpdate'
 		},
 
 		initialize: function() {
@@ -87,6 +88,20 @@ define([
 				$('#profile-content-sidr').children('h1'). html(first + " " + last);
 				$('#profile-content-sidr').children('p'). html('Something interesting should probably go here');
 			}, 100);
+		},
+
+		expandUpdate: function(e){
+			if($(e.currentTarget).parent().parent().children(".edit-locale").css("height") == "200px"){
+				$(e.currentTarget).parent().parent().children(".edit-locale").stop().animate({height: "0px"}, function(){
+					$(e.currentTarget).parent().parent().children(".edit-locale").css("display","none");
+				});
+			} else {
+				$(e.currentTarget).parent().parent().children(".edit-locale").css("display","block");
+				$(e.currentTarget).parent().parent().children(".edit-locale").stop().animate({height: "200px"}, function(){
+					console.log("NO")
+				});
+			}
+			
 		}
 	});
 

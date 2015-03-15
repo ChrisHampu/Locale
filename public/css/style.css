@@ -19,6 +19,11 @@ body
     overflow: hidden;
 } 
 
+textarea
+{
+    resize: none;
+}
+
 /* Map Page Stuff */
 
 #mappage
@@ -434,7 +439,7 @@ footer
     width: auto;
 }
 
-#my-room-container .fa-wrench{
+#my-room-container .fa-pencil{
     margin: 13px 0px;
 }
 
@@ -626,4 +631,14 @@ footer
 .sidebar-content {
     padding: 0px;
 	overflow-y: auto;
+    max-height:80%;
+}
+
+.edit-locale {
+    height:0px;
+    display: none;
+}
+
+.btn-group {
+    margin: 5px;
 }

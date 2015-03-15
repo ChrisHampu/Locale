@@ -4,8 +4,9 @@ define([
 	'backbone',
 	'bootstrapjs',
 	'LocaleChatroomView',
-	'LocaleSocket'
-], function($, _, Backbone, Bootstrap, LocaleChatroomView, LocaleSocket){
+	'LocaleSocket',
+	'LocaleAuth'
+], function($, _, Backbone, Bootstrap, LocaleChatroomView, LocaleSocket, LocaleAuth){
 
 	var LocaleChatroomListView = Backbone.View.extend({
 		el: '#my-rooms',
@@ -89,7 +90,8 @@ define([
 				LocaleSocket.Emit('addroom', {
 					"name": name,
 					"description" : description,
-					"tags" : tags
+					"tags" : tags,
+					"admin" : LocaleAuth.GetUserModel().get("profileUrl")
 				});
 			}
 			

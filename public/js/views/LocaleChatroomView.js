@@ -41,11 +41,11 @@ define([
                                     '<div class="h2">University of British Columbia</div>' +
                                 '</div>' +
                             '</div>' +
-                              '<div class="btn btn-default">' +
-                                '<i class="fa fa-wrench fa-lg"></i>' +
+                              '<div class="btn btn-default toggle-pencil">' +
+                                '<i class="fa fa-pencil fa-lg"></i>' +
                               '</div>' +
                         '</div>' +
-                        '<div class="panel panel-default">' +
+                        '<div class="panel panel-default edit-locale">' +
                             '<div class="panel-body">' +
                                 '<form>' +
                                     '<div class="form-group">' +
@@ -53,9 +53,16 @@ define([
                                             this.model.get("description") +
                                         '</textarea>' +
                                     '</div>' +
+                                    '<div class="form-group">' +
+                                        '<textarea class="form-control" id="roomTags" placeholder="Tags" rows="1">' +
+                                            this.model.get("tags") +
+                                        '</textarea>' +
+                                    '</div>' +
+                                   
                                     '<button id="delete-locale" type="button" class="btn btn-danger"><i class="fa fa-trash-o"></i> Delete</button>' +
                                     '<button id="update-locale" type="button" class="btn btn-success"><i class="fa fa-check"></i> Update</button>' +
                                 '</form>' +
+                            '</div>' +
                             '</div>' +
                         '</div>' 
             );
