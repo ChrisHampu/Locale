@@ -70,7 +70,6 @@ io.sockets.on('connection', function (socket) {
 		allRooms = rooms;
 		
 		allRoomNames = allRooms.map(function(obj) {
-			
 			return obj.name;
 		});
 	});
@@ -92,27 +91,23 @@ io.sockets.on('connection', function (socket) {
 		// Calculate the active rooms for this user and push them
 		world.getAllowedRoomNames(newUser.location.latitude, newUser.location.longitude, function(allowedRooms) {
 
-			var usersRooms = allRooms.map(function(obj){ 
-				if (!(allowedRooms.indexOf(obj.name) > -1)) {
-					obj.userCount = 1;
-					userCounts.push(obj.name);
-				} else {
-					obj.userCount = userCounts[obj.name];
-				}
+			var usersRooms = allRooms.map( function (obj) { 
+				
+				createCounter(obj.name);
+				//obj.userCount = userCounts[obj.name];
 
 				if (allowedRooms.indexOf(obj.name) > -1) {
 					obj.canJoin = true;
 				} else {
 					obj.canJoin = false;
 				}
-				
-				console.log(obj);
 
 				return obj;
 			});
 
 			socket.emit('updaterooms', usersRooms);
 		});
+
 	});
 
 	// listener, add rooms to the database by user request
@@ -132,12 +127,9 @@ io.sockets.on('connection', function (socket) {
 		world.getAllowedRoomNames(socket.user.location.latitude, socket.user.location.longitude, function(allowedRooms) {
 	
 			var usersRooms = allRooms.map(function(obj){ 
-				if (!(allowedRooms.indexOf(obj.name) > -1)) {
-					obj.userCount = 1;
-					userCounts.push(obj.name);
-				} else {
-					obj.userCount = userCounts[obj.name];
-				}
+								
+				createCounter(obj.name);
+				obj.userCount = userCounts[obj.name];
 	
 				if (allowedRooms.indexOf(obj.name) > -1) {
 					obj.canJoin = true;
@@ -160,12 +152,9 @@ io.sockets.on('connection', function (socket) {
 		world.getAllowedRoomNames(newUser.location.lat, newUser.location.lon, function(allowedRooms) {
 
 			var usersRooms = allRooms.map(function(obj){ 
-				if (!(allowedRooms.indexOf(obj.name) > -1)) {
-					obj.userCount = 1;
-					userCounts.push(obj.name);
-				} else {
-					obj.userCount = userCounts[obj.name];
-				}
+
+				createCounter(obj.name);
+				obj.userCount = userCounts[obj.name];
 
 				if (allowedRooms.indexOf(obj.name) > -1) {
 					obj.canJoin = true;
@@ -208,7 +197,8 @@ io.sockets.on('connection', function (socket) {
 	socket.on('joinroom', function(room){
 		socket.join(room);
 
-		userCounts[room]++;
+		incrementCount(room);
+
 
 		world.getRoomHistory(room, function(messages) {
 			socket.emit('loadroom', {"room": room, "messages": messages});
@@ -228,3 +218,33 @@ io.sockets.on('connection', function (socket) {
 
 });
 
+function createCounter(room) {
+	if (userCounts.indexOf(room) > -1) {
+		// Do nothing
+	} else {
+		userCounts.push({room: 0})
+	}
+}
+
+function incrementCount(room) {
+	if (userCounts.indexOf(room) > -1) {
+		userCounts[room]++;
+		console.log(room, userCounts[room]);
+	} else {
+		userCounts[room] = 1;
+		console.log(room, "Created count 1");
+	}
+
+	console.log(userCounts);
+}
+
+function decrementCount(room) {
+	if (userCounts.indexOf(room) > -1) {
+		if (userCounts[room] > 0) {
+			userCounts[room]--;
+		}
+	} else {
+		userCounts.push(room);
+		userCounts[room] = 0;
+	}
+}
