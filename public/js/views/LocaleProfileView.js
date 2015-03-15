@@ -4,8 +4,9 @@ define([
 	'backbone',
 	'bootstrapjs',
 	'sidr',
-	'LocaleAuth'
-], function($, _, Backbone, Bootstrap, sidr, LocaleAuth){
+	'LocaleAuth',
+	'LocaleSocket'
+], function($, _, Backbone, Bootstrap, sidr, LocaleAuth, LocaleSocket){
 
 	var sidrOpened = false;
 	var LocaleProfileView = Backbone.View.extend({
@@ -13,6 +14,7 @@ define([
 
 		events: {
 			'click #profile-thumbnail' : 'profile',
+			'click #add-locale' : 'createLocale',
 			'click .toggle-delete' : 'toggle'
 		},
 
@@ -39,6 +41,24 @@ define([
 
 		},
 
+		createLocale: function () {
+			//event.preventDefault();
+			var name = this.$el.find("#roomName").val();
+			var description = this.$el.find("#roomDescription").val();
+
+			if(name === undefined || description === "")
+				return;
+
+			var roomData = {
+				"name": name,
+				"description": description
+			}
+
+			console.log("Adding " + name);
+			
+			LocaleSocket.Emit('addroom', roomData);
+		},
+
 		toggle: function(){
 			if($('.exit-room').css("display") == "none"){
 				$('.exit-room').css("display", "inline");
@@ -54,7 +74,14 @@ define([
 		},
 
 		setProfilePic: function(url) {
-			$('.profilepic').css("background", "url(" + url + ")").css("background-size", "contain");
+			setTimeout(function() {
+				$('.profilepic').css("background", "url(" + url + ")").css("background-size", "contain");
+
+				var first = LocaleAuth.GetUserModel().get("firstName");
+				var last = LocaleAuth.GetUserModel().get("lastName");
+
+				$('#profile-content-sidr').html(first + " " + last);
+			}, 100);
 		}
 	});
 

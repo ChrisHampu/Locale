@@ -107,8 +107,6 @@ io.sockets.on('connection', function (socket) {
 		// Calculate the active rooms for this user and push them
 		world.getAllowedRoomNames(newUser.location.lat, newUser.location.lon, function(allowedRooms) {
 
-			console.log(allRoomNames);
-
 			var usersRooms = allRooms.map(function(obj){ 
 				if (!userCounts[obj.name]) {
 					obj["users"] = 0
@@ -130,13 +128,26 @@ io.sockets.on('connection', function (socket) {
 		});
 	});
 
+	// listener, add rooms to the database by user request
+	socket.on('addroom', function (data) {
+
+		console.log(data);
+
+		var newRoom = {
+			name: data.name,
+			description: data.description,
+			location: socket.user.location,
+			radius: '1000'
+		}
+
+		world.addRoom(newRoom);
+	})
+
 	// listener, client asks for updaterooms, server sends back the list of rooms
 	socket.on('updaterooms', function (data) {
 		// Calculate the active rooms for this user and push them
 		// Calculate the active rooms for this user and push them
 		world.getAllowedRoomNames(newUser.location.lat, newUser.location.lon, function(allowedRooms) {
-
-			console.log(allRoomNames);
 
 			var usersRooms = allRooms.map(function(obj){ 
 				if (!userCounts[obj.name]) {
@@ -237,8 +248,6 @@ function switchRoom(socket, newroom) {
 	
 		// Calculate the active rooms for this user and push them
 		world.getAllowedRoomNames(newUser.location.lat, newUser.location.lon, function(allowedRooms) {
-
-			console.log(allRoomNames);
 
 			var usersRooms = allRooms.map(function(obj){ 
 				if (!userCounts[obj.name]) {

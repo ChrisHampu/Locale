@@ -33,7 +33,7 @@ define([
 	}
 
 	var SetProfilePic = function(url) {
-		Router.getLocaleView().getMapView().getProfileView().SetProfilePic(url);
+		Router.getLocaleView().getMapView().getProfileView().setProfilePic(url);
 	}
 	
 	// Map public API functions to internal functions
