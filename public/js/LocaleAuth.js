@@ -51,7 +51,7 @@ define([
 				UserModel.set("location", { lat: LocaleUtilities.GetCurrentLocation().coords.latitude, lon: LocaleUtilities.GetCurrentLocation().coords.longitude });
 				UserModel.set("firstName", response.first_name);
 				UserModel.set("lastName", response.last_name);
-				UserModel.set("profileUrl", response.profile_url);
+				//UserModel.set("profileUrl", response.profile_url);
 				UserModel.set("email", response.email);
 
 				PopulateFBData( function(response) {
