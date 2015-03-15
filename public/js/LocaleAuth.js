@@ -54,7 +54,6 @@ define([
 				UserModel.set("lastName", response.last_name);
 				UserModel.set("token", AuthToken);
 				UserModel.set("email", response.email);
-				UserModel.set("profile_url", "assets/profilepic/placeholder.png");
 
 				LocaleSocket.Emit('join', JSON.stringify(UserModel));
 			});
