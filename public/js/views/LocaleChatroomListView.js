@@ -74,16 +74,25 @@ define([
 		createLocale: function() {
 			var name = this.$el.find("#roomName").val();
 			var description = this.$el.find("#roomDescription").val();
-			var tags = [];
+			var tags = this.$el.find("#roomTags").val().split("#");
+			tags.splice(0,1);
+			console.log(tags);
 
 			if(name === undefined || description === "")
 				return;
+			if(tags.length == 0){
+				LocaleSocket.Emit('addroom', {
+					"name": name,
+					"description" : description
+				});
+			} else {
+				LocaleSocket.Emit('addroom', {
+					"name": name,
+					"description" : description,
+					"tags" : tags
+				});
+			}
 			
-			LocaleSocket.Emit('addroom', {
-				"name": name,
-				"description" : description,
-				"tags" : tags
-			});
 
 			console.log("creating locale named " + name);
 
