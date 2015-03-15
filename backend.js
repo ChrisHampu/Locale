@@ -140,7 +140,7 @@ io.sockets.on('connection', function (socket) {
 		socket.join(room);
 
 		world.getRoomHistory(room, function(messages) {
-			socket.emit('loadroom', messages);
+			socket.emit('loadroom', {"room": room, "messages": messages});
 		})
 
 		socket.emit('updatechat', {"user": "system", "message": "Welcome to " + room});
