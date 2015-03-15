@@ -144,12 +144,28 @@ io.sockets.on('connection', function (socket) {
 			socket.emit('loadroom', {"room": room, "messages": messages});
 		})
 
-		socket.emit('updatechat', {"user": "system", "message": "Welcome to " + room});
+		var joinedMsg = {
+			"room": room,
+			"firstName": socket.user.firstName,
+			"lastInitial": socket.user.lastName.charAt(0),
+			"message": "has joined the Locale"
+		};
+
+		io.sockets.in(room).emit('broadcastchat', joinedMsg);
 		// TODO: Add user to the list of people in the room
 	});
 
 	socket.on('leaveroom', function(room){
 		socket.leave(room);
+
+		var joinedMsg = {
+			"room": room,
+			"firstName": undefined,
+			"lastInitial": undefined,
+			"message": socket.user.firstName + " " + socket.user.lastName.charAt(0) + ". has left the Locale"
+		};
+
+		io.sockets.in(room).emit('broadcastchat', joinedMsg);
 	});
 	
 

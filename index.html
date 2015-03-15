@@ -44,7 +44,6 @@
 		// Set the global chatmessages for this room to the received values
 		chatMessages = data.messages.reverse();
 
-		console.log(data);
 		// Render the historical room messages
 		renderMessages();
 	})
@@ -98,7 +97,7 @@
 		console.log(chatMessages);
 
 		$.each(chatMessages, function(key, value) {
-			$('#conversation').append('<b>'+ value["user"] + ':</b> ' + value["message"] + '<br>');
+			$('#conversation').append('<b>'+ value["firstName"] + " " + value['lastInitial'] + ':</b> ' + value["message"] + '<br>');
 		});
 	
 	}
