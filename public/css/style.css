@@ -631,6 +631,7 @@ footer
 .sidebar-content {
     padding: 0px;
 	overflow-y: auto;
+    max-height:80%;
 }
 
 .edit-locale {
