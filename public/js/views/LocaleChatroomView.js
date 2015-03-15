@@ -32,20 +32,34 @@ define([
 		},
 
 		renderButton: function() {
-			this.$el.html('<ul id="my-room-container">' +
-                                '<li class="btn-group">'+
-                                   '<div class="btn btn-default room-button">' +
-                                        '<div class="chatbox-icon"></div>' +
-                                        '<div class="chatbox-title">' +
-                                            '<div class="h1">' + this.model.get("name") + '</div>' +
-                                            '<div class="h2">University of British Columbia</div>' +
-                                        '</div>' +
-                                        '<span class="badge">' + this.model.get("messageCount") + '</span>' +
+			this.$el.html(
+                        '<div class="btn-group">' +
+                           '<div class="btn btn-default room-button">' +
+                                '<div class="chatbox-icon"></div>' +
+                                '<div class="chatbox-title">' +
+                                    '<div class="h1">' + this.model.get("name") + '</div>' +
+                                    '<div class="h2">University of British Columbia</div>' +
+                                '</div>' +
+                                '<span class="badge">' + this.model.get("messageCount") + '</span>' +
+                            '</div>' +
+                              '<div class="btn btn-default">' +
+                                '<i class="fa fa-wrench fa-lg"></i>' +
+                              '</div>' +
+                        '</div>' +
+                        '<div class="panel panel-default">' +
+                            '<div class="panel-body">' +
+                                '<form>' +
+                                    '<div class="form-group">' +
+                                        '<textarea class="form-control" id="roomDescription" placeholder="Locale Description" rows="3">' +
+                                            this.model.get("description") +
+                                        '</textarea>' +
                                     '</div>' +
-                                      '<div class="btn btn-default">' +
-                                        '<i class="fa fa-wrench fa-lg"></i>' +
-                                      '</div>' +
-                                '</li>');
+                                    '<button id="delete-locale" type="button" class="btn btn-danger"><i class="fa fa-trash-o"></i> Delete</button>' +
+                                    '<button id="update-locale" type="button" class="btn btn-success"><i class="fa fa-check"></i> Update</button>' +
+                                '</form>' +
+                            '</div>' +
+                        '</div>' 
+            );
 
 			return this;
 		},

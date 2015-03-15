@@ -410,14 +410,25 @@ footer
 
 
 #my-room-container{
-    text-align: left;
     list-style: none;
     margin: 10px;
 }
 
-#my-room-container .btn{
+#my-room-container .btn-group > .btn{
     text-align: left;
     height: 54px;
+}
+
+#my-room-container #delete-locale {
+    float: left;
+}
+
+#my-room-container #update-locale {
+    float: right;
+}
+
+#my-room-container .panel{
+    margin: 10px 25px;
 }
 
 #my-room-container .chatbox-title{
@@ -604,10 +615,9 @@ footer
 #add-room-dialog {
     display: none;
     height: 0;
-    margin: 10px;
+    margin: 10px 35px;
     text-align: left;
     position:relative;
-    width: 330px;
 }
 
 #add-locale {
