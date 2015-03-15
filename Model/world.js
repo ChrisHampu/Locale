@@ -47,6 +47,7 @@ World.prototype.persistMessage = function (data, callback){
         .data(data)
         .create()
         .then(function (result) {
+            data["timestamp"] = result.path["timestamp"];
             callback(data);
         });
 }

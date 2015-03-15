@@ -160,7 +160,7 @@ io.sockets.on('connection', function (socket) {
 	
 	// when the client emits 'sendchat', this listens and executes
 	socket.on('sendchat', function (data) {
-		var persistedMessage = {
+		var message = {
 			"room": data.room,
 			"firstName": socket.user.firstName,
 			"lastInitial": socket.user.lastName.charAt(0),
@@ -168,9 +168,11 @@ io.sockets.on('connection', function (socket) {
 			"message": data.message
 		};
 
-		world.persistMessage(persistedMessage);
+		// Plain message goes in, after it's persisted processedMessage has a timestamp
+		world.persistMessage(message, function(processedMessage) {
+			io.sockets.in(data.room).emit('broadcastchat', processedMessage);
+		});
 
-		io.sockets.in(data.room).emit('broadcastchat', persistedMessage);
 	});
 	
 	socket.on('switchRoom', function(newroom){
