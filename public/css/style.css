@@ -349,7 +349,7 @@ footer
 }
 
 .chatbox-icon {
-    background: url('../assets/demo/one-ring.jpg') no-repeat 50% 50%;
+    background: url('../assets/demo/nwhacks.png') no-repeat 50% 50%;
     background-size: cover;
     border-radius: 2px;
     float: left;
@@ -423,11 +423,11 @@ footer
     height: 54px;
 }
 
-#my-room-container #delete-locale {
-    float: left;
+#my-room-container .delete-locale {
+    float: right;
 }
 
-#my-room-container #update-locale {
+#my-room-container .update-locale {
     float: right;
 }
 
