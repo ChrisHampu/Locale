@@ -197,37 +197,46 @@ define([
 		},
 
 		search: function() {
-			this.getValue(function(value){
-				_.each(ChatroomListView.getRooms(), function(chat) {
-					var tags = chat.model.get("tags");
+			this.getValue(function(value, collection, searchCallback){
+				_.each(collection.models, function(chat) {
+					var tags = chat.get("tags");
 					if(tags.length > 0)
 					{
+						var cleanTags = _.map(tags, function(clean) {
+							return $.trim(clean);
+						});
+
 						var tagsArr = value.split(' ');
+						var matches = [];
+
 						_.each(tagsArr, function(tag) {
 
-							var ind = tags.indexOf(tag);
-							if(ind > 0)
+							var ind = cleanTags.indexOf(tag);
+							if(ind > -1)
 							{
-								console.log("Matched tag " + tag + " to model tag " + tags[ind]);
+								matches.push(cleanTags[ind]);
 							}
-						});
-					}
-					else
-					{
-						console.log("model has no tags");
+						}, this);
+
+						if(matches.length > 0)
+							searchCallback(matches);
 					}
 				});
-			});
+			}, ChatroomCollection, this.doSearchDropdown);
 		},
 
-		getValue: function(callback){
+		doSearchDropdown: function(tags) {
+			console.log("Found matches: " + tags);
+		},
+
+		getValue: function(callback, collection, searchCallback){
 			if(timer !== undefined){
 				clearTimeout(timer);
 				timer = undefined;
 			}
 			timer = setTimeout(function() {
 				searchQuery = $('#search-content').val();
-				callback(searchQuery);
+				callback(searchQuery, collection, searchCallback);
 				$("#searchbar").val("");
 			},500);
 		},
