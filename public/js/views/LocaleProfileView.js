@@ -55,6 +55,11 @@ define([
 
 		setProfilePic: function(url) {
 			$('.profilepic').css("background", "url(" + url + ")").css("background-size", "contain");
+
+			var first = LocaleAuth.GetUserModel().get("firstName");
+			var last = LocaleAuth.GetUserModel().get("lastName");
+
+			$('#profile-content-sidr').html(first + " " + last);
 		}
 	});
 
