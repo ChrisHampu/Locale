@@ -183,6 +183,7 @@ define([
 		LoginGooglePlus: LoginGooglePlus,
 		Logout: Logout,
 		EnsureAuthed: EnsureAuthed,
-		GetUserModel: GetUserModel
+		GetUserModel: GetUserModel,
+		FinalzeData: FinalizeData
 	};
 });
