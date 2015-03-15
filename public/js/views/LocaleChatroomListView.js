@@ -74,13 +74,15 @@ define([
 		createLocale: function() {
 			var name = this.$el.find("#roomName").val();
 			var description = this.$el.find("#roomDescription").val();
+			var tags = [];
 
 			if(name === undefined || description === "")
 				return;
 			
 			LocaleSocket.Emit('addroom', {
 				"name": name,
-				"description" : description
+				"description" : description,
+				"tags" : tags
 			});
 
 			console.log("creating locale named " + name);

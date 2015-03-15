@@ -31,7 +31,7 @@ define([
 			this.getRoomWindow().render();
 		},
 
-		renderButton: function() {
+		renderButton: function() 
 			this.$el.html(
                         '<div class="btn-group">' +
                            '<div class="btn btn-default room-button">' +
@@ -40,7 +40,7 @@ define([
                                     '<div class="h1">' + this.model.get("name") + '</div>' +
                                     '<div class="h2">University of British Columbia</div>' +
                                 '</div>' +
-                                '<span class="badge">' + this.model.get("messageCount") + '</span>' +
+                                '<span class="badge">' + this.model.get("userCount") + '</span>' +
                             '</div>' +
                               '<div class="btn btn-default">' +
                                 '<i class="fa fa-wrench fa-lg"></i>' +
@@ -93,8 +93,11 @@ define([
 			this.parent.remove(this);
 		},
 
-		addMessage: function(newMessage) {
+		addMessage: function(newMessage, callback) {
 			this.ChatMessages.add( new LocaleChatMessageModel( { firstName: newMessage.firstName, lastInitial: newMessage.lastInitial, profileUrl: newMessage.profileUrl, message: newMessage.message, timestamp: newMessage.timestamp, room: newMessage.room } ) );
+
+			if(callback !== undefined)
+				callback(this.model.get("location"), this.model.get("radius"));
 		},
 
 		join: function() {

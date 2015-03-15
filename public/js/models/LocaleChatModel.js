@@ -19,7 +19,10 @@ define([
 			name: "Room",
 			radius: 1000,
 			canJoin: false,
-			messageCount: 0
+			userCount: 0,
+			description: undefined,
+			tags: undefined,
+			admin: ""
 		}
 	});
 

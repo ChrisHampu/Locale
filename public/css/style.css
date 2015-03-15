@@ -15,7 +15,6 @@ body
     min-height: 100%;
     background: #3c3d42;
     font-family: "Roboto";
-    background: url('../assets/forest-dim.jpg') no-repeat;
     background-size: cover;
     overflow: hidden;
 } 
