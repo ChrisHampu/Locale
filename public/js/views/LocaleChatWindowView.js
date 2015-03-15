@@ -13,6 +13,8 @@ define([
 		className: 'chatbox',
 
 		events: {
+			'click .chatbox-minimize' : 'minimize',
+			'click .chatbox-exit' : 'exit'
 
 		},
 
@@ -41,6 +43,27 @@ define([
 
 		remove: function(message) {
 
+		},
+
+		minimize: function(){
+			var checkState = this.$el.css("bottom");
+			if (checkState == "42px"){
+				this.$el.children(".chatbox-content").css({display: "block"});
+				this.$el.stop().animate({"bottom" :"384px"}, 400);
+			} else {
+				this.$el.stop().animate({"bottom" :"42px"}, 400, function(){
+					this.$el.children(".chatbox-content").css({display: "none"});
+				});
+			}
+			
+			//this.$el.children(".chatbox-content").css({display: "none"});
+			
+			
+			console.log("MINIIMIZE");
+		},
+
+		exit: function(){
+			console.log("exit");
 		}
 	});
 

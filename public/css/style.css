@@ -293,6 +293,7 @@ footer
     position: fixed;
     bottom: 0;
     right: 0;
+    bottom: -384px;
 }
 
 .chatbox {
@@ -304,6 +305,7 @@ footer
     width: 300px;
     position: relative;
     float: right;
+    bottom: 384px;
 }
 
 .chatbox-input {
