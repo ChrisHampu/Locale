@@ -85,10 +85,6 @@ io.sockets.on('connection', function (socket) {
 		newUser["location"]["longitude"] = newUser["location"]["lon"];
 		delete newUser["location"]["lon"];
 
-
-		// TODO: Create or update the user's db entry
-		//console.log(newUser);
-
 		// Store the username in the socket session for this client
 		socket.username = newUser.firstName;
 		socket.user = newUser;
@@ -129,6 +125,29 @@ io.sockets.on('connection', function (socket) {
 		}
 
 		world.addRoom(newRoom);
+
+		// Calculate the new active rooms for this user and push them
+		world.getAllowedRoomNames(socket.user.location.latitude, socket.user.location.longitude, function(allowedRooms) {
+	
+			var usersRooms = allRooms.map(function(obj){ 
+				if (!userCounts[obj.name]) {
+					obj["users"] = 0
+				} else {
+					obj["users"] = userCounts[obj.name];
+				}
+	
+				if (allowedRooms.indexOf(obj.name) > -1) {
+					obj.canJoin = true;
+				} else {
+					obj.canJoin = false;
+				}
+	
+				return obj;
+			});
+	
+
+			socket.emit('updaterooms', usersRooms);
+		});
 	})
 
 	// listener, client asks for updaterooms, server sends back the list of rooms
@@ -170,7 +189,6 @@ io.sockets.on('connection', function (socket) {
 
 		// Plain message goes in, after it's persisted processedMessage has a timestamp
 		world.persistMessage(message, function(processedMessage) {
-			console.log(processedMessage);
 			io.sockets.in(data.room).emit('broadcastchat', processedMessage);
 		});
 
