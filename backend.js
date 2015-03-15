@@ -68,19 +68,15 @@ io.sockets.on('connection', function (socket) {
 	// Pull all the available rooms on every connection to compare against rooms that a given user is permitted access to
 	world.getRooms(function(rooms) {
 		allRooms = rooms;
-
+		
 		allRoomNames = allRooms.map(function(obj) {
-			userCounts.push(obj.name);
-			console.log(userCounts);
+			
 			return obj.name;
 		});
 	});
 
 	// When the client emits 'join', this listens and executes
 	socket.on('join', function(user){
-
-		console.log("join");
-	
 		var newUser = JSON.parse(user);
 	
 		newUser["location"]["latitude"] = newUser["location"]["lat"];
@@ -98,9 +94,10 @@ io.sockets.on('connection', function (socket) {
 
 			var usersRooms = allRooms.map(function(obj){ 
 				if (!userCounts.contains(obj.name)) {
-					obj.userCount = 0
+					obj.userCount = 1;
+					userCounts.push(obj.name);
 				} else {
-					obj.userCount = userCounts[obj.name];
+					obj.userCount = userCounts[obj.name]++;
 				}
 
 				if (allowedRooms.indexOf(obj.name) > -1) {
@@ -137,7 +134,8 @@ io.sockets.on('connection', function (socket) {
 	
 			var usersRooms = allRooms.map(function(obj){ 
 				if (!userCounts.contains(obj.name)) {
-					obj.userCount = 0
+					obj.userCount = 1;
+					userCounts.push(obj.name);
 				} else {
 					obj.userCount = userCounts[obj.name];
 				}
@@ -164,7 +162,8 @@ io.sockets.on('connection', function (socket) {
 
 			var usersRooms = allRooms.map(function(obj){ 
 				if (!userCounts.contains(obj.name)) {
-					obj.userCount = 0
+					obj.userCount = 1;
+					userCounts.push(obj.name);
 				} else {
 					obj.userCount = userCounts[obj.name];
 				}
