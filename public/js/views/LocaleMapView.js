@@ -198,6 +198,9 @@ define([
 
 		search: function() {
 			this.getValue(function(value, collection, searchCallback){
+
+				var matches = [];
+
 				_.each(collection.models, function(chat) {
 					var tags = chat.get("tags");
 					if(tags.length > 0)
@@ -207,21 +210,22 @@ define([
 						});
 
 						var tagsArr = value.split(' ');
-						var matches = [];
+						
 
 						_.each(tagsArr, function(tag) {
 
 							var ind = cleanTags.indexOf(tag);
 							if(ind > -1)
 							{
-								matches.push(cleanTags[ind]);
+								matches.push( { tag: cleanTags[ind], model: chat });
 							}
 						}, this);
-
-						if(matches.length > 0)
-							searchCallback(matches);
 					}
 				});
+
+				if(matches.length > 0)
+					searchCallback(matches);
+
 			}, ChatroomCollection, this.doSearchDropdown);
 		},
 
@@ -232,6 +236,9 @@ define([
 			for(tag in tags){
 				console.log(tags[tag]);
 			}*/
+			_.each(tags, function(tag) {
+				console.log("Found match: " + tag.tag + " to object " + tag.model.get("name"));
+			});
 		},
 
 		getValue: function(callback, collection, searchCallback){
