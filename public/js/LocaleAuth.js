@@ -18,7 +18,7 @@ define([
 		UserModel,
 		UsingFB;
 
-	var PopulateFBData = function() {
+	var PopulateFBData = function(callback) {
 		FB.api(
 		    "/me/picture",
 		    {
@@ -29,8 +29,7 @@ define([
 		    },
 		    function (response) {
 				if (response && !response.error) {
-					UserModel.set("profile_url", response.data.url);
-					Locale.SetProfilePic(response.data.url);
+					callback(response);
 				}
 		    }
 		);
@@ -55,7 +54,12 @@ define([
 				UserModel.set("profileUrl", response.profile_url);
 				UserModel.set("email", response.email);
 
-				LocaleSocket.Emit('join', JSON.stringify(UserModel));
+				PopulateFBData( function(response) {
+					UserModel.set("profile_url", response.data.url);
+					LocaleSocket.Emit('join', JSON.stringify(UserModel));
+					Locale.SetProfilePic(response.data.url);
+				});
+
 			});
 		}
 		else

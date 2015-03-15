@@ -72,7 +72,7 @@ define([
 			if(message.get("profileUrl") === LocaleAuth.GetUserModel().get("profileUrl"))
 				UserSent = true;
 
-			if (message.get("profileUrl")) {
+			if (message.get("profileUrl") !== undefined) {
 				var style = "style=\"background: url(" + message.get("profileUrl") + ");\""
 			} else {
 				var style = "";
