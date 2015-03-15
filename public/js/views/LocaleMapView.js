@@ -137,12 +137,12 @@ define([
 				google.maps.event.addListener(marker, 'click', function() {
 				   	//Pan to and do hovered
 				   	var name = '<h4>' + value.name + '</h4>';
-				   	var description = "Rachel and Chandler are our Junior Designers. Rachel is a web designer with knowledge of HTML and CSS and supports Ross on projects.";
+				   	var description = value.description;
 				   	var buttonHTML;
 				   	if(value.canJoin){
 				   		buttonHTML = '<button type="button" class="btn btn-success waypoint-join" data-name= "' +  value.name +'">Join</button>';
 				   	} else {
-				   		buttonHTML = '<button type="button" class="btn btn-success waypoint-join" disabled="disabled" data-name= "' +  value.name +'">Too Far</button>'
+				   		buttonHTML = '<button type="button" class="btn btn-success waypoint-join" disabled="disabled" data-name= "' +  value.name +'">Out of Range</button>'
 				   	}
 
 
@@ -183,7 +183,7 @@ define([
 					map: Map
 				});
 
-				ChatroomCollection.add( new LocaleChatModel( { location: value.location, name: value.name, radius: value.radius, canJoin: value.canJoin }));
+				ChatroomCollection.add( new LocaleChatModel( { location: value.location, name: value.name, radius: value.radius, canJoin: value.canJoin, userCount: value.userCount }));
 			});
 		},
 
