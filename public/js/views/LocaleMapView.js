@@ -61,8 +61,6 @@ define([
 			LocaleSocket.Handle('broadcastchat', function(data) {
 				_.each(ChatroomListView.getRooms(), function(chat) {
 
-					console.log(chat);
-
 					var roomName = chat.model.get("name");
 					var dataName = data.room;
 					if(roomName === dataName)

@@ -68,11 +68,15 @@ define([
 
 		renderMessage: function(message) {
 			var UserSent = false;
-			//if(message.get("firstName") === LocaleAuth.GetUserModel.get("firstName") && message.get("lastInitial") === LocaleAuth.GetUserModel.get("lastName")[0])
-			//	UserSent = true;
 
-			if (message.get("profileUrl")) {
-				var style = "style=\"background: url(" + message.get("profileUrl") + ");\""
+			var msgUrl = message.get("profileUrl");
+			var localUrl = LocaleAuth.GetUserModel().get("profileUrl");
+
+			if(msgUrl === localUrl)
+				UserSent = true;
+
+			if (msgUrl !== undefined) {
+				var style = "style=\"background: url(" + msgUrl + ");\""
 			} else {
 				var style = "";
 			}
