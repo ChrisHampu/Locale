@@ -117,7 +117,7 @@ define([
 				   	if(value.canJoin){
 				   		buttonHTML = '<button type="button" class="btn btn-success waypoint-join" data-name= "' +  value.name +'">Join</button>';
 				   	} else {
-				   		buttonHTML = '<button type="button" class="btn btn-success waypoint-join" disabled="disabled" data-name= "' +  value.name +'">Join</button>'
+				   		buttonHTML = '<button type="button" class="btn btn-success waypoint-join" disabled="disabled" data-name= "' +  value.name +'">Too Far</button>'
 				   	}
 
 
