@@ -14,7 +14,8 @@ define([
 
 		events: {
 			'click .chatbox-minimize' : 'minimize',
-			'click .chatbox-exit' : 'exit'
+			'click .chatbox-exit' : 'exit',
+			'click .chatbox-header' : 'maximize'
 
 		},
 
@@ -56,15 +57,20 @@ define([
 					this.$el.children(".chatbox-content").css({display: "none"});
 				});
 			}
-			
-			//this.$el.children(".chatbox-content").css({display: "none"});
-			
-			
-			console.log("MINIIMIZE");
+		},
+
+		maximize: function(){
+			console.log("MAX");
+			var checkState = this.$el.css("bottom");
+			if (checkState == "42px"){
+				this.$el.children(".chatbox-content").css({display: "block"});
+				console.log("RUN");
+				this.$el.stop().animate({"bottom" :"384px"}, 400);
+			}
 		},
 
 		exit: function(){
-			console.log("exit");
+			this.$el.closest(".chatbox").remove();
 		}
 	});
 

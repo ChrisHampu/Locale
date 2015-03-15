@@ -41,6 +41,10 @@ define([
 			return this.ChatWindow;
 		},
 
+		removeChatWindow: function() {
+			this.ChatWindow.$el.css("display: none");
+		},
+
 		remove: function() {
 			//this.stop().animate({left:"-200px"}, 2000);
 			this.$el.stop().animate({left:"-300px"}, 750, function(){
