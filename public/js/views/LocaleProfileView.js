@@ -75,7 +75,7 @@ define([
 
 		setProfilePic: function(url) {
 			setTimeout(function() {
-				$('.profilepic').css("background", "url(" + url + ")").css("background-size", "contain");
+				$('.profilepic').css("background", "url(" + url + ")");
 
 				var first = LocaleAuth.GetUserModel().get("firstName");
 				var last = LocaleAuth.GetUserModel().get("lastName");
