@@ -100,11 +100,9 @@ define([
 		},
 
 		maximize: function(){
-			console.log("MAX");
 			var checkState = this.$el.css("bottom");
 			if (checkState == "42px"){
 				this.$el.children(".chatbox-content").css({display: "block"});
-				console.log("RUN");
 				this.$el.stop().animate({"bottom" :"384px"}, 400);
 			}
 		},
