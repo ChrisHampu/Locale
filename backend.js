@@ -135,7 +135,9 @@ io.sockets.on('connection', function (socket) {
 			
 				var usersRooms = allRooms.map(function(obj){ 
 
-					if (allowedRooms.indexOf(obj.name) > -1) {
+					if (obj.name == newRoom.name) {
+						obj.canJoin = true;
+					} else if (allowedRooms.indexOf(obj.name) > -1) {
 						obj.canJoin = true;
 					} else {
 						obj.canJoin = false;
@@ -145,9 +147,7 @@ io.sockets.on('connection', function (socket) {
 			
 					return obj;
 				});
-				
-				console.log(usersRooms);
-			
+							
 				socket.emit('updaterooms', usersRooms);
 			});
 		});
