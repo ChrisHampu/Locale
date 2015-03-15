@@ -189,7 +189,7 @@ io.sockets.on('connection', function (socket) {
 
 		// Plain message goes in, after it's persisted processedMessage has a timestamp
 		world.persistMessage(message, function(processedMessage) {
-			io.sockets.in(data.room).emit('broadcastchat', processedMessage);
+			io.sockets.emit('broadcastchat', processedMessage);
 		});
 
 	});
