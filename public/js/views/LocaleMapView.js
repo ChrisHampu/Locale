@@ -108,12 +108,35 @@ define([
 				var circle = new google.maps.Circle({
 					center: pos,
 					radius: parseInt(value.radius), //Measured in meters
-					fillColor: "#758ff9",
+					fillColor: "#AEBDF9",
 					fillOpacity: 0.5,
 					strokeOpacity: 0.0,
 					strokeWidth: 0,
 					map: Map
 				});
+
+				google.maps.event.addListener(circle, "click", function() {
+					var pulse = new google.maps.Circle({
+						center: pos,
+						radius: 1,
+						strokeColor: "#758ff9",
+						strokeOpacity: 1,
+						strokeWeight: 3,
+						fillColor: "#758ff9",
+						fillOpacity: 0
+					});
+					pulse.setMap(Map);
+
+					var direction = 1;
+					var rMin = 1, rMax = parseInt(value.radius);
+					setInterval(function() {
+						var radius = pulse.getRadius();
+						if (radius > rMax) {
+							pulse.setMap(null);
+						}
+						pulse.setRadius(radius + 5);
+					}, 10);
+				})
 
 				ChatroomCollection.add( new LocaleChatModel( { location: value.location, name: value.name, radius: value.radius }));
 			});
