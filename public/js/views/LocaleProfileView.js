@@ -50,24 +50,6 @@ define([
 			$('#all-room-container').css("max-height", maxHeight);
 		},
 
-		createLocale: function () {
-			//event.preventDefault();
-			var name = this.$el.find("#roomName").val();
-			var description = this.$el.find("#roomDescription").val();
-
-			if(name === undefined || description === "")
-				return;
-
-			var roomData = {
-				"name": name,
-				"description": description
-			}
-
-			console.log("Adding " + name);
-			
-			LocaleSocket.Emit('addroom', roomData);
-		},
-
 		toggle: function(){
 			if($('.exit-room').css("display") == "none"){
 				$('.exit-room').css("display", "inline");

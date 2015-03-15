@@ -3,18 +3,19 @@ define([
 	'underscore',
 	'backbone',
 	'bootstrapjs',
-	'LocaleChatroomView'
-], function($, _, Backbone, Bootstrap, LocaleChatroomView){
+	'LocaleChatroomView',
+	'LocaleSocket'
+], function($, _, Backbone, Bootstrap, LocaleChatroomView, LocaleSocket){
 
 	var LocaleChatroomListView = Backbone.View.extend({
-		el: '#my-room-container',
+		el: '#my-rooms',
 
 		events: {
-			
+			'click #add-locale' : 'createLocale'
 		},
 
 		initialize: function() {
-			this.$el.html(""); // Remove dummy data
+			this.$el.find("#my-room-container").html(""); // Remove dummy data
 			$("#chatarea").html("");
 			this.listenTo(this.collection, "add", this.add);
 			this.Rooms = [];
@@ -22,7 +23,7 @@ define([
 
 		render: function() {
 			
-			this.$el.html("");
+			this.$el.find("#my-room-container").html("");
 			$("#chatarea").html("");
 
 			var parent = this;
@@ -33,7 +34,7 @@ define([
 		},
 
 		renderSingle: function(RoomView) {
-			this.$el.append(RoomView.renderButton().$el);
+			this.$el.find("#my-room-container").append(RoomView.renderButton().$el);
 			RoomView.delegateEvents();
 
 			if(RoomView.model.get("joined") === true) {
@@ -51,7 +52,7 @@ define([
 			console.log(room.canJoin);
 			var RoomView = new LocaleChatroomView ( { model: room, parent: this });
 
-			this.$el.append(RoomView.renderButton().$el);
+			this.$el.find("#my-room-container").append(RoomView.renderButton().$el);
 			
 			if(room.get("joined") === true) {
 				$("#chatarea").append(RoomView.getRoomWindow().render().$el);
@@ -69,6 +70,24 @@ define([
 
 		getRooms: function() {
 			return this.Rooms;
+		},
+
+		createLocale: function() {
+			var name = this.$el.find("#roomName").val();
+			var description = this.$el.find("#roomDescription").val();
+
+			if(name === undefined || description === "")
+				return;
+			
+			LocaleSocket.Emit('addroom', {
+				"name": name,
+				"description" : description
+			});
+
+			console.log("creating locale named " + name);
+
+			this.$el.find("#roomName").val("");
+			this.$el.find("#roomDescription").val("");
 		}
 	});
 
