@@ -170,7 +170,7 @@ io.sockets.on('connection', function (socket) {
 
 		world.persistMessage(persistedMessage);
 
-		io.sockets.in(room).emit('broadcastchat', persistedMessage);
+		io.sockets.in(data.room).emit('broadcastchat', persistedMessage);
 	});
 	
 	socket.on('switchRoom', function(newroom){
