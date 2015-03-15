@@ -69,7 +69,7 @@ define([
 		},
 
 		deleteRoom: function(room) {
-			delete room;
+			this.Rooms = _.without(this.Rooms, room);
 			this.render();
 		},
 

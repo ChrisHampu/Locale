@@ -60,7 +60,7 @@ define([
 		},
 
 		deleteLocale: function() {
-			this.$el.html("");
+			this.parent.deleteRoom(this);
 			LocaleSocket.Emit('deletelocale', this.model.get("name"));
 			LocaleSocket.Emit('updaterooms');
 		},
