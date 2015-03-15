@@ -32,7 +32,7 @@ define([
 				$('#searchbar').stop().animate({ left: "75px"});
 			}
 			var numRooms = $('#my-room-container').children().size();
-			var maxHeight = (5-numRooms) * 7 + 35 + "%";
+			var maxHeight = (5-numRooms) * 7 + 40 + "%";
 
 
 			$('#all-room-container').css("max-height", maxHeight);

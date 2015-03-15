@@ -40,7 +40,21 @@ define([
 		},
 
 		remove: function() {
-			this.parent.remove(this);
+			//this.stop().animate({left:"-200px"}, 2000);
+			this.$el.stop().animate({left:"-300px"}, 750, function(){
+				//move under element up
+				this.remove(this);
+				var numRooms = $('#my-room-container').children().size();
+				if(numRooms == 0){
+					$('#my-room-container').html('<div id="no-rooms">You do not have any rooms!</div>');
+					$('.toggle-delete').css("display", "none");
+				}
+				var maxHeight = (5-numRooms) * 7 + 40 + "%";
+
+				$('#all-room-container').css("max-height", maxHeight);
+			})
+
+			
 		}
 	});
 
