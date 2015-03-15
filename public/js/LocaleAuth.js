@@ -136,6 +136,10 @@ define([
 			Locale.RedirectLogin();
 		}
 	}
+
+	var GetUserModel = function() {
+		return UserModel;
+	}
 	
 	// Map public API functions to internal functions
 	return {
@@ -145,6 +149,7 @@ define([
 		LoginFacebook: LoginFacebook,
 		LoginGooglePlus: LoginGooglePlus,
 		Logout: Logout,
-		EnsureAuthed: EnsureAuthed
+		EnsureAuthed: EnsureAuthed,
+		GetUserModel: GetUserModel
 	};
 });

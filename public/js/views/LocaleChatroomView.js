@@ -6,8 +6,9 @@ define([
 	'LocaleChatUserModel',
 	'LocaleChatWindowView',
 	'LocaleChatroomMessageCollection',
+	'LocaleChatMessageModel',
 	'LocaleSocket'
-], function($, _, Backbone, Bootstrap, LocaleChatUserModel, LocaleChatWindowView, LocaleChatroomMessageCollection, LocaleSocket){
+], function($, _, Backbone, Bootstrap, LocaleChatUserModel, LocaleChatWindowView, LocaleChatroomMessageCollection, LocaleChatMessageModel, LocaleSocket){
 
 	var LocaleChatroomView = Backbone.View.extend({
 		tagName: 'li',
@@ -19,7 +20,7 @@ define([
 
 		initialize: function(options) {
 			this.parent = options.parent;
-			this.listenTo(this.model, "change", this.render);
+			//this.listenTo(this.model, "change", this.render);
 
 			this.ChatMessages = new LocaleChatroomMessageCollection();
 			this.ChatWindow = new LocaleChatWindowView( { collection: this.ChatMessages, parent: this, UserModel: this.model });
@@ -46,25 +47,29 @@ define([
 		},
 
 		remove: function() {
+			
 			//this.stop().animate({left:"-200px"}, 2000);
-			this.$el.stop().animate({left:"-300px"}, 750, function(){
-				//move under element up
-				this.remove(this);
-				var numRooms = $('#my-room-container').children().size();
-				if(numRooms == 0){
-					$('#my-room-container').html('<div id="no-rooms">You do not have any rooms!</div>');
-					$('.toggle-delete').css("display", "none");
-				}
-				var maxHeight = (5-numRooms) * 7 + 40 + "%";
+            this.$el.stop().animate({left:"-300px"}, 750, function(){
+                    //move under element up
+                   // this.remove(this);
+                    var numRooms = $('#my-room-container').children().size();
+                    if(numRooms == 0){
+                            $('#my-room-container').html('<div id="no-rooms">You do not have any rooms!</div>');
+                            $('.toggle-delete').css("display", "none");
+                    }
+                    var maxHeight = (5-numRooms) * 7 + 40 + "%";
 
-				$('#all-room-container').css("max-height", maxHeight);
-			})
+                    $('#all-room-container').css("max-height", maxHeight);
+            });
+			
 
-			//this.parent.remove(this);
+			this.parent.remove(this);
 		},
 
 		addMessage: function(newMessage) {
-			this.ChatMessages.add( { user: newMessage.user, newMessage: message, timestamp: newMessage.timestamp});
+			//console.log("trying message: " + newMessage);
+
+			this.ChatMessages.add( new LocaleChatMessageModel( { firstName: newMessage.firstName, lastInitial: newMessage.lastInitial, message: newMessage.message, timestamp: newMessage.timestamp, room: newMessage.room } ) );
 		},
 
 		join: function() {

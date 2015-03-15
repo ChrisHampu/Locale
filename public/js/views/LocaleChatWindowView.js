@@ -4,8 +4,24 @@ define([
 	'backbone',
 	'bootstrapjs',
 	'LocaleChatMessageModel',
-	'LocaleChatUserModel'
-], function($, _, Backbone, Bootstrap, LocaleChatMessageModel, LocaleChatUserModel){
+	'LocaleChatUserModel',
+	'LocaleAuth'
+], function($, _, Backbone, Bootstrap, LocaleChatMessageModel, LocaleChatUserModel, LocaleAuth){
+
+	var Weekdays = new Array("Sun","Mon","Tue","Wed","Thu","Fri","Sat");
+
+	var FormatTimestamp = function(timestamp) {
+		var date = new Date(timestamp);
+
+		var day = Weekdays[date.getDay()];
+		var hours = "0" + date.getHours();
+		var minutes = "0" + date.getMinutes();
+		var seconds = "0" + date.getSeconds();
+
+		var format = day + ", " + hours.substr(hours.length-2) + ':' + minutes.substr(minutes.length-2) + ':' + seconds.substr(seconds.length-2);
+		
+		return format;
+	};
 
 	var LocaleChatWindowView = Backbone.View.extend({
 		tagName: 'div',
@@ -24,6 +40,7 @@ define([
 			this.ChatUserModel = options.UserModel;
 			this.$el.html(""); // Remove dummy data
 			this.listenTo(this.collection, "add", this.add);
+			this.listenTo(this.collection, "change", this.render);
 		},
 
 		render: function() {
@@ -36,11 +53,28 @@ define([
 
 			this.$el.html(chatStr);
 
+			_.each(this.collection.models, function(model) {
+				this.$el.find(".chatbox-messages").append( this.renderMessage( model ));
+			});
+
 			return this;
 		},
 
-		add: function(message) {
+		renderMessage: function(message) {
+			var UserSent = false;
+			//if(message.get("firstName") === LocaleAuth.GetUserModel.get("firstName") && message.get("lastInitial") === LocaleAuth.GetUserModel.get("lastName")[0])
+			//	UserSent = true;
 
+			var msgStr = UserSent === true ? "<div class=\"chat-message local-message\">" : "<div class=\"chat-message foreign-message\">";
+            msgStr += "<div class=\"profilepic chatpic img-circle\"></div><div class='message-content-wrapper'><div class='message-content' ><p>" +
+                        message.get("message") + "</p><span class=\"message-subtext\">" + message.get("firstName") + " " + message.get("lastInitial") + " - " +
+                        FormatTimestamp(message.get("timestamp")) + "</span></div></div></div>";
+
+            return msgStr;
+		},
+
+		add: function(message) {
+			this.$el.find(".chatbox-messages").append( this.renderMessage(message) );
 		},
 
 		remove: function(message) {
