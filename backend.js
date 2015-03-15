@@ -95,7 +95,17 @@ io.sockets.on('connection', function (socket) {
 
 		// Calculate the active rooms for this user and push them
 		world.getValidRooms(newUser.location.lat, newUser.location.lon, function(worldRooms) {
-			updateRooms(worldRooms);
+			var usersRooms = worldRooms.map(function(obj){ 
+				if (!userCounts[obj.name]) {
+					obj["users"] = 0
+				} else {
+					obj["users"] = userCounts[obj.name];
+				}
+				return obj;
+			});
+
+
+			socket.emit('updaterooms', usersRooms);
 		});
 	});
 
@@ -103,8 +113,19 @@ io.sockets.on('connection', function (socket) {
 	socket.on('updaterooms', function (data) {
 		// Calculate the active rooms for this user and push them
 		world.getValidRooms(userRoom.location.lat, userRoom.location.lon, function(worldRooms) {
-			updateRooms(worldRooms);
+			var usersRooms = worldRooms.map(function(obj){ 
+				if (!userCounts[obj.name]) {
+					obj["users"] = 0
+				} else {
+					obj["users"] = userCounts[obj.name];
+				}
+				return obj;
+			});
+
 		});
+
+
+		socket.emit('updaterooms', usersRooms);
 	})
 	
 	// when the client emits 'sendchat', this listens and executes
@@ -185,7 +206,16 @@ function switchRoom(socket, newroom){
 	
 	// Calculate the new active rooms for this user and push them
 	world.getValidRooms(socket.user.location.lat, socket.user.location.lon, function(worldRooms) {
-		updateRooms(worldRooms);
+		var usersRooms = rooms.map(function(obj){ 
+			if (!userCounts[obj.name]) {
+				obj["users"] = 0
+			} else {
+				obj["users"] = userCounts[obj.name];
+			}
+			return obj;
+		});
+
+		socket.emit('updaterooms', usersRooms);
 	});
 }
 
