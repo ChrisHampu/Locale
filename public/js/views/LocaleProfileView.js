@@ -3,8 +3,9 @@ define([
 	'underscore',
 	'backbone',
 	'bootstrapjs',
-	'sidr'
-], function($, _, Backbone, Bootstrap, sidr){
+	'sidr',
+	'LocaleAuth'
+], function($, _, Backbone, Bootstrap, sidr, LocaleAuth){
 
 	var sidrOpened = false;
 	var LocaleProfileView = Backbone.View.extend({
@@ -17,6 +18,13 @@ define([
 
 		initialize: function() {
 			$('#profile-thumbnail').sidr();
+
+			var url = LocaleAuth.GetUserModel().get("profile_url");
+
+			if(url !== undefined)
+			{
+				$('.profilepic').css("background", "url(" + url + ")").css("background-size", "contain");
+			}
 		},
 
 		render: function() {

@@ -34,7 +34,7 @@ define([
 		},
 
 		initialize: function() {
-			ProfileView = new LocaleProfileView();
+			
 
 			ChatroomCollection = new LocaleChatroomCollection();
 			ChatroomListView = new LocaleChatroomListView( { collection: ChatroomCollection } );
@@ -57,6 +57,8 @@ define([
 		},
 
 		render: function() {
+			ProfileView = new LocaleProfileView();
+			
 			// Failed to get position, do nothing
 			LocaleUtilities.GetCurrentLocation(function(position) {
 				CurrentPosition = position;
