@@ -159,17 +159,18 @@ io.sockets.on('connection', function (socket) {
 	})
 	
 	// when the client emits 'sendchat', this listens and executes
-	socket.on('sendchat', function (room, message) {
+	socket.on('sendchat', function (data) {
 		var persistedMessage = {
-			"room": room,
+			"room": data.room,
 			"firstName": socket.user.firstName,
 			"lastInitial": socket.user.lastName.charAt(0),
-			"message": message
+			"profileUrl": socket.user.profileUrl,
+			"message": data.message
 		};
 
 		world.persistMessage(persistedMessage);
 
-		io.sockets.in(room).emit('broadcastchat', persistedMessage);
+		io.sockets.in(data.room).emit('broadcastchat', persistedMessage);
 	});
 	
 	socket.on('switchRoom', function(newroom){

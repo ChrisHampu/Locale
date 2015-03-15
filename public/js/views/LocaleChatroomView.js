@@ -15,7 +15,7 @@ define([
 
 		events: {
 			'click .room-button' : 'join',
-			'click .exit-room' : 'remove'
+			'keypress .exit-room' : 'remove'
 		},
 
 		initialize: function(options) {
@@ -82,7 +82,7 @@ define([
 		addMessage: function(newMessage) {
 			//console.log("trying message: " + newMessage);
 
-			this.ChatMessages.add( new LocaleChatMessageModel( { firstName: newMessage.firstName, lastInitial: newMessage.lastInitial, message: newMessage.message, timestamp: newMessage.timestamp, room: newMessage.room } ) );
+			this.ChatMessages.add( new LocaleChatMessageModel( { firstName: newMessage.firstName, lastInitial: newMessage.lastInitial, profileUrl: newMessage.profileUrl, message: newMessage.message, timestamp: newMessage.timestamp, room: newMessage.room } ) );
 		},
 
 		join: function() {
@@ -90,6 +90,12 @@ define([
 			this.parent.render();
 			this.ChatMessages.reset();
 			LocaleSocket.Emit('joinroom', this.model.get("name"));
+
+			var checkState = this.ChatWindow.$el.css("bottom");
+			if (checkState == "42px"){
+				this.ChatWindow.$el.children(".chatbox-content").css({display: "block"});
+				this.ChatWindow.$el.stop().animate({"bottom" :"384px"}, 400);
+			}
 		}
 	});
 

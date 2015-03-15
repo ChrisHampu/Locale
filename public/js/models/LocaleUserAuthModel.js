@@ -19,7 +19,7 @@ define([
 			location: undefined,
 			firstName: "John",
 			lastName: "Doe",
-			token: undefined,
+			profileUrl: undefined,
 			email: ""
 		}
 	});

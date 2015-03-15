@@ -14,12 +14,26 @@ define([
 
 		events: {
 			'click #profile-thumbnail' : 'profile',
-			'click #add-locale' : 'createLocale',
 			'click .toggle-delete' : 'toggle'
 		},
 
 		initialize: function() {
 			$('#profile-thumbnail').sidr();
+
+			this.$el.on('click', "#form-dialog-btn", function() {
+
+				var displayed = $("#add-room-dialog").css("display");
+
+				if(displayed === "block"){
+					$("#add-room-dialog").stop().animate({height: "0"}, function(){
+						$("#add-room-dialog").css("display", "none");
+					})
+				}else{
+					$("#add-room-dialog").css("display", "block");
+					$("#add-room-dialog").stop().animate({height: "250px"});
+				}
+
+			});
 		},
 
 		render: function() {
@@ -38,25 +52,6 @@ define([
 
 
 			$('#all-room-container').css("max-height", maxHeight);
-
-		},
-
-		createLocale: function () {
-			//event.preventDefault();
-			var name = this.$el.find("#roomName").val();
-			var description = this.$el.find("#roomDescription").val();
-
-			if(name === undefined || description === "")
-				return;
-
-			var roomData = {
-				"name": name,
-				"description": description
-			}
-
-			console.log("Adding " + name);
-			
-			LocaleSocket.Emit('addroom', roomData);
 		},
 
 		toggle: function(){

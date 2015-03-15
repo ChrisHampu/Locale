@@ -33,7 +33,8 @@ define([
 			'click .chatbox-minimize' : 'minimize',
 			'click .chatbox-exit' : 'exit',
 			'click .chatbox-header' : 'maximize',
-			'click .send-message' : 'send'
+			'click .send-message' : 'send',
+			'keypress .chatbox-input' : 'sendMessage'
 		},
 
 		initialize: function(options) {
@@ -67,11 +68,21 @@ define([
 
 		renderMessage: function(message) {
 			var UserSent = false;
-			//if(message.get("firstName") === LocaleAuth.GetUserModel.get("firstName") && message.get("lastInitial") === LocaleAuth.GetUserModel.get("lastName")[0])
-			//	UserSent = true;
+
+			var msgUrl = message.get("profileUrl");
+			var localUrl = LocaleAuth.GetUserModel().get("profileUrl");
+
+			if(msgUrl === localUrl)
+				UserSent = true;
+
+			if (msgUrl !== undefined) {
+				var style = "style=\"background: url(" + msgUrl + ");\""
+			} else {
+				var style = "";
+			}
 
 			var msgStr = UserSent === true ? "<div class=\"chat-message local-message\">" : "<div class=\"chat-message foreign-message\">";
-            msgStr += "<div class=\"profilepic chatpic img-circle\"></div><div class='message-content-wrapper'><div class='message-content' ><p>" +
+            msgStr += "<div class=\"profilepic chatpic img-circle\"" + style + "></div><div class='message-content-wrapper'><div class='message-content' ><p>" +
                         message.get("message") + "</p><span class=\"message-subtext\">" + message.get("firstName") + " " + message.get("lastInitial") + " - " +
                         FormatTimestamp(message.get("timestamp")) + "</span></div></div></div>";
 
@@ -100,11 +111,9 @@ define([
 		},
 
 		maximize: function(){
-			console.log("MAX");
 			var checkState = this.$el.css("bottom");
 			if (checkState == "42px"){
 				this.$el.children(".chatbox-content").css({display: "block"});
-				console.log("RUN");
 				this.$el.stop().animate({"bottom" :"384px"}, 400);
 			}
 		},
@@ -116,12 +125,20 @@ define([
 			if(input === undefined || input === "")
 				return;
 
-			LocaleSocket.Emit('sendchat', room ,input);
+			LocaleSocket.Emit('sendchat', {"room": room, "message": input});
+
+			this.$el.find(".message-box").val("");
 		},
 
 		exit: function(){
 			this.$el.closest(".chatbox").remove();
 			this.parent.model.set("joined", false);
+		},
+
+		sendMessage:function(e){
+			if(e.which === 13){
+				this.send();
+			}
 		}
 	});
 

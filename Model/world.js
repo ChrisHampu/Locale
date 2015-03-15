@@ -28,7 +28,7 @@ World.prototype.getRooms = function (callback) {
 
 World.prototype.getAllowedRoomNames = function (lat, lon, callback){
     // Search for all rooms within 10km of the passed lat/long
-    this.db.newSearchBuilder().collection("rooms").query("value.location:NEAR:{lat:" + lat + " lon:" + lon + " dist:10000000km}").then(function (result) {
+    this.db.newSearchBuilder().collection("rooms").query("value.location:NEAR:{lat:" + lat + " lon:" + lon + " dist:1000m}").then(function (result) {
         var roomObjects = result.body.results;
 
         var rooms = roomObjects.map(function(obj){ 

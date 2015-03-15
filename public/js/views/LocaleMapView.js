@@ -47,8 +47,6 @@ define([
 
 				_.each(ChatroomListView.getRooms(), function(chat) {
 
-					console.log(chat);
-
 					var roomName = chat.model.get("name");
 					var dataName = data.room;
 					if(roomName === dataName)
@@ -56,6 +54,18 @@ define([
 						_.each(data.messages, function(message) {
 							chat.addMessage(message);
 						});
+					}
+				});
+			});
+
+			LocaleSocket.Handle('broadcastchat', function(data) {
+				_.each(ChatroomListView.getRooms(), function(chat) {
+
+					var roomName = chat.model.get("name");
+					var dataName = data.room;
+					if(roomName === dataName)
+					{
+						chat.addMessage(data);
 					}
 				});
 			});
@@ -77,6 +87,19 @@ define([
 				      icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
 				  });
 
+			    /* google.maps.event.addListener(marker, 'click', function(){
+			     	var name;
+			     	var 
+
+			     	$('.waypoint-info').css({display: "block"});
+				    $('.waypoint-info').stop().animate({height: "125px"});
+				    $('.waypoint-info').html('<div class="chatbox-icon"></div>'
+				    	+'<div class="waypoint-name">'
+				    		 + name 
+				    	+ '</div>' 
+				    	+ '<div class="waypoint-info-dismiss"><i class="fa fa-angle-up fa-lg"></i></div>'
+			     })*/
+
 	      		Map.setCenter(pos);
 			});
 		},
@@ -92,24 +115,28 @@ define([
 
 				google.maps.event.addListener(marker, 'mouseover', function() {
 				    //display info about the room if it is a room, or if it is you, display your info.
-				    console.log("hovered");
 				});
 
 				google.maps.event.addListener(marker, 'mouseout', function() {
 				    //remove whatever info was displayed
-				    console.log("unhovered");
 				});
 
 				google.maps.event.addListener(marker, 'click', function() {
 				   	//Pan to and do hovered
 				   	var name = '<h4>' + value.name + '</h4>';
 				   	var description = "Rachel and Chandler are our Junior Designers. Rachel is a web designer with knowledge of HTML and CSS and supports Ross on projects.";
+				   	var buttonHTML;
+				   	if(value.canJoin){
+				   		buttonHTML = '<button type="button" class="btn btn-success waypoint-join" data-name= "' +  value.name +'">Join</button>';
+				   	} else {
+				   		buttonHTML = '<button type="button" class="btn btn-success waypoint-join" disabled="disabled" data-name= "' +  value.name +'">Join</button>'
+				   	}
 
 
 				    Map.panTo(marker.getPosition());
-				    console.log("clicked");
 				    $('.waypoint-info').css({display: "block"});
 				    $('.waypoint-info').stop().animate({height: "125px"});
+
 				    $('.waypoint-info').html(
                         '<div class="panel panel-default">' +
                             '<div class="panel-heading">' +
@@ -126,11 +153,7 @@ define([
                                     '<button type="button" class="btn btn-default waypoint-info-dismiss">' +
                                         '<i class="fa fa-angle-up fa-lg"></i>' +
                                     '</button>' +
-                                    '<button type="button" ' +
-                                        'class="btn btn-success waypoint-join" data-name= "' +
-                                        value.name + '">' +
-                                        'Join' +
-                                    '</button>' +
+                                    buttonHTML +
                                 '</div>' +
                             '</div>' +
                     '</div>');
@@ -170,7 +193,7 @@ define([
 					}, 10);
 				})
 
-				ChatroomCollection.add( new LocaleChatModel( { location: value.location, name: value.name, radius: value.radius }));
+				ChatroomCollection.add( new LocaleChatModel( { location: value.location, name: value.name, radius: value.radius, canJoin: value.canJoin }));
 			});
 		},
 
