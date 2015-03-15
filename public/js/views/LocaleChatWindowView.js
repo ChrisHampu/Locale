@@ -45,7 +45,7 @@ define([
 		},
 
 		render: function() {
-			var chatStr = "<div class='chatbox-header'><div class='chatbox-icon'></div><div class='chatbox-title'><div class='h1'>" + this.ChatUserModel.get("name") + "</div>" +
+			var chatStr = "<div class='chatbox-header'><div class='chatbox-icon'></div><div class='chatbox-title'><div class='h1 room-title'>" + this.ChatUserModel.get("name") + "</div>" +
 "<div class='h2'>University of British Columbia</div> </div><div class=\"chatbox-controls\"><div class=\"chatbox-exit btn\" href='#'><i class=\"fa fa-close\"></i></div>" +
 "<div class=\"chatbox-minimize btn\" href='#'><i class=\"fa fa-minus\"></i></div></div></div><div class='chatbox-content'>" +
 "<div class='chatbox-messages'><div class=\"messages-wrapper\"></div> </div><div class='chatbox-input input-group'><input type=\"text\" class=\"form-control message-box\" placeholder=\"Enter Message\">" +
@@ -111,13 +111,12 @@ define([
 
 		send: function() {
 			var input = this.$el.find(".message-box").val();
+			var room = this.$el.find(".room-title").text();
 
 			if(input === undefined || input === "")
 				return;
 
-
-			console.log("sending " + input);
-			//LocaleSocket.Emit('', input);
+			LocaleSocket.Emit('sendchat', room ,input);
 		},
 
 		exit: function(){

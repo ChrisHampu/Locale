@@ -34,7 +34,7 @@ define([
 		renderButton: function() {
 			this.$el.html('<ul id="my-room-container">' +
                                 '<li class="btn-group">'+
-                                   '<div class="btn btn-default">' +
+                                   '<div class="btn btn-default room-button">' +
                                         '<div class="chatbox-icon"></div>' +
                                         '<div class="chatbox-title">' +
                                             '<div class="h1">' + this.model.get("name") + '</div>' +
