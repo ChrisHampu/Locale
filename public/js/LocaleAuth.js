@@ -184,6 +184,6 @@ define([
 		Logout: Logout,
 		EnsureAuthed: EnsureAuthed,
 		GetUserModel: GetUserModel,
-		FinalzeData: FinalizeData
+		FinalizeData: FinalizeData
 	};
 });
