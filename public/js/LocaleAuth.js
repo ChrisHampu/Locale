@@ -79,7 +79,7 @@ define([
 
 			IsAuthed = true;
 
-			SendAuthModel();
+			SendAuthModel(true);
 		}
 		else if(response.status === 'not_authorized')
 		{
