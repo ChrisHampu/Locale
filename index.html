@@ -6,17 +6,21 @@
 	var activeRooms = [];
 	var currentRoom = null;
 
-	// chatMessages is a key-value array of room->messages
+	// chatMessages is an array of the chat messages currently being displayed
 	var chatMessages = [];
 
 	// On connection to server, get the location and send it to the server
 	navigator.geolocation.getCurrentPosition(function(loc){
 		socket.emit('join', {
-			"username": "User1", 
-			"location": {
-				"lat": loc.coords.latitude,
-				"lon": loc.coords.longitude
-			}
+			id: 1, 
+			location: { 
+				lat: loc.coords.latitude, 
+				lon: loc.coords.longitude 
+			}, 
+			firstName: "John", 
+			lastName: "Doe", 
+			token: '123', 
+			email: "email@email.com" 
 		});
 	});
 
@@ -29,22 +33,25 @@
 		renderRooms();
 	});
 
-	// listener, whenever the server emits 'updatechat', this updates the chat body
-	socket.on('updatechat', function (username, data) {
-		chatMessages.push({
-		    key:   "keyName",
-		    value: "the value"
-		});
-
-		$('#conversation').append('<b>'+username + ':</b> ' + data + '<br>');
+	// listener, catch 'broadcastchat' events for a room and feed the data into that room
+	socket.on('broadcastchat', function (data) {
+		chatMessages.push(data);
+		renderMessages();
 	});
 
-	function askForRooms() {
-		socket.emit('updaterooms');
-	}
+	// The server will send an initial loadroom packet with the room's most recent messages when a user joins
+	socket.on('loadroom', function(messages) {
+		// Set the global chatmessages for this room to the received values
+		chatMessages = messages
+
+		// Render the historical room messages
+		renderMessages();
+	})
 
 	function switchRoom(room) {
 		socket.emit('switchRoom', room);
+		currentRoom = room;
+		chatMessages = [];
 	}
 	
 	// on load of page
@@ -54,7 +61,7 @@
 			var message = $('#data').val();
 			$('#data').val('');
 			// tell server to execute 'sendchat' and send along one parameter
-			socket.emit('sendchat', message);
+			socket.emit('sendchat', currentRoom, message);
 		});
 
 		// when the client hits ENTER on their keyboard
@@ -71,9 +78,9 @@
 	 */
 	function renderRooms() {
 		$('#rooms').empty();
-		
+
 		$.each(activeRooms, function(key, value) {
-			if(value == currentRoom){
+			if(value["name"] == currentRoom){
 				$('#rooms').append('<div>' + value["name"] + '</div>');
 			}
 			else {
@@ -83,11 +90,21 @@
 
 	}
 
-	function renderChatMessage(message) {
+		// Render the chat messages that were handled elsewhere
+	function renderMessages() {
+		$('#conversation').empty();
 
+		console.log(chatMessages);
+
+		$.each(chatMessages, function(key, value) {
+			$('#conversation').append('<b>'+ value["user"] + ':</b> ' + value["message"] + '<br>');
+		});
+	
 	}
 
 </script>
+
+
 <div style="float:left;width:100px;border-right:1px solid black;height:300px;padding:10px;overflow:scroll-y;">
 	<b>ROOMS</b>
 	<div id="rooms"></div>

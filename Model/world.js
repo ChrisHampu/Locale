@@ -48,8 +48,29 @@ World.prototype.getValidRooms = function (lat, lon, callback){
 
         callback(rooms);
     })
-
 }
 
+// Persist a message, passes the data object back into the callback
+World.prototype.persistMessage = function (data, callback){
+    this.db.put('messages', data.id, data).then(function (result) {
+        callback(data);
+    })
+}
+
+// Return the last 10 messages for a room
+World.prototype.getRoomHistory = function (room, callback){
+    var rooms = null;
+
+    // Search for all rooms within 10km of the passed lat/long
+    this.db.newSearchBuilder().collection("messages").query("value.location:NEAR:{lat:" + lat + " lon:" + lon + " dist:10000000km}").then(function (result) {
+        var roomObjects = result.body.results;
+
+        var rooms = roomObjects.map(function(obj){ 
+            return obj["value"];
+        });
+
+        callback(rooms);
+    })
+}
 
 module.exports = World;

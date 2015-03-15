@@ -3,9 +3,10 @@ define([
 	'underscore',
 	'backbone',
 	'bootstrapjs',
+	'LocaleSocket',
 	'LocaleAuth',
 	'LocaleMapView'
-], function($, _, Backbone, Bootstrap, LocaleAuth, LocaleMapView){
+], function($, _, Backbone, Bootstrap, LocaleSocket, LocaleAuth, LocaleMapView){
 
 	var MapView;
 
@@ -15,6 +16,11 @@ define([
 		initialize: function() {
 
 			MapView = new LocaleMapView();
+
+			LocaleSocket.Handle('updaterooms', function(rooms, current) {
+				MapView.renderRooms(rooms, current);
+				console.log("update rooms");
+			});
 		},
 
 		render: function() {

@@ -92,23 +92,21 @@ io.sockets.on('connection', function (socket) {
 	// when the client emits 'join', this listens and executes
 	socket.on('join', function(user){
 
+		var newUser = JSON.parse(user);
+	
 		// Create or update the user's db entry
-		console.log(user);
+		console.log(newUser);
 
 		// Store the username in the socket session for this client
-		socket.username = user.username;
-		socket.user = user;
+		socket.username = newUser.firstName;
+		socket.user = newUser;
 
 		// Calculate the active rooms for this user and push them
-		world.getValidRooms(user.location.lat, user.location.lon, function(worldRooms) {
+		world.getValidRooms(newUser.location.lat, newUser.location.lon, function(worldRooms) {
 			var usersRooms = worldRooms; 
 			
 			socket.emit('updaterooms', usersRooms);
 		});
-
-
-		// echo to client they've connected
-		socket.emit('updatechat', 'SERVER', 'You have joined the server (not in a room yet)');
 	});
 
 	// listener, client asks for updaterooms, server sends back the list of rooms
@@ -122,19 +120,34 @@ io.sockets.on('connection', function (socket) {
 	})
 	
 	// when the client emits 'sendchat', this listens and executes
-	socket.on('sendchat', function (data) {
-		// we tell the client to execute 'updatechat' with 2 parameters
-		io.sockets.in(socket.room).emit('updatechat', socket.username, data);
+	socket.on('sendchat', function (room, message) {
+		var persistedMessage = {
+			"id": guid(),
+			"room": room,
+			"user": socket.username,
+			"message": message
+		};
 
-		console.log(data);
+		world.persistMessage(persistedMessage);
+
+		io.sockets.in(room).emit('broadcastchat', persistedMessage);
 	});
 	
 	socket.on('switchRoom', function(newroom){
 		switchRoom(socket, newroom);
 	});
+
+	socket.on('joinroom', function(room){
+		socket.join(room);
+		socket.emit('updatechat', {"user": "system", "message": "Welcome to " + newroom});
+		// TODO: Add user to the list of people in the room
+	});
+
+	socket.on('leaveroom', function(room){
+		socket.leave(room);
+	});
 	
 
-	// when the user disconnects.. perform this
 	socket.on('disconnect', function(){
 		// remove the username from global usernames list
 		//delete usernames[socket.username];
@@ -150,14 +163,14 @@ io.sockets.on('connection', function (socket) {
 function switchRoom(socket, newroom){
 	socket.leave(socket.room);
 	socket.join(newroom);
-	socket.emit('updatechat', 'SERVER', 'you have connected to ' + newroom);
+	socket.emit('loadroom', [{"user": "System", "message": "Welcome to " + newroom}]);
 	// sent message to OLD room
 	socket.broadcast.to(socket.room).emit('updatechat', 'SERVER', socket.username+' has left this room');
 	// update socket session room title
 	socket.room = newroom;
 	socket.broadcast.to(newroom).emit('updatechat', 'SERVER', socket.username+' has joined this room');
 	
-	// Calculate the active rooms for this user and push them
+	// Calculate the new active rooms for this user and push them
 	world.getValidRooms(socket.user.location.lat, socket.user.location.lon, function(worldRooms) {
 		var usersRooms = worldRooms; 
 		
@@ -165,3 +178,13 @@ function switchRoom(socket, newroom){
 	});
 }
 
+// Generates psuedo-guid's for chat messages and anything else we need them for
+function guid() {
+	function s4() {
+		return Math.floor((1 + Math.random()) * 0x10000)
+		.toString(16)
+		.substring(1);
+	}
+	return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+	s4() + '-' + s4() + s4() + s4();
+}

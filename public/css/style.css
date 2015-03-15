@@ -485,3 +485,64 @@ footer
     font-size: 11px;
     color: #888888;
 }
+
+.room-button {
+    left:25%;
+    background-color: #888888;
+    position: relative;
+    color:white;
+    width: 125px;
+    height:35px;
+}
+
+.exit-room {
+    cursor: pointer;
+    display: none;
+    position:relative;
+    left:80px;
+}
+
+.toggle-delete {
+    position:relative;
+    top:-28px;
+    left: 122px;
+    cursor: pointer;
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+}
+ 
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px #888888; 
+    border-radius: 10px;
+}
+ 
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px #111111; 
+}
+
+#room-container {
+    overflow-y: auto; 
+    max-height: 100%;
+    padding-bottom: 20px;
+    padding-top:20px;
+}
+
+.badge{
+    position:relative;
+    top: -35px;
+    left:100px;
+    width:22px;
+
+
+}
+
+.button-title{
+
+}
+
+.button-location{
+
+}
