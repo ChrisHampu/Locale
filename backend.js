@@ -123,7 +123,8 @@ io.sockets.on('connection', function (socket) {
 	socket.on('sendchat', function (room, message) {
 		var persistedMessage = {
 			"room": room,
-			"user": socket.username,
+			"firstName": socket.user.firstName,
+			"lastInitial": socket.user.lastName.charAt(0),
 			"message": message
 		};
 
