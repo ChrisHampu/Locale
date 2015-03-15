@@ -20,7 +20,7 @@ define([
 	var Map,
 		CurrentPosition = undefined;
 
-	var timer;
+	var timer = undefined;
 
 	var searchQuery;
 
@@ -36,7 +36,8 @@ define([
 		events: {
 			'click .waypoint-join' : 'join',
 			'click .waypoint-info-dismiss' : 'dismiss',
-			'keypress #searchbar' : 'search'
+			'keypress #searchbar' : 'search',
+			'click #searchbar' : 'search'
 		},
 
 		initialize: function() {
@@ -122,7 +123,7 @@ define([
 
 				// Disallow duplicates
 				var exists = ChatroomCollection.where( { name: value.name} );
-				
+
 				if(exists.length == 0)
 				{
 					var pos = new google.maps.LatLng(value.location.latitude, value.location.longitude);
@@ -189,7 +190,7 @@ define([
 						map: Map
 					});
 
-					ChatroomCollection.add( new LocaleChatModel( { location: value.location, name: value.name, radius: value.radius, canJoin: value.canJoin, userCount: value.userCount }));
+					ChatroomCollection.add( new LocaleChatModel( { location: value.location, name: value.name, radius: value.radius, canJoin: value.canJoin, userCount: value.userCount, tags: value.tags }));
 
 				}
 
@@ -200,19 +201,33 @@ define([
 			this.getValue(function(value){
 				_.each(ChatroomListView.getRooms(), function(chat) {
 					var tags = chat.model.get("tags");
-					console.log(tags);
+					if(tags !== undefined)
+					{
+						var tagsArr = value.split(' ');
+						_.each(tagsArr, function(tag) {
+
+							var ind = tags.indexOf(tag);
+							if(ind > 0)
+							{
+								console.log("Matched tag " + tag + " to model tag " + tags[ind]);
+							}
+						});
+					}
+					console.log("model has no tags");
 				});
 			});
 		},
 
 		getValue: function(callback){
-			if(timer){
+			if(timer !== undefined){
 				clearTimeout(timer);
+				timer = undefined;
 			}
 			timer = setTimeout(function() {
 				searchQuery = $('#search-content').val();
 				callback(searchQuery);
-			},1000);
+				$("#searchbar").val("");
+			},500);
 		},
 
 		getLocation: function() {
