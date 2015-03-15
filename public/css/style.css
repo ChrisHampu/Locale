@@ -629,11 +629,15 @@ footer
 
 #add-room-dialog {
     display: none;
+    height: 0;
     margin: 10px;
     text-align: left;
     position:relative;
-    float: left;
     width: 330px;
+}
+
+#add-locale {
+    float:right;
 }
 
 .sidebar-content {
