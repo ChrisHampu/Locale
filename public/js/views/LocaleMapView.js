@@ -31,7 +31,8 @@ define([
 
 		events: {
 			'click #do-search' : 'search',
-			'click .waypoint-join' : 'join'
+			'click .waypoint-join' : 'join',
+			'click .waypoint-info-dismiss' : 'dismiss'
 		},
 
 		initialize: function() {
@@ -112,6 +113,7 @@ define([
 				    	+'<div class="waypoint-name">'
 				    		 + name 
 				    	+ '</div>' 
+				    	+ '<div class="waypoint-info-dismiss"><i class="fa fa-angle-up fa-lg"></i></div>'
 				    	+ '<div class="waypoint-description">' 
 				    		+   description
 				    	+ '</div>'
@@ -172,6 +174,9 @@ define([
 		},
 
 		join: function(e) {
+			$('.waypoint-info').stop().animate({height: "0px"}, function(){
+				$('.waypoint-info').css("display", "none");
+			});
 			var name = $(e.currentTarget).data()["name"];
 			_.each(ChatroomListView.getRooms(), function(chat) {
 				var roomName = chat.model.get("name");
@@ -180,6 +185,12 @@ define([
 					console.log("joined chat" + roomName);
 					chat.join();
 				}
+			});
+		},
+
+		dismiss: function(){
+			$('.waypoint-info').stop().animate({height: "0px"}, function(){
+				$('.waypoint-info').css("display", "none");
 			});
 		}
 	});

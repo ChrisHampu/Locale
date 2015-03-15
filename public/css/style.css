@@ -639,3 +639,11 @@ footer
 .sidebar-content {
     padding: 0px;
 }
+
+.waypoint-info-dismiss {
+    float:right;
+    position:relative;
+    top:-35px;
+    right:10px;
+    cursor: pointer;
+}
