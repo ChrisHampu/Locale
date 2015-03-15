@@ -118,7 +118,13 @@ define([
 		},
 
 		renderRooms: function(rooms, current) {
-			$.each(rooms, function(key, value) {
+			_.each(rooms, function(value) {
+
+				// Disallow duplicates
+				var exists = ChatroomCollection.where( { name: value.name} );
+				if(exists.length > 0)
+					return;
+
 				var pos = new google.maps.LatLng(value.location.latitude, value.location.longitude);
 
 			    var marker = new google.maps.Marker({
@@ -184,7 +190,7 @@ define([
 				});
 
 				ChatroomCollection.add( new LocaleChatModel( { location: value.location, name: value.name, radius: value.radius, canJoin: value.canJoin, userCount: value.userCount }));
-			});
+			}, this);
 		},
 
 		search: function() {
