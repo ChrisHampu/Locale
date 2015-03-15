@@ -10,14 +10,10 @@
 }
 
 World.prototype.addRoom = function(room, callback) {
-
     this.db.put('rooms', room.name, room)
-
 }
 
 World.prototype.getRooms = function (callback) {
-    var rooms = null;
-
     this.db.list('rooms').then(function (result) {
         var roomObjects = result.body.results;
 
@@ -30,15 +26,13 @@ World.prototype.getRooms = function (callback) {
 
 }
 
-World.prototype.getValidRooms = function (lat, lon, callback){
-    var rooms = null;
-
+World.prototype.getAllowedRoomNames = function (lat, lon, callback){
     // Search for all rooms within 10km of the passed lat/long
     this.db.newSearchBuilder().collection("rooms").query("value.location:NEAR:{lat:" + lat + " lon:" + lon + " dist:10000000km}").then(function (result) {
         var roomObjects = result.body.results;
 
         var rooms = roomObjects.map(function(obj){ 
-            return obj["value"];
+            return obj["value"].name;
         });
 
         callback(rooms);

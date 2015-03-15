@@ -72,7 +72,8 @@ app.get('/main', function(req, res){
 var World = require("./Model/world.js");
 var world = new World(db);
 
-var worldRooms = null;
+var allRooms = null;
+var allRoomNames = null;
 
 // users connected to each room
 var userCounts = [];
@@ -80,6 +81,15 @@ var userCounts = [];
 var roomNames = null;
 
 io.sockets.on('connection', function (socket) {
+
+	// Pull all the available rooms on every connection to compare against rooms that a given user is permitted access to
+	world.getRooms(function(rooms) {
+		allRooms = rooms;
+
+		allRoomNames = allRooms.map(function(obj) {
+			return obj.name;
+		})
+	});
 
 	// When the client emits 'join', this listens and executes
 	socket.on('join', function(user){
@@ -93,14 +103,25 @@ io.sockets.on('connection', function (socket) {
 		socket.username = newUser.firstName;
 		socket.user = newUser;
 
+
 		// Calculate the active rooms for this user and push them
-		world.getValidRooms(newUser.location.lat, newUser.location.lon, function(worldRooms) {
-			var usersRooms = worldRooms.map(function(obj){ 
+		world.getAllowedRoomNames(newUser.location.lat, newUser.location.lon, function(allowedRooms) {
+
+			console.log(allRoomNames);
+
+			var usersRooms = allRooms.map(function(obj){ 
 				if (!userCounts[obj.name]) {
 					obj["users"] = 0
 				} else {
 					obj["users"] = userCounts[obj.name];
 				}
+
+				if (allowedRooms.indexOf(obj.name) > -1) {
+					obj.canJoin = true;
+				} else {
+					obj.canJoin = false;
+				}
+
 				return obj;
 			});
 
@@ -112,20 +133,30 @@ io.sockets.on('connection', function (socket) {
 	// listener, client asks for updaterooms, server sends back the list of rooms
 	socket.on('updaterooms', function (data) {
 		// Calculate the active rooms for this user and push them
-		world.getValidRooms(userRoom.location.lat, userRoom.location.lon, function(worldRooms) {
-			var usersRooms = worldRooms.map(function(obj){ 
+		// Calculate the active rooms for this user and push them
+		world.getAllowedRoomNames(newUser.location.lat, newUser.location.lon, function(allowedRooms) {
+
+			console.log(allRoomNames);
+
+			var usersRooms = allRooms.map(function(obj){ 
 				if (!userCounts[obj.name]) {
 					obj["users"] = 0
 				} else {
 					obj["users"] = userCounts[obj.name];
 				}
+
+				if (allowedRooms.indexOf(obj.name) > -1) {
+					obj.canJoin = true;
+				} else {
+					obj.canJoin = false;
+				}
+
 				return obj;
 			});
 
+
+			socket.emit('updaterooms', usersRooms);
 		});
-
-
-		socket.emit('updaterooms', usersRooms);
 	})
 	
 	// when the client emits 'sendchat', this listens and executes
@@ -195,7 +226,7 @@ io.sockets.on('connection', function (socket) {
 
 });
 
-function switchRoom(socket, newroom){
+function switchRoom(socket, newroom) {
 	socket.leave(socket.room);
 
 	// sent message to OLD room
@@ -204,32 +235,28 @@ function switchRoom(socket, newroom){
 	socket.room = newroom;
 	socket.broadcast.to(newroom).emit('updatechat', 'SERVER', socket.username+' has joined this room');
 	
-	// Calculate the new active rooms for this user and push them
-	world.getValidRooms(socket.user.location.lat, socket.user.location.lon, function(worldRooms) {
-		var usersRooms = rooms.map(function(obj){ 
-			if (!userCounts[obj.name]) {
-				obj["users"] = 0
-			} else {
-				obj["users"] = userCounts[obj.name];
-			}
-			return obj;
+		// Calculate the active rooms for this user and push them
+		world.getAllowedRoomNames(newUser.location.lat, newUser.location.lon, function(allowedRooms) {
+
+			console.log(allRoomNames);
+
+			var usersRooms = allRooms.map(function(obj){ 
+				if (!userCounts[obj.name]) {
+					obj["users"] = 0
+				} else {
+					obj["users"] = userCounts[obj.name];
+				}
+
+				if (allowedRooms.indexOf(obj.name) > -1) {
+					obj.canJoin = true;
+				} else {
+					obj.canJoin = false;
+				}
+
+				return obj;
+			});
+
+
+			socket.emit('updaterooms', usersRooms);
 		});
-
-		socket.emit('updaterooms', usersRooms);
-	});
-}
-
-function updateRooms(rooms) {
-	var usersRooms = rooms.map(function(obj){ 
-		if (!userCounts[obj.name]) {
-			obj["users"] = 0
-		} else {
-			obj["users"] = userCounts[obj.name];
-		}
-		return obj;
-	});
-
-	console.log(usersRooms);
-
-	socket.emit('updaterooms', usersRooms);
 }
