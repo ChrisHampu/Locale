@@ -13,7 +13,7 @@ define([
 		tagName: 'li',
 
 		events: {
-			'click' : 'join',
+			'click .room-button' : 'join',
 			'click .exit-room' : 'remove'
 		},
 
