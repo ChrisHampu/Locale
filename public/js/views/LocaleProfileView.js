@@ -20,6 +20,11 @@ define([
 		initialize: function() {
 			$('#profile-thumbnail').sidr();
 			this.$el.on('click', "#form-dialog-btn", function() {
+				if($('#form-dialog-btn').hasClass("active")){
+					$('#form-dialog-btn').removeClass("active");
+				} else {
+					$('#form-dialog-btn').addClass("active")
+				}
 
 				var displayed = $("#add-room-dialog").css("display");
 

@@ -4,8 +4,7 @@
 	display: none;
     box-shadow: -5px 0px 20px 10px #808080;
 	height: 100%;
-	overflow-y: auto;
-    overflow-x: none;
+    overflow: none;
 	position: absolute;
 	position: fixed;
 	top: 0;

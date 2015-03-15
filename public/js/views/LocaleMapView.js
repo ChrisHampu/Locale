@@ -66,8 +66,29 @@ define([
 					var dataName = data.room;
 					if(roomName === dataName)
 					{
-						chat.addMessage(data);
-						console.log("Broadcast", data);
+						chat.addMessage(data, function(location, radius) {
+
+							var pulse = new google.maps.Circle({
+								center: new google.maps.LatLng(location.latitude, location.longitude),
+								radius: 1,
+								strokeColor: "#758ff9",
+								strokeOpacity: 1,
+								strokeWeight: 3,
+								fillColor: "#758ff9",
+								fillOpacity: 0
+							});
+							pulse.setMap(Map);
+
+							var direction = 1;
+							var rMin = 1, rMax = parseInt(radius);
+							setInterval(function() {
+								var radius = pulse.getRadius();
+								if (radius > rMax) {
+									pulse.setMap(null);
+								}
+								pulse.setRadius(radius + 5);
+							}, 10);
+						});
 					}
 				});
 			});
@@ -88,18 +109,6 @@ define([
 				      icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
 				  });
 
-			    /* google.maps.event.addListener(marker, 'click', function(){
-			     	var name;
-			     	var 
-
-			     	$('.waypoint-info').css({display: "block"});
-				    $('.waypoint-info').stop().animate({height: "125px"});
-				    $('.waypoint-info').html('<div class="chatbox-icon"></div>'
-				    	+'<div class="waypoint-name">'
-				    		 + name 
-				    	+ '</div>' 
-				    	+ '<div class="waypoint-info-dismiss"><i class="fa fa-angle-up fa-lg"></i></div>'
-			     })*/
 	      		Map.setCenter(pos);
 			});
 		},
@@ -129,13 +138,13 @@ define([
 				   	if(value.canJoin){
 				   		buttonHTML = '<button type="button" class="btn btn-success waypoint-join" data-name= "' +  value.name +'">Join</button>';
 				   	} else {
-				   		buttonHTML = '<button type="button" class="btn btn-success waypoint-join" disabled="disabled" data-name= "' +  value.name +'">Join</button>'
+				   		buttonHTML = '<button type="button" class="btn btn-success waypoint-join" disabled="disabled" data-name= "' +  value.name +'">Too Far</button>'
 				   	}
 
 
 				    Map.panTo(marker.getPosition());
 				    $('.waypoint-info').css({display: "block"});
-				    $('.waypoint-info').stop().animate({height: "125px"});
+				    $('.waypoint-info').stop().animate({height: "250px"}, 500);
 
 				    $('.waypoint-info').html(
                         '<div class="panel panel-default">' +
@@ -169,29 +178,6 @@ define([
 					strokeWidth: 0,
 					map: Map
 				});
-
-				google.maps.event.addListener(circle, "click", function() {
-					var pulse = new google.maps.Circle({
-						center: pos,
-						radius: 1,
-						strokeColor: "#758ff9",
-						strokeOpacity: 1,
-						strokeWeight: 3,
-						fillColor: "#758ff9",
-						fillOpacity: 0
-					});
-					pulse.setMap(Map);
-
-					var direction = 1;
-					var rMin = 1, rMax = parseInt(value.radius);
-					setInterval(function() {
-						var radius = pulse.getRadius();
-						if (radius > rMax) {
-							pulse.setMap(null);
-						}
-						pulse.setRadius(radius + 5);
-					}, 10);
-				})
 
 				ChatroomCollection.add( new LocaleChatModel( { location: value.location, name: value.name, radius: value.radius, canJoin: value.canJoin }));
 			});
