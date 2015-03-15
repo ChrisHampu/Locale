@@ -6,13 +6,16 @@ define([
 	'LocaleUtilities',
 	'LocaleProfileView',
 	'LocaleChatroomListView',
+	'LocaleChatModel',
+	'LocaleChatroomCollection',
 	'LocaleSearchModel',
 	'LocaleSocket',
 	'async!http://maps.google.com/maps/api/js?sensor=false!callback'
-], function($, _, Backbone, Bootstrap, LocaleUtilities, LocaleProfileView, LocaleChatroomListView, LocaleSearchModel, LocaleSocket, GMaps){
+], function($, _, Backbone, Bootstrap, LocaleUtilities, LocaleProfileView, LocaleChatroomListView, LocaleChatModel, LocaleChatroomCollection, LocaleSearchModel, LocaleSocket, GMaps){
 
 	var ProfileView,
-		ChatroomListView;
+		ChatroomListView,
+		ChatroomCollection;
 
 	var Map,
 		CurrentPosition = undefined;
@@ -32,7 +35,9 @@ define([
 
 		initialize: function() {
 			ProfileView = new LocaleProfileView();
-			ChatroomListView = new LocaleChatroomListView();
+
+			ChatroomCollection = new LocaleChatroomCollection();
+			ChatroomListView = new LocaleChatroomListView( { collection: ChatroomCollection } );
 			
 			Map = new google.maps.Map(this.$el.find("#map-wrapper")[0], mapOptions);
 		},
@@ -56,10 +61,8 @@ define([
 		},
 
 		renderRooms: function(rooms, current) {
-			console.log(rooms);
-
 			$.each(rooms, function(key, value) {
-
+				console.log(value);
 				var pos = new google.maps.LatLng(value.location.latitude, value.location.longitude);
 
 				if(value == current) {
@@ -100,6 +103,8 @@ define([
 					strokeWidth: 0,
 					map: Map
 				});
+
+				ChatroomCollection.add( new LocaleChatModel( { location: value.location, name: value.name, radius: value.radius }));
 			});
 		},
 

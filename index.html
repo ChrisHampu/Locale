@@ -11,7 +11,7 @@
 
 	// On connection to server, get the location and send it to the server
 	navigator.geolocation.getCurrentPosition(function(loc){
-		socket.emit('join', {
+		socket.emit('join', JSON.stringify({
 			id: 1, 
 			location: { 
 				lat: loc.coords.latitude, 
@@ -21,7 +21,7 @@
 			lastName: "Doe", 
 			token: '123', 
 			email: "email@email.com" 
-		});
+		}));
 	});
 
 	// listener, whenever the server emits 'updaterooms', update the client's room list
@@ -42,16 +42,16 @@
 	// The server will send an initial loadroom packet with the room's most recent messages when a user joins
 	socket.on('loadroom', function(messages) {
 		// Set the global chatmessages for this room to the received values
-		chatMessages = messages
+		chatMessages = messages.reverse();
 
 		// Render the historical room messages
 		renderMessages();
 	})
 
 	function switchRoom(room) {
-		socket.emit('switchRoom', room);
+		socket.emit('leaveroom', currentRoom);
+		socket.emit('joinroom', room);
 		currentRoom = room;
-		chatMessages = [];
 	}
 	
 	// on load of page
