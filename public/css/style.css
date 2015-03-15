@@ -627,3 +627,12 @@ footer
     padding: 0px;
 	overflow-y: auto;
 }
+
+.edit-locale {
+    height:0px;
+    display: none;
+}
+
+.btn-group {
+    margin: 5px;
+}

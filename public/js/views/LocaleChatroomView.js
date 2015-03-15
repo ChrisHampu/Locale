@@ -42,11 +42,11 @@ define([
                                 '</div>' +
                                 '<span class="badge">' + this.model.get("userCount") + '</span>' +
                             '</div>' +
-                              '<div class="btn btn-default">' +
+                              '<div class="btn btn-default toggle-pencil">' +
                                 '<i class="fa fa-pencil fa-lg"></i>' +
                               '</div>' +
                         '</div>' +
-                        '<div class="panel panel-default">' +
+                        '<div class="panel panel-default edit-locale">' +
                             '<div class="panel-body">' +
                                 '<form>' +
                                     '<div class="form-group">' +
