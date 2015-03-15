@@ -28,7 +28,7 @@ define([
 		    },
 		    function (response) {
 				if (response && !response.error) {
-					UserModel.set("profile_url", response.url);
+					UserModel.set("profile_url", response.data.url);
 				}
 		    }
 		);
