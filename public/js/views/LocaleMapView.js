@@ -81,14 +81,6 @@ define([
 				console.log(value);
 				var pos = new google.maps.LatLng(value.location.latitude, value.location.longitude);
 
-				if(value == current) {
-
-				}
-				else
-				{
-
-				}
-
 			    var marker = new google.maps.Marker({
 				      position: pos,
 				      map: Map
@@ -106,9 +98,9 @@ define([
 
 				google.maps.event.addListener(marker, 'click', function() {
 				   	//Pan to and do hovered
-				   	var numUsers = '<strong>' + ' 10' + '</strong>';
-				   	var name = '<h4>' + "Testing" + '</h4>';
-				   	var description = "local group";
+				   	var numUsers = '<strong>' + value.users + '</strong>';
+				   	var name = '<h4>' + value.name + '</h4>';
+				   	var description = "Description";
 
 
 				    Map.panTo(marker.getPosition());
