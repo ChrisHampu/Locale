@@ -402,6 +402,15 @@ footer
 
 #my-room-container .btn{
     text-align: left;
+    height: 54px;
+}
+
+#my-room-container .chatbox-title{
+    width: auto;
+}
+
+#my-room-container .fa-wrench{
+    margin: 13px 4px;
 }
 
 .chatbox-messages {

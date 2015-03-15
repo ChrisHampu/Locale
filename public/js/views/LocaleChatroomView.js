@@ -33,8 +33,8 @@ define([
 
 		renderButton: function() {
 			this.$el.html('<ul id="my-room-container">' +
-                                '<li>'+
-                                   '<div class="chatbox-header btn btn-default">' +
+                                '<li class="btn-group">'+
+                                   '<div class="btn btn-default">' +
                                         '<div class="chatbox-icon"></div>' +
                                         '<div class="chatbox-title">' +
                                             '<div class="h1">' + this.model.get("name") + '</div>' +
@@ -42,6 +42,9 @@ define([
                                         '</div>' +
                                         '<span class="badge">' + 3 /*this.model.get("messageCount")*/ + '</span>' +
                                     '</div>' +
+                                      '<div class="btn btn-default">' +
+                                        '<i class="fa fa-wrench fa-lg"></i>' +
+                                      '</div>' +
                                 '</li>');
 
 			return this;
