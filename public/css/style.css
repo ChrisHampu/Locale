@@ -571,3 +571,43 @@ footer
     margin-bottom:-20px;
     margin-top:20px;
 }
+
+.waypoint-info{
+    display: none;
+    height: 0px;
+    top:-8px;
+    position:relative;
+    right:-86px;
+    background:white;
+    width: 79.5%;
+    border-radius:4px;
+}
+
+.waypoint-info >.btn {
+    float:right;
+    width: 20%;
+    position:relative;
+    top:-20px;
+    right:10px;
+}
+
+.waypoint-name, .waypoint-numUsers, .waypoint-description {
+    float:left;
+    width: 80%;
+    padding-top: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
+}
+
+#search-bar-wrapper {
+    position:relative;
+}
+
+/*.waypoint-numUsers {
+    float:left;
+}
+
+.waypoint-description {
+    float:left;
+}*/

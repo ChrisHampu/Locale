@@ -26,10 +26,12 @@ define([
 			sidrOpened ? sidrOpened = false : sidrOpened = true;
 			if(sidrOpened){
 				//$('#searchbar').css("left", "-20px")
-				$('#searchbar').stop().animate({ left: "-20px"});
+				$('#search-bar-wrapper').stop().animate({ left: "-90px"});
+				/*$('.waypoint-info').stop().animate({ left: "-15px"});*/
 			} else {
 				//$('#searchbar').css("left", "75px")
-				$('#searchbar').stop().animate({ left: "75px"});
+				$('#search-bar-wrapper').stop().animate({ left: "0px"});
+				/*$('.waypoint-info').stop().animate({ left: "75px"});*/
 			}
 			var numRooms = $('#my-room-container').children().size();
 			var maxHeight = (5-numRooms) * 7 + 40 + "%";
