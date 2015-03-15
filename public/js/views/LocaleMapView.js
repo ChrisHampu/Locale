@@ -35,11 +35,6 @@ define([
 			ChatroomListView = new LocaleChatroomListView();
 			
 			Map = new google.maps.Map(this.$el.find("#map-wrapper")[0], mapOptions);
-
-			LocaleSocket.Handle('updaterooms', function(rooms, current) {
-				LocaleMapView.renderRooms(rooms, current);
-				console.log("update rooms");
-			});
 		},
 
 		render: function() {
@@ -47,8 +42,14 @@ define([
 			LocaleUtilities.GetCurrentLocation(function(position) {
 				CurrentPosition = position;
 
-			      var pos = new google.maps.LatLng(CurrentPosition.coords.latitude,
-			                                       CurrentPosition.coords.longitude);
+			      var pos = new google.maps.LatLng(position.coords.latitude,
+			                                       position.coords.longitude);
+
+			     var marker = new google.maps.Marker({
+				      position: pos,
+				      map: Map,
+				      icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+				  });
 
 	      		Map.setCenter(pos);
 			});
@@ -59,8 +60,7 @@ define([
 
 			$.each(rooms, function(key, value) {
 
-				var pos = { latitude: value.location.latitude, longitude: value.location.longitude };
-				console.log(pos);
+				var pos = new google.maps.LatLng(value.location.latitude, value.location.longitude);
 
 				if(value == current) {
 
@@ -93,7 +93,7 @@ define([
 
 				var circle = new google.maps.Circle({
 					center: pos,
-					radius: value.radius, //Measured in meters
+					radius: parseInt(value.radius), //Measured in meters
 					fillColor: "#758ff9",
 					fillOpacity: 0.5,
 					strokeOpacity: 0.0,
