@@ -93,11 +93,11 @@ io.sockets.on('connection', function (socket) {
 		world.getAllowedRoomNames(newUser.location.latitude, newUser.location.longitude, function(allowedRooms) {
 
 			var usersRooms = allRooms.map(function(obj){ 
-				if (!userCounts.contains(obj.name)) {
+				if (!(allowedRooms.indexOf(obj.name) > -1)) {
 					obj.userCount = 1;
 					userCounts.push(obj.name);
 				} else {
-					obj.userCount = userCounts[obj.name]++;
+					obj.userCount = userCounts[obj.name];
 				}
 
 				if (allowedRooms.indexOf(obj.name) > -1) {
@@ -110,7 +110,6 @@ io.sockets.on('connection', function (socket) {
 
 				return obj;
 			});
-
 
 			socket.emit('updaterooms', usersRooms);
 		});
@@ -133,7 +132,7 @@ io.sockets.on('connection', function (socket) {
 		world.getAllowedRoomNames(socket.user.location.latitude, socket.user.location.longitude, function(allowedRooms) {
 	
 			var usersRooms = allRooms.map(function(obj){ 
-				if (!userCounts.contains(obj.name)) {
+				if (!(allowedRooms.indexOf(obj.name) > -1)) {
 					obj.userCount = 1;
 					userCounts.push(obj.name);
 				} else {
@@ -161,7 +160,7 @@ io.sockets.on('connection', function (socket) {
 		world.getAllowedRoomNames(newUser.location.lat, newUser.location.lon, function(allowedRooms) {
 
 			var usersRooms = allRooms.map(function(obj){ 
-				if (!userCounts.contains(obj.name)) {
+				if (!(allowedRooms.indexOf(obj.name) > -1)) {
 					obj.userCount = 1;
 					userCounts.push(obj.name);
 				} else {
@@ -174,9 +173,12 @@ io.sockets.on('connection', function (socket) {
 					obj.canJoin = false;
 				}
 
+				console.log(obj);
+
 				return obj;
 			});
 
+			console.log(usersRooms);
 
 			socket.emit('updaterooms', usersRooms);
 		});
