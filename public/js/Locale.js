@@ -31,11 +31,16 @@ define([
 
 		console.log("Locale authenticated is " + Authed);
 	}
+
+	var SetProfilePic = function(url) {
+		Router.getLocaleView().getMapView().getProfileView().SetProfilePic(url);
+	}
 	
 	// Map public API functions to internal functions
 	return {
 		Initialize: Initialize,
 		OnLoggedIn: OnLoggedIn,
-		RedirectLogin: RedirectLogin
+		RedirectLogin: RedirectLogin,
+		SetProfilePic: SetProfilePic
 	};
 });

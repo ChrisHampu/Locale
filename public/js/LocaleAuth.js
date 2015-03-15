@@ -15,7 +15,8 @@ define([
 		AppToken = 616102381854407,
 		RedirectURL = "http://getlocale.me",
 		Locale,
-		UserModel;
+		UserModel,
+		UsingFB;
 
 	var PopulateFBData = function() {
 		FB.api(
@@ -29,27 +30,32 @@ define([
 		    function (response) {
 				if (response && !response.error) {
 					UserModel.set("profile_url", response.data.url);
-					$('.profilepic').css("background", "url(" + response.data.url + ")").css("background-size", "contain");
+					Locale.SetProfilePic(response.data.url);
 				}
 		    }
 		);
 	}
 
 	var PopulateGPlusData = function() {
-		UserModel.set("profile_url", "assets/profilepic/placeholder.png");
+
 	}
 
 	var SendAuthModel = function(useFB) {
 
+		UsingFB = useFB;
+
 		if(useFB === true)
 		{
 			FB.api('/me', function(response) {
-			    UserModel = new LocaleUserAuthModel({ id: response.id, location: { lat: LocaleUtilities.GetCurrentLocation().coords.latitude, lon: LocaleUtilities.GetCurrentLocation().coords.longitude },
-			     firstName: response.first_name, lastName: response.last_name, token: AuthToken, email: response.email });
 				
-				LocaleSocket.Emit('join', JSON.stringify(UserModel));
+				UserModel.set("id", response.id);
+				UserModel.set("location", { lat: LocaleUtilities.GetCurrentLocation().coords.latitude, lon: LocaleUtilities.GetCurrentLocation().coords.longitude });
+				UserModel.set("firstName", response.first_name);
+				UserModel.set("lastName", response.last_name);
+				UserModel.set("token", AuthToken);
+				UserModel.set("email", response.email);
 
-				PopulateFBData();
+				LocaleSocket.Emit('join', JSON.stringify(UserModel));
 			});
 		}
 		else
@@ -60,9 +66,9 @@ define([
 				firstName: "John", lastName: "Doe", token: AuthToken, email: "email@email.com" 
 			});
 
-			LocaleSocket.Emit('join', JSON.stringify(UserModel));
+			UserModel.set("profile_url", "assets/profilepic/placeholder.png");
 
-			PopulateGPlusData();
+			LocaleSocket.Emit('join', JSON.stringify(UserModel));
 		}
 
 		// Navigate to actual site
@@ -112,6 +118,10 @@ define([
       	});
 
       	Locale = LocaleApp;
+
+	    UserModel = new LocaleUserAuthModel();
+		
+		UserModel.set("profile_url", "assets/profilepic/placeholder.png");
 	}
 
 	var GetAuthState = function() {
@@ -165,6 +175,11 @@ define([
 	var GetUserModel = function() {
 		return UserModel;
 	}
+
+	var FinalizeData = function() {
+		PopulateFBData();
+		PopulateGPlusData();
+	}
 	
 	// Map public API functions to internal functions
 	return {
@@ -175,6 +190,7 @@ define([
 		LoginGooglePlus: LoginGooglePlus,
 		Logout: Logout,
 		EnsureAuthed: EnsureAuthed,
-		GetUserModel: GetUserModel
+		GetUserModel: GetUserModel,
+		FinalizeData: FinalizeData
 	};
 });

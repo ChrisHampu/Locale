@@ -80,6 +80,7 @@ define([
 
 		add: function(message) {
 			this.$el.find(".messages-wrapper").append( this.renderMessage(message) );
+			this.$el.find(".messages-wrapper").scrollTop(1000000);
 		},
 
 		remove: function(message) {
