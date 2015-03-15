@@ -24,23 +24,6 @@ app.get('', function (req, res) {
 // 
 // ROUTING
 //
-app.post('/api/user_auth', function (req, res){
-
-	var user = {
-		email: req.body.email,
-		name: req.body.name,
-		fbToken: req.body.fbToken,
-		location: {
-			lat: req.body.location.lat,
-			long: req.body.location.long,
-		}
-	};
-
-	db.put('users', user.email, user).then(function (result) {
-		return res.send(user);
-	});
-});
-
 app.get('/privacy', function (req, res) {
 	//Loads index file.
 	res.sendFile(__dirname + '/privacy.html');
@@ -112,7 +95,7 @@ io.sockets.on('connection', function (socket) {
 
 
 		// Calculate the active rooms for this user and push them
-		world.getAllowedRoomNames(newUser.location.lat, newUser.location.lon, function(allowedRooms) {
+		world.getAllowedRoomNames(newUser.location.latitude, newUser.location.longitude, function(allowedRooms) {
 
 			var usersRooms = allRooms.map(function(obj){ 
 				if (!userCounts[obj.name]) {
