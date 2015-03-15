@@ -124,27 +124,26 @@ io.sockets.on('connection', function (socket) {
 			tags: data.tags
 		}
 
-		world.addRoom(newRoom);
-		
+		world.addRoom(newRoom, function() {
+			// Calculate the new active rooms for this user and push them
+			world.getAllowedRoomNames(socket.user.location.latitude, socket.user.location.longitude, function(allowedRooms) {
 
-		// Calculate the new active rooms for this user and push them
-		world.getAllowedRoomNames(socket.user.location.latitude, socket.user.location.longitude, function(allowedRooms) {
-	
-			var usersRooms = allRooms.map(function(obj){ 
-								
-				obj.userCount = 0
+				var usersRooms = allRooms.map(function(obj){ 
 
-				if (allowedRooms.indexOf(obj.name) > -1) {
-					obj.canJoin = true;
-				} else {
-					obj.canJoin = false;
-				}
-	
-				return obj;
+					obj.userCount = 0
+
+					if (allowedRooms.indexOf(obj.name) > -1) {
+						obj.canJoin = true;
+					} else {
+						obj.canJoin = false;
+					}
+
+					return obj;
+				});
+
+
+				socket.emit('updaterooms', usersRooms);
 			});
-	
-
-			socket.emit('updaterooms', usersRooms);
 		});
 	})
 
