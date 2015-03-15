@@ -57,6 +57,8 @@ define([
 		},
 
 		render: function() {
+			ProfileView.render();
+			
 			// Failed to get position, do nothing
 			LocaleUtilities.GetCurrentLocation(function(position) {
 				CurrentPosition = position;
