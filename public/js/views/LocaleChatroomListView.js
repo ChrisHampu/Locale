@@ -73,9 +73,15 @@ define([
 		},
 
 		createLocale: function() {
+
+			$("#add-room-dialog").stop().animate({height: "0"}, function(){
+				$("#add-room-dialog").css("display", "none");
+				$('#form-dialog-btn').removeClass('active');
+			})
+			
 			var name = this.$el.find("#roomName").val();
 			var description = this.$el.find("#roomDescription").val();
-			var tags = this.$el.find("#roomTags").val().split("#");
+			var tags = this.$el.find("#roomTags").val().replace(" ","").split("#");
 			tags.splice(0,1);
 			console.log(tags);
 
@@ -93,7 +99,6 @@ define([
 					"tags" : tags
 				});
 			}
-			
 
 			console.log("creating locale named " + name);
 

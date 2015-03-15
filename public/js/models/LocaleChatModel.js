@@ -21,7 +21,7 @@ define([
 			canJoin: false,
 			userCount: 0,
 			description: undefined,
-			tags: undefined,
+			tags: [],
 			admin: ""
 		}
 	});
