@@ -15,7 +15,8 @@ define([
 
 		events: {
 			'click .room-button' : 'join',
-			'keypress .exit-room' : 'remove'
+			'keypress .exit-room' : 'remove',
+			'click .delete-locale' : 'deleteLocale'
 		},
 
 		initialize: function(options) {
@@ -48,28 +49,19 @@ define([
                         '<div class="panel panel-default edit-locale">' +
                             '<div class="panel-body">' +
                                 '<form>' +
-                                    '<div class="form-group">' +
-                                        '<textarea class="form-control" id="roomDescription" placeholder="Locale Description" rows="3">' +
-                                            this.model.get("description") +
-                                        '</textarea>' +
-                                    '</div>' +
-                                    '<div class="form-group">' +
-                                        '<textarea class="form-control" id="roomTags" placeholder="Tags" rows="1">' +
-                                            this.model.get("tags") +
-                                        '</textarea>' +
-                                    '</div>' +
-                                   
-                                    '<button id="delete-locale" type="button" class="btn btn-danger"><i class="fa fa-trash-o"></i> Delete</button>' +
-                                    '<button id="update-locale" type="button" class="btn btn-success"><i class="fa fa-check"></i> Update</button>' +
+                                    '<button type="button" class="btn btn-danger delete-locale"><i class="fa fa-trash-o"></i> Delete</button>' +
                                 '</form>' +
                             '</div>' +
                             '</div>' +
                         '</div>' 
             );
 
-			console.log(this.model.get("userCount"));
-
 			return this;
+		},
+
+		deleteLocale: function() {
+			LocaleSocket.Emit('deletelocale', this.model.get("name"));
+			LocaleSocket.Emit('updaterooms');
 		},
 
 		getRoomWindow: function() {

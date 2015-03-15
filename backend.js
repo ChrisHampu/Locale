@@ -84,6 +84,8 @@ io.sockets.on('connection', function (socket) {
 		newUser["location"]["longitude"] = newUser["location"]["lon"];
 		delete newUser["location"]["lon"];
 
+		console.log(newUser);
+
 		// Store the username in the socket session for this client
 		socket.username = newUser.firstName;
 		socket.user = newUser;
@@ -118,6 +120,7 @@ io.sockets.on('connection', function (socket) {
 			description: data.description,
 			location: socket.user.location,
 			radius: '1000',
+			owner: socket.user.profileUrl,
 			tags: data.tags
 		}
 
@@ -129,9 +132,8 @@ io.sockets.on('connection', function (socket) {
 	
 			var usersRooms = allRooms.map(function(obj){ 
 								
-				createCounter(obj.name);
-				obj.userCount = userCounts[obj.name];
-	
+				obj.userCount = 0
+
 				if (allowedRooms.indexOf(obj.name) > -1) {
 					obj.canJoin = true;
 				} else {
@@ -193,6 +195,12 @@ io.sockets.on('connection', function (socket) {
 	
 	socket.on('switchRoom', function(newroom){
 		switchRoom(socket, newroom);
+	});
+
+	socket.on('deletelocale', function(room){
+		console.log(room);
+
+		world.deleteRoom(room);
 	});
 
 	socket.on('joinroom', function(room){

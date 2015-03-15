@@ -91,13 +91,13 @@ define([
 		},
 
 		expandUpdate: function(e){
-			if($(e.currentTarget).parent().parent().children(".edit-locale").css("height") == "200px"){
+			if($(e.currentTarget).parent().parent().children(".edit-locale").css("height") == "70px"){
 				$(e.currentTarget).parent().parent().children(".edit-locale").stop().animate({height: "0px"}, function(){
 					$(e.currentTarget).parent().parent().children(".edit-locale").css("display","none");
 				});
 			} else {
 				$(e.currentTarget).parent().parent().children(".edit-locale").css("display","block");
-				$(e.currentTarget).parent().parent().children(".edit-locale").stop().animate({height: "200px"}, function(){
+				$(e.currentTarget).parent().parent().children(".edit-locale").stop().animate({height: "70px"}, function(){
 					console.log("NO")
 				});
 			}

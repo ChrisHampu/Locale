@@ -90,8 +90,7 @@ define([
 				LocaleSocket.Emit('addroom', {
 					"name": name,
 					"description" : description,
-					"tags" : tags,
-					"admin" : LocaleAuth.GetUserModel().get("profileUrl")
+					"tags" : tags
 				});
 			}
 			

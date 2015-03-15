@@ -13,6 +13,12 @@ World.prototype.addRoom = function(room, callback) {
     this.db.put('rooms', room.name, room)
 }
 
+World.prototype.deleteRoom = function(room, callback) {
+    this.db.remove('rooms', room, true).then(function (result) {
+        callback(result);
+    });
+}
+
 World.prototype.getRooms = function (callback) {
     this.db.list('rooms').then(function (result) {
         var roomObjects = result.body.results;
