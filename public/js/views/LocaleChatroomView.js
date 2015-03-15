@@ -38,7 +38,7 @@ define([
                                 '<div class="chatbox-icon"></div>' +
                                 '<div class="chatbox-title">' +
                                     '<div class="h1">' + this.model.get("name") + '</div>' +
-                                    '<div class="h2">University of British Columbia</div>' +
+                                    '<div class="h2">Rivendell</div>' +
                                 '</div>' +
                             '</div>' +
                               '<div class="btn btn-default toggle-pencil">' +
