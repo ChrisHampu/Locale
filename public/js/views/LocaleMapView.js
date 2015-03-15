@@ -47,8 +47,6 @@ define([
 
 				_.each(ChatroomListView.getRooms(), function(chat) {
 
-					console.log(chat);
-
 					var roomName = chat.model.get("name");
 					var dataName = data.room;
 					if(roomName === dataName)
@@ -105,12 +103,10 @@ define([
 
 				google.maps.event.addListener(marker, 'mouseover', function() {
 				    //display info about the room if it is a room, or if it is you, display your info.
-				    console.log("hovered");
 				});
 
 				google.maps.event.addListener(marker, 'mouseout', function() {
 				    //remove whatever info was displayed
-				    console.log("unhovered");
 				});
 
 				google.maps.event.addListener(marker, 'click', function() {
@@ -177,7 +173,7 @@ define([
 					}, 10);
 				})
 
-				ChatroomCollection.add( new LocaleChatModel( { location: value.location, name: value.name, radius: value.radius }));
+				ChatroomCollection.add( new LocaleChatModel( { location: value.location, name: value.name, radius: value.radius, canJoin: value.canJoin }));
 			});
 		},
 
