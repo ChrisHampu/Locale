@@ -105,12 +105,12 @@ define([
 
 				google.maps.event.addListener(marker, 'mouseover', function() {
 				    //display info about the room if it is a room, or if it is you, display your info.
-				    console.log("hovered");
+				    //console.log("hovered");
 				});
 
 				google.maps.event.addListener(marker, 'mouseout', function() {
 				    //remove whatever info was displayed
-				    console.log("unhovered");
+				    //console.log("unhovered");
 				});
 
 				google.maps.event.addListener(marker, 'click', function() {
