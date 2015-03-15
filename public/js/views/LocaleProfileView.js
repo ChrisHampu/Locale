@@ -14,7 +14,6 @@ define([
 
 		events: {
 			'click #profile-thumbnail' : 'profile',
-			'click #add-locale' : 'createLocale',
 			'click .toggle-delete' : 'toggle'
 		},
 
@@ -25,10 +24,15 @@ define([
 
 				var displayed = $("#add-room-dialog").css("display");
 
-				if(displayed === "block")
-					$("#add-room-dialog").css("display", "none");
-				else
+				if(displayed === "block"){
+					$("#add-room-dialog").stop().animate({height: "0"}, function(){
+						$("#add-room-dialog").css("display", "none");
+					})
+				}else{
 					$("#add-room-dialog").css("display", "block");
+					$("#add-room-dialog").stop().animate({height: "250px"});
+				}
+
 			});
 		},
 
