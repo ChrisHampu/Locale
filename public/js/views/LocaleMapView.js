@@ -200,7 +200,7 @@ define([
 			this.getValue(function(value){
 				_.each(ChatroomListView.getRooms(), function(chat) {
 					var tags = chat.model.get("tags");
-					if(tags !== undefined)
+					if(tags.length > 0)
 					{
 						var tagsArr = value.split(' ');
 						_.each(tagsArr, function(tag) {
@@ -212,7 +212,10 @@ define([
 							}
 						});
 					}
-					console.log("model has no tags");
+					else
+					{
+						console.log("model has no tags");
+					}
 				});
 			});
 		},
