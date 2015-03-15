@@ -592,6 +592,8 @@ footer
     height: 0px;
     top:-8px;
     position:relative;
+    background-color: white;
+    border-radius: 4px;
     right:-86px;
     width: 79.5%;
 }
@@ -641,4 +643,19 @@ footer
 
 .btn-group {
     margin: 5px;
+}
+
+.waypoint-info ul {
+
+}
+
+.waypoint-info ul li {
+    list-style: none;
+    padding:5px;
+    margin-left: 10px;
+    padding-top:10px;
+}
+
+.waypoint-info ul li:hover{
+    
 }

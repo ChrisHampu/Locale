@@ -197,7 +197,7 @@ define([
 		},
 
 		search: function() {
-			this.getValue(function(value, collection, searchCallback){
+			this.getValue(function(value, collection, view){
 
 				var matches = [];
 
@@ -224,20 +224,39 @@ define([
 				});
 
 				if(matches.length > 0)
-					searchCallback(matches);
+					view.doSearchDropdown(matches, view);
 
-			}, ChatroomCollection, this.doSearchDropdown);
+			}, ChatroomCollection, this);
 		},
 
-		doSearchDropdown: function(tags) {
+		doSearchDropdown: function(tags, view) {
 			/*console.log("Found matches: " + tags);*/
-			/*$('.waypoint-info').css("display", "block");
+			$('.waypoint-info').empty();
+			$('.waypoint-info').css({display: "block"});
 			$('.waypoint-info').stop().animate({height : "100px"});
-			for(tag in tags){
-				console.log(tags[tag]);
-			}*/
+
+			//htmlContainer = '<ul>';
+			view.adjustMap(tags, function(obj){
+				console.log(obj.get("location")["latitude"]);
+				Map.panTo(new google.maps.LatLng(obj.get("location")["latitude"], obj.get("location")["longitude"]))
+			});
+			
+			//console.log("Found match: " + tag.tag + " to object " + tag.model.get("name"));
+		},
+
+		adjustMap: function(tags, callback) {
+			$('<ul/>', {
+				'class' : 'searchcontainer'
+			}).appendTo('.waypoint-info');
+
 			_.each(tags, function(tag) {
-				console.log("Found match: " + tag.tag + " to object " + tag.model.get("name"));
+				$('<li/>', {
+					'class' : 'searchelement',
+					'text' : tag.tag
+				}).on('click', function(){
+					callback(tag.model);
+				}).appendTo('.searchcontainer');
+				//htmlContainer += '<li>' + tag.tag + '</li>';
 			});
 		},
 
