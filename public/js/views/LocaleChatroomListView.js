@@ -76,6 +76,7 @@ define([
 
 			$("#add-room-dialog").stop().animate({height: "0"}, function(){
 				$("#add-room-dialog").css("display", "none");
+				$('#form-dialog-btn').removeClass('active');
 			})
 			
 			var name = this.$el.find("#roomName").val();
