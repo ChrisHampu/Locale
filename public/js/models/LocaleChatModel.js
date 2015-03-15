@@ -20,7 +20,9 @@ define([
 			radius: 1000,
 			canJoin: false,
 			userCount: 0,
-			description: undefined
+			description: undefined,
+			tags: undefined,
+			admin: ""
 		}
 	});
 

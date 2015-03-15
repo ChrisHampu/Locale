@@ -40,7 +40,7 @@ define([
                                             '<div class="h1">' + this.model.get("name") + '</div>' +
                                             '<div class="h2">University of British Columbia</div>' +
                                         '</div>' +
-                                        '<span class="badge">' + this.model.get("messageCount") + '</span>' +
+                                        '<span class="badge">' + this.model.get("userCount") + '</span>' +
                                     '</div>' +
                                       '<div class="btn btn-default">' +
                                         '<i class="fa fa-wrench fa-lg"></i>' +

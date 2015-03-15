@@ -70,13 +70,17 @@ io.sockets.on('connection', function (socket) {
 		allRooms = rooms;
 
 		allRoomNames = allRooms.map(function(obj) {
+			userCounts.push(obj.name);
+			console.log(userCounts);
 			return obj.name;
-		})
+		});
 	});
 
 	// When the client emits 'join', this listens and executes
 	socket.on('join', function(user){
 
+		console.log("join");
+	
 		var newUser = JSON.parse(user);
 	
 		newUser["location"]["latitude"] = newUser["location"]["lat"];
@@ -89,15 +93,14 @@ io.sockets.on('connection', function (socket) {
 		socket.username = newUser.firstName;
 		socket.user = newUser;
 
-
 		// Calculate the active rooms for this user and push them
 		world.getAllowedRoomNames(newUser.location.latitude, newUser.location.longitude, function(allowedRooms) {
 
 			var usersRooms = allRooms.map(function(obj){ 
-				if (!userCounts[obj.name]) {
-					obj["users"] = 0
+				if (!userCounts.contains([obj.name])) {
+					obj.userCount = 0
 				} else {
-					obj["users"] = userCounts[obj.name];
+					obj.userCount = userCounts[obj.name];
 				}
 
 				if (allowedRooms.indexOf(obj.name) > -1) {
@@ -105,6 +108,8 @@ io.sockets.on('connection', function (socket) {
 				} else {
 					obj.canJoin = false;
 				}
+				
+				console.log(obj);
 
 				return obj;
 			});
@@ -125,15 +130,16 @@ io.sockets.on('connection', function (socket) {
 		}
 
 		world.addRoom(newRoom);
+		
 
 		// Calculate the new active rooms for this user and push them
 		world.getAllowedRoomNames(socket.user.location.latitude, socket.user.location.longitude, function(allowedRooms) {
 	
 			var usersRooms = allRooms.map(function(obj){ 
-				if (!userCounts[obj.name]) {
-					obj["users"] = 0
+				if (!userCounts.contains([obj.name])) {
+					obj.userCount = 0
 				} else {
-					obj["users"] = userCounts[obj.name];
+					obj.userCount = userCounts[obj.name];
 				}
 	
 				if (allowedRooms.indexOf(obj.name) > -1) {
@@ -157,10 +163,10 @@ io.sockets.on('connection', function (socket) {
 		world.getAllowedRoomNames(newUser.location.lat, newUser.location.lon, function(allowedRooms) {
 
 			var usersRooms = allRooms.map(function(obj){ 
-				if (!userCounts[obj.name]) {
-					obj["users"] = 0
+				if (!userCounts.contains([obj.name])) {
+					obj.userCount = 0
 				} else {
-					obj["users"] = userCounts[obj.name];
+					obj.userCount = userCounts[obj.name];
 				}
 
 				if (allowedRooms.indexOf(obj.name) > -1) {
