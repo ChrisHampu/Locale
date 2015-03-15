@@ -70,8 +70,14 @@ define([
 			//if(message.get("firstName") === LocaleAuth.GetUserModel.get("firstName") && message.get("lastInitial") === LocaleAuth.GetUserModel.get("lastName")[0])
 			//	UserSent = true;
 
+			if (message.get("profileUrl")) {
+				var style = "style=\"background: url(" + message.get("profileUrl") + ");\""
+			} else {
+				var style = "";
+			}
+
 			var msgStr = UserSent === true ? "<div class=\"chat-message local-message\">" : "<div class=\"chat-message foreign-message\">";
-            msgStr += "<div class=\"profilepic chatpic img-circle\"></div><div class='message-content-wrapper'><div class='message-content' ><p>" +
+            msgStr += "<div class=\"profilepic chatpic img-circle\"" + style + "></div><div class='message-content-wrapper'><div class='message-content' ><p>" +
                         message.get("message") + "</p><span class=\"message-subtext\">" + message.get("firstName") + " " + message.get("lastInitial") + " - " +
                         FormatTimestamp(message.get("timestamp")) + "</span></div></div></div>";
 

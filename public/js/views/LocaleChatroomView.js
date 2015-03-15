@@ -82,7 +82,7 @@ define([
 		addMessage: function(newMessage) {
 			//console.log("trying message: " + newMessage);
 
-			this.ChatMessages.add( new LocaleChatMessageModel( { firstName: newMessage.firstName, lastInitial: newMessage.lastInitial, message: newMessage.message, timestamp: newMessage.timestamp, room: newMessage.room } ) );
+			this.ChatMessages.add( new LocaleChatMessageModel( { firstName: newMessage.firstName, lastInitial: newMessage.lastInitial, profileUrl: newMessage.profileUrl, message: newMessage.message, timestamp: newMessage.timestamp, room: newMessage.room } ) );
 		},
 
 		join: function() {

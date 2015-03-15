@@ -164,6 +164,7 @@ io.sockets.on('connection', function (socket) {
 			"room": data.room,
 			"firstName": socket.user.firstName,
 			"lastInitial": socket.user.lastName.charAt(0),
+			"profileUrl": socket.user.profileUrl,
 			"message": data.message
 		};
 
