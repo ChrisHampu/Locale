@@ -122,7 +122,8 @@ io.sockets.on('connection', function (socket) {
 			name: data.name,
 			description: data.description,
 			location: socket.user.location,
-			radius: '1000'
+			radius: '1000',
+			tags: data.tags
 		}
 
 		world.addRoom(newRoom);
