@@ -94,7 +94,7 @@ io.sockets.on('connection', function (socket) {
 
 		var newUser = JSON.parse(user);
 	
-		// Create or update the user's db entry
+		// TODO: Create or update the user's db entry
 		console.log(newUser);
 
 		// Store the username in the socket session for this client
@@ -122,7 +122,6 @@ io.sockets.on('connection', function (socket) {
 	// when the client emits 'sendchat', this listens and executes
 	socket.on('sendchat', function (room, message) {
 		var persistedMessage = {
-			"id": guid(),
 			"room": room,
 			"user": socket.username,
 			"message": message
@@ -139,7 +138,12 @@ io.sockets.on('connection', function (socket) {
 
 	socket.on('joinroom', function(room){
 		socket.join(room);
-		socket.emit('updatechat', {"user": "system", "message": "Welcome to " + newroom});
+
+		world.getRoomHistory(room, function(messages) {
+			socket.emit('loadroom', messages);
+		})
+
+		socket.emit('updatechat', {"user": "system", "message": "Welcome to " + room});
 		// TODO: Add user to the list of people in the room
 	});
 
@@ -162,8 +166,7 @@ io.sockets.on('connection', function (socket) {
 
 function switchRoom(socket, newroom){
 	socket.leave(socket.room);
-	socket.join(newroom);
-	socket.emit('loadroom', [{"user": "System", "message": "Welcome to " + newroom}]);
+
 	// sent message to OLD room
 	socket.broadcast.to(socket.room).emit('updatechat', 'SERVER', socket.username+' has left this room');
 	// update socket session room title
@@ -176,15 +179,4 @@ function switchRoom(socket, newroom){
 		
 		socket.emit('updaterooms', usersRooms);
 	});
-}
-
-// Generates psuedo-guid's for chat messages and anything else we need them for
-function guid() {
-	function s4() {
-		return Math.floor((1 + Math.random()) * 0x10000)
-		.toString(16)
-		.substring(1);
-	}
-	return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-	s4() + '-' + s4() + s4() + s4();
 }

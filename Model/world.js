@@ -52,25 +52,31 @@ World.prototype.getValidRooms = function (lat, lon, callback){
 
 // Persist a message, passes the data object back into the callback
 World.prototype.persistMessage = function (data, callback){
-    this.db.put('messages', data.id, data).then(function (result) {
-        callback(data);
-    })
+    this.db.newEventBuilder()
+        .from('rooms', data.room)
+        .type('message')
+        .data(data)
+        .create()
+        .then(function (result) {
+            callback(data);
+        });
 }
 
 // Return the last 10 messages for a room
 World.prototype.getRoomHistory = function (room, callback){
-    var rooms = null;
 
-    // Search for all rooms within 10km of the passed lat/long
-    this.db.newSearchBuilder().collection("messages").query("value.location:NEAR:{lat:" + lat + " lon:" + lon + " dist:10000000km}").then(function (result) {
-        var roomObjects = result.body.results;
+    this.db.newEventReader()
+        .from('rooms', room)
+        .type('message')
+        .list()
+        .then(function (res) {
+            var messages = res.body.results.map(function(object) {
+                return object.value;
+            });
 
-        var rooms = roomObjects.map(function(obj){ 
-            return obj["value"];
+            callback(messages)
         });
 
-        callback(rooms);
-    })
 }
 
 module.exports = World;
