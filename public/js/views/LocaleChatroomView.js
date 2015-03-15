@@ -3,8 +3,10 @@ define([
 	'underscore',
 	'backbone',
 	'bootstrapjs',
-	'LocaleChatUserModel'
-], function($, _, Backbone, Bootstrap){
+	'LocaleChatUserModel',
+	'LocaleChatWindowView',
+	'LocaleChatroomMessageCollection'
+], function($, _, Backbone, Bootstrap, LocaleChatUserModel, LocaleChatWindowView, LocaleChatroomMessageCollection){
 
 	var LocaleChatroomView = Backbone.View.extend({
 		tagName: 'li',
@@ -16,6 +18,9 @@ define([
 		initialize: function(options) {
 			this.parent = options.parent;
 			this.listenTo(this.model, "change", this.render);
+
+			this.ChatMessages = new LocaleChatroomMessageCollection();
+			this.ChatWindow = new LocaleChatWindowView( { collection: this.ChatMessages });
 		},
 
 		render: function() {
@@ -29,10 +34,9 @@ define([
 			return this;
 		},
 
-		renderRoom: function() {
-			this.$el.html("");
+		getRoomWindow: function() {
 			
-			return this;
+			return this.ChatWindow;
 		},
 
 		remove: function() {

@@ -29,7 +29,9 @@ require.config({
 		socketio: '/socket.io/socket.io.js',
 		LocaleSocket: 'LocaleSocket',
 		LocaleChatroomCollection: 'collections/LocaleChatroomCollection',
-		LocaleChatroomMessageCollection: 'collections/LocaleChatroomMessageCollection'
+		LocaleChatroomMessageCollection: 'collections/LocaleChatroomMessageCollection',
+		LocaleChatWindowView: 'views/LocaleChatWindowView',
+		LocaleChatMessageModel: 'models/LocaleChatMessageModel'
 	}
 });
 

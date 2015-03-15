@@ -14,11 +14,13 @@ define([
 
 		initialize: function() {
 			this.$el.html(""); // Remove dummy data
+			$("#chatarea").html("");
 			this.listenTo(this.collection, "add", this.add);
 		},
 
 		render: function() {
 			this.$el.html("");
+			$("#chatarea").html("");
 
 			var parent = this;
 
@@ -35,7 +37,8 @@ define([
 			var RoomView = new LocaleChatroomView ( { model: room, parent: this });
 
 			this.$el.append(RoomView.renderButton().$el);
-			//this.$el.append(RoomView.renderRoom().$el);
+			
+			$("#chatarea").append(RoomView.getRoomWindow().render().$el);
 		},
 
 		remove: function(room) {
