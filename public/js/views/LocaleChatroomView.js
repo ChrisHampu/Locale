@@ -32,7 +32,17 @@ define([
 		},
 
 		renderButton: function() {
-			this.$el.html("<button class=\"btn btn-default room-button\" type=\"submit\">" + this.model.get("name") + "<div class=\"badge\">"+this.model.get("messageCount")+"</div></button><i class=\"fa fa-minus-circle exit-room\"></i>");
+			this.$el.html('<ul id="my-room-container">' +
+                                '<li>'+
+                                   '<div class="chatbox-header btn btn-default">' +
+                                        '<div class="chatbox-icon"></div>' +
+                                        '<div class="chatbox-title">' +
+                                            '<div class="h1">' + this.model.get("name") + '</div>' +
+                                            '<div class="h2">University of British Columbia</div>' +
+                                        '</div>' +
+                                        '<span class="badge">' + 3 /*this.model.get("messageCount")*/ + '</span>' +
+                                    '</div>' +
+                                '</li>');
 
 			return this;
 		},
