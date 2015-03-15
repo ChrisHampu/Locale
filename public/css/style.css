@@ -132,6 +132,7 @@ body
 
 #loginpage
 {
+    visibility: collapse;
     width: 100%;
     height: 100%;
     position: absolute;
@@ -297,19 +298,18 @@ footer
 
 .chatbox {
     z-index: 2;
-    background: #fff;
+    background: #23262a;
     margin: 0px 5px;
-    border: 2px solid #353535;
-    border-radius: 3px 3px 0px 0px;
+    border-radius: 2px 2px 0px 0px;
     width: 300px;
     position: relative;
     float: right;
+    box-shadow: 2px 2px 2px 0px #a4a7aa;
 }
 
 .chatbox-input {
     position: relative;
-    width: 296px;
-    padding: 3px 1px 1px 1px;
+    padding: 2px 1px 1px 1px;
 }
 
 .chatbox-input .message-box
@@ -335,7 +335,6 @@ footer
 
 .chatbox-header {
     height: 40px;
-    background: #353535;
 }
 
 .chatbox-controls {
@@ -423,7 +422,7 @@ footer
 
 .chatbox-content {
 /*    display: none;*/
-    background:#353535;
+    margin: 0px 1px 1px 1px;
 }
 
 .messages-wrapper {
@@ -432,6 +431,7 @@ footer
     width: 100%;
     overflow-y: auto;
     bottom: 0;
+    box-shadow: inset 0px 7px 3px -5px #888888;
 }
 
 .message-content-wrapper {
@@ -442,14 +442,14 @@ footer
 
 .foreign-message .message-content-wrapper
 {
-    border-top: 10px solid #2a2c2e;
+    border-top: 10px solid #393c3e;
     border-left: 10px solid transparent;
     float: left;
 }
 
 .foreign-message .message-content
 {
-    background: #2a2c2e;
+    background: #393c3e;
 }
 
 .local-message .message-content-wrapper
