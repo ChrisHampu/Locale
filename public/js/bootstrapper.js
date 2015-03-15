@@ -18,7 +18,7 @@ require.config({
 		LocaleAuthView: 'views/LocaleAuthView',
 		LocaleMapView: 'views/LocaleMapView',
 		LocaleSearchModel: 'models/LocaleSearchModel',
-		LocaleUserModel: 'models/LocaleUserModel',
+		LocaleChatModel: 'models/LocaleChatModel',
 		LocaleChatUserModel: 'models/LocaleChatUserModel',
 		LocaleChatroomView: 'views/LocaleChatroomView',
 		LocaleChatroomListView: 'views/LocaleChatroomListView',
@@ -27,7 +27,9 @@ require.config({
 		LocaleUtilities: 'LocaleUtilities',
 		sidr: 'libs/sidr/jquery.sidr.min',
 		socketio: '/socket.io/socket.io.js',
-		LocaleSocket: 'LocaleSocket'
+		LocaleSocket: 'LocaleSocket',
+		LocaleChatroomCollection: 'collections/LocaleChatroomCollection',
+		LocaleChatroomMessageCollection: 'collections/LocaleChatroomMessageCollection'
 	}
 });
 

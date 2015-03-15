@@ -12,8 +12,7 @@ define([
 
 		events: {
 			'click #profile-thumbnail' : 'profile',
-			'click .toggle-delete' : 'toggle',
-			'click .exit-room' : 'dismiss'
+			'click .toggle-delete' : 'toggle'
 		},
 
 		initialize: function() {
