@@ -111,6 +111,9 @@ define([
 	}
 
 	var Initialize = function (LocaleApp) {
+		
+		Locale = LocaleApp;
+
 		FB.init( {
 			appId      : '616102381854407',
       		xfbml      : true,
@@ -120,8 +123,6 @@ define([
       	FB.getLoginStatus(function(response) {
       		FBAuthStateChanged(response);
       	});
-
-      	Locale = LocaleApp;
 
 	    UserModel = new LocaleUserAuthModel();
 		
@@ -181,7 +182,7 @@ define([
 	}
 
 	var FinalizeData = function() {
-		PopulateFBData();
+		//PopulateFBData();
 		PopulateGPlusData();
 	}
 	
