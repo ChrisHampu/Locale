@@ -20,6 +20,16 @@ define([
 
 		initialize: function() {
 			$('#profile-thumbnail').sidr();
+
+			this.$el.on('click', "#form-dialog-btn", function() {
+
+				var displayed = $("#add-room-dialog").css("display");
+
+				if(displayed === "block")
+					$("#add-room-dialog").css("display", "none");
+				else
+					$("#add-room-dialog").css("display", "block");
+			});
 		},
 
 		render: function() {
@@ -38,7 +48,6 @@ define([
 
 
 			$('#all-room-container').css("max-height", maxHeight);
-
 		},
 
 		createLocale: function () {
