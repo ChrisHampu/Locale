@@ -62,7 +62,7 @@ define([
 			this.$el.find(".messages-wrapper").html("");
 
 			_.each(this.collection.models, function(model) {
-				this.$el.find(".messages-wrapper").append( this.renderMessage( model ));
+				this.$el.find(".messages-wrapper").prepend( this.renderMessage( model ));
 			}, this);
 		},
 
@@ -71,8 +71,14 @@ define([
 			//if(message.get("firstName") === LocaleAuth.GetUserModel.get("firstName") && message.get("lastInitial") === LocaleAuth.GetUserModel.get("lastName")[0])
 			//	UserSent = true;
 
+			if (message.get("profileUrl")) {
+				var style = "style=\"background: url(" + message.get("profileUrl") + ");\""
+			} else {
+				var style = "";
+			}
+
 			var msgStr = UserSent === true ? "<div class=\"chat-message local-message\">" : "<div class=\"chat-message foreign-message\">";
-            msgStr += "<div class=\"profilepic chatpic img-circle\"></div><div class='message-content-wrapper'><div class='message-content' ><p>" +
+            msgStr += "<div class=\"profilepic chatpic img-circle\"" + style + "></div><div class='message-content-wrapper'><div class='message-content' ><p>" +
                         message.get("message") + "</p><span class=\"message-subtext\">" + message.get("firstName") + " " + message.get("lastInitial") + " - " +
                         FormatTimestamp(message.get("timestamp")) + "</span></div></div></div>";
 
@@ -80,7 +86,7 @@ define([
 		},
 
 		add: function(message) {
-			this.$el.find(".messages-wrapper").append( this.renderMessage(message) );
+			this.$el.find(".messages-wrapper").prepend( this.renderMessage(message) );
 			this.$el.find(".messages-wrapper").scrollTop(1000000);
 		},
 
@@ -115,7 +121,7 @@ define([
 			if(input === undefined || input === "")
 				return;
 
-			LocaleSocket.Emit('sendchat', room ,input);
+			LocaleSocket.Emit('sendchat', {"room": room, "message": input});
 		},
 
 		exit: function(){
