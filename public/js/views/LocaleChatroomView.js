@@ -75,6 +75,7 @@ define([
 		join: function() {
 			this.model.set("joined", true);
 			this.parent.render();
+			this.ChatMessages.reset();
 			LocaleSocket.Emit('joinroom', this.model.get("name"));
 		}
 	});

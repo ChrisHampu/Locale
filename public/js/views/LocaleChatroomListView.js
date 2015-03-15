@@ -20,31 +20,27 @@ define([
 		},
 
 		render: function() {
-
-			Rooms = [];
-
+			
 			this.$el.html("");
 			$("#chatarea").html("");
 
 			var parent = this;
 
-			_.each(this.collection.models, function(element) {
-				var RoomView = new LocaleChatroomView ( { model: element, parent: parent });
-				
-				this.$el.append(RoomView.renderButton().$el);
-
-				if(element.get("joined") === true)
-					$("#chatarea").append(RoomView.getRoomWindow().render().$el);
-
-				this.Rooms.push(RoomView);
+			_.each(this.Rooms, function(View) {
+				this.renderSingle(View);
 			}, this);
 		},
 
 		renderSingle: function(RoomView) {
 			this.$el.append(RoomView.renderButton().$el);
-			
-			if(RoomView.model.get("joined") === true)
+			RoomView.delegateEvents();
+
+			if(RoomView.model.get("joined") === true) {
 				$("#chatarea").append(RoomView.getRoomWindow().render().$el);
+				RoomView.getRoomWindow().renderAllMessages();
+			}
+
+			RoomView.getRoomWindow().delegateEvents();
 		},
 
 		add: function(room) {
@@ -52,15 +48,17 @@ define([
 
 			this.$el.append(RoomView.renderButton().$el);
 			
-			if(room.get("joined") === true)
+			if(room.get("joined") === true) {
 				$("#chatarea").append(RoomView.getRoomWindow().render().$el);
+				RoomView.getRoomWindow().renderAllMessages();
+			}
 
 			this.Rooms.push(RoomView);
 		},
 
 		remove: function(room) {
-			this.collection.remove(room.model);
-			delete room;
+			room.set("joined", false);
+
 			this.render();
 		},
 

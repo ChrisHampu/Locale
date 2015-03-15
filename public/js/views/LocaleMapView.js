@@ -44,7 +44,9 @@ define([
 			LocaleSocket.Handle('loadroom', function(data) {
 
 				_.each(ChatroomListView.getRooms(), function(chat) {
-					if(chat.model.get("name") === data.room)
+					var roomName = chat.model.get("name");
+					var dataName = data.room;
+					if(roomName === dataName)
 					{
 						_.each(data.messages, function(message) {
 							chat.addMessage(message);
