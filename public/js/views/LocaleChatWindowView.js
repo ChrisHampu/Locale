@@ -53,11 +53,15 @@ define([
 
 			this.$el.html(chatStr);
 
-			_.each(this.collection.models, function(model) {
-				this.$el.find(".chatbox-messages").append( this.renderMessage( model ));
-			});
-
 			return this;
+		},
+
+		renderAllMessages: function() {
+			this.$el.find(".messages-wrapper").html("");
+
+			_.each(this.collection.models, function(model) {
+				this.$el.find(".messages-wrapper").append( this.renderMessage( model ));
+			}, this);
 		},
 
 		renderMessage: function(message) {
@@ -74,7 +78,7 @@ define([
 		},
 
 		add: function(message) {
-			this.$el.find(".chatbox-messages").append( this.renderMessage(message) );
+			this.$el.find(".messages-wrapper").append( this.renderMessage(message) );
 		},
 
 		remove: function(message) {
@@ -105,6 +109,7 @@ define([
 
 		exit: function(){
 			this.$el.closest(".chatbox").remove();
+			this.parent.model.set("joined", false);
 		}
 	});
 
