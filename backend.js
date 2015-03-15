@@ -68,11 +68,6 @@ io.sockets.on('connection', function (socket) {
 	// Pull all the available rooms on every connection to compare against rooms that a given user is permitted access to
 	world.getRooms(function(rooms) {
 		allRooms = rooms;
-		userCounts = rooms;
-		
-		console.log();
-		console.log(rooms);
-		console.log(userCounts);
 		
 		allRoomNames = allRooms.map(function(obj) {
 			
@@ -98,8 +93,8 @@ io.sockets.on('connection', function (socket) {
 		world.getAllowedRoomNames(newUser.location.latitude, newUser.location.longitude, function(allowedRooms) {
 
 			var usersRooms = allRooms.map(function(obj){ 
-				if (!userCounts.contains(obj.name)) {
-					obj.userCount = 0;
+				if (!(allowedRooms.indexOf(obj.name) > -1)) {
+					obj.userCount = 1;
 					userCounts.push(obj.name);
 				} else {
 					obj.userCount = userCounts[obj.name];
@@ -115,7 +110,6 @@ io.sockets.on('connection', function (socket) {
 
 				return obj;
 			});
-
 
 			socket.emit('updaterooms', usersRooms);
 		});
@@ -138,8 +132,8 @@ io.sockets.on('connection', function (socket) {
 		world.getAllowedRoomNames(socket.user.location.latitude, socket.user.location.longitude, function(allowedRooms) {
 	
 			var usersRooms = allRooms.map(function(obj){ 
-				if (!userCounts.contains(obj.name)) {
-					obj.userCount = 0;
+				if (!(allowedRooms.indexOf(obj.name) > -1)) {
+					obj.userCount = 1;
 					userCounts.push(obj.name);
 				} else {
 					obj.userCount = userCounts[obj.name];
@@ -166,8 +160,8 @@ io.sockets.on('connection', function (socket) {
 		world.getAllowedRoomNames(newUser.location.lat, newUser.location.lon, function(allowedRooms) {
 
 			var usersRooms = allRooms.map(function(obj){ 
-				if (!userCounts.contains(obj.name)) {
-					obj.userCount = 0;
+				if (!(allowedRooms.indexOf(obj.name) > -1)) {
+					obj.userCount = 1;
 					userCounts.push(obj.name);
 				} else {
 					obj.userCount = userCounts[obj.name];
@@ -179,9 +173,12 @@ io.sockets.on('connection', function (socket) {
 					obj.canJoin = false;
 				}
 
+				console.log(obj);
+
 				return obj;
 			});
 
+			console.log(usersRooms);
 
 			socket.emit('updaterooms', usersRooms);
 		});

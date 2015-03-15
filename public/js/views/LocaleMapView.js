@@ -20,6 +20,10 @@ define([
 	var Map,
 		CurrentPosition = undefined;
 
+	var timer;
+
+	var searchQuery;
+
 	var mapOptions = {
 		  zoom: 13,
 		  mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -30,9 +34,9 @@ define([
 		el: '#mappage',
 
 		events: {
-			'click #do-search' : 'search',
 			'click .waypoint-join' : 'join',
-			'click .waypoint-info-dismiss' : 'dismiss'
+			'click .waypoint-info-dismiss' : 'dismiss',
+			'keypress #searchbar' : 'search'
 		},
 
 		initialize: function() {
@@ -184,7 +188,22 @@ define([
 		},
 
 		search: function() {
-			console.log(this.$el.find("#search-content").val());
+			this.getValue(function(value){
+				_.each(ChatroomListView.getRooms(), function(chat) {
+					var tags = chat.model.get("tags");
+					console.log(tags);
+				});
+			});
+		},
+
+		getValue: function(callback){
+			if(timer){
+				clearTimeout(timer);
+			}
+			timer = setTimeout(function() {
+				searchQuery = $('#search-content').val();
+				callback(searchQuery);
+			},1000);
 		},
 
 		getLocation: function() {

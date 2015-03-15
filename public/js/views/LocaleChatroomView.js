@@ -31,7 +31,7 @@ define([
 			this.getRoomWindow().render();
 		},
 
-		renderButton: function() 
+		renderButton: function() {
 			this.$el.html(
                         '<div class="btn-group">' +
                            '<div class="btn btn-default room-button">' +
