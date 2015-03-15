@@ -396,8 +396,8 @@ footer
     font-size: 20px;
 }
 
-#room-container{
-    top: 150px;
+#my-room-container{
+    top: 100px;
     position:relative;
 }
 
@@ -420,7 +420,7 @@ footer
 .toggle-delete {
     position:relative;
     top:-28px;
-    left: 122px;
+    left: 128px;
     cursor: pointer;
 }
 
@@ -460,4 +460,19 @@ footer
 
 .button-location{
 
+}
+
+#all-room-container{
+    top:130px;
+    position:relative;
+    overflow-y: auto;
+    overflow-x: none;
+    max-height: 55%;
+}
+
+#all-room-header{
+    top:125px;
+    position:relative;
+    font-size:20px;
+    left:50px;
 }

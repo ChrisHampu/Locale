@@ -25,7 +25,6 @@ define([
 
 		profile: function() {
 			sidrOpened ? sidrOpened = false : sidrOpened = true;
-			console.log(sidrOpened);
 			if(sidrOpened){
 				//$('#searchbar').css("left", "-20px")
 				$('#searchbar').stop().animate({ left: "-20px"});
@@ -33,6 +32,11 @@ define([
 				//$('#searchbar').css("left", "75px")
 				$('#searchbar').stop().animate({ left: "75px"});
 			}
+			var numRooms = $('#my-room-container').children().size();
+			var maxHeight = (5-numRooms) * 7 + 35 + "%";
+
+
+			$('#all-room-container').css("max-height", maxHeight);
 
 		},
 
