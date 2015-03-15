@@ -79,8 +79,11 @@ define([
 			this.parent.remove(this);
 		},
 
-		addMessage: function(newMessage) {
+		addMessage: function(newMessage, callback) {
 			this.ChatMessages.add( new LocaleChatMessageModel( { firstName: newMessage.firstName, lastInitial: newMessage.lastInitial, profileUrl: newMessage.profileUrl, message: newMessage.message, timestamp: newMessage.timestamp, room: newMessage.room } ) );
+
+			if(callback !== undefined)
+				callback(this.model.get("location"), this.model.get("radius"));
 		},
 
 		join: function() {

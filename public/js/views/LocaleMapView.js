@@ -66,8 +66,29 @@ define([
 					var dataName = data.room;
 					if(roomName === dataName)
 					{
-						chat.addMessage(data);
-						console.log("Broadcast", data);
+						chat.addMessage(data, function(location, radius) {
+
+							var pulse = new google.maps.Circle({
+								center: new google.maps.LatLng(location.latitude, location.longitude),
+								radius: 1,
+								strokeColor: "#758ff9",
+								strokeOpacity: 1,
+								strokeWeight: 3,
+								fillColor: "#758ff9",
+								fillOpacity: 0
+							});
+							pulse.setMap(Map);
+
+							var direction = 1;
+							var rMin = 1, rMax = parseInt(radius);
+							setInterval(function() {
+								var radius = pulse.getRadius();
+								if (radius > rMax) {
+									pulse.setMap(null);
+								}
+								pulse.setRadius(radius + 5);
+							}, 10);
+						});
 					}
 				});
 			});
@@ -157,29 +178,6 @@ define([
 					strokeWidth: 0,
 					map: Map
 				});
-
-				google.maps.event.addListener(circle, "click", function() {
-					var pulse = new google.maps.Circle({
-						center: pos,
-						radius: 1,
-						strokeColor: "#758ff9",
-						strokeOpacity: 1,
-						strokeWeight: 3,
-						fillColor: "#758ff9",
-						fillOpacity: 0
-					});
-					pulse.setMap(Map);
-
-					var direction = 1;
-					var rMin = 1, rMax = parseInt(value.radius);
-					setInterval(function() {
-						var radius = pulse.getRadius();
-						if (radius > rMax) {
-							pulse.setMap(null);
-						}
-						pulse.setRadius(radius + 5);
-					}, 10);
-				})
 
 				ChatroomCollection.add( new LocaleChatModel( { location: value.location, name: value.name, radius: value.radius, canJoin: value.canJoin }));
 			});
