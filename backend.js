@@ -74,28 +74,20 @@ var world = new World(db);
 
 var worldRooms = null;
 
-// usernames which are currently connected to the chat
-var usersLookingAtList = {};
+// users connected to each room
+var userCounts = [];
 
 var roomNames = null;
 
 io.sockets.on('connection', function (socket) {
-	
-	world.getRooms(function(worldRooms) {
-		rooms = worldRooms; 
-		roomNames = rooms.map(function(obj){
-			return obj["name"];
-		})
-	});
 
-
-	// when the client emits 'join', this listens and executes
+	// When the client emits 'join', this listens and executes
 	socket.on('join', function(user){
 
 		var newUser = JSON.parse(user);
 	
 		// TODO: Create or update the user's db entry
-		console.log(newUser);
+		//console.log(newUser);
 
 		// Store the username in the socket session for this client
 		socket.username = newUser.firstName;
@@ -103,9 +95,7 @@ io.sockets.on('connection', function (socket) {
 
 		// Calculate the active rooms for this user and push them
 		world.getValidRooms(newUser.location.lat, newUser.location.lon, function(worldRooms) {
-			var usersRooms = worldRooms; 
-			
-			socket.emit('updaterooms', usersRooms);
+			updateRooms(worldRooms);
 		});
 	});
 
@@ -113,9 +103,7 @@ io.sockets.on('connection', function (socket) {
 	socket.on('updaterooms', function (data) {
 		// Calculate the active rooms for this user and push them
 		world.getValidRooms(userRoom.location.lat, userRoom.location.lon, function(worldRooms) {
-			var usersRooms = worldRooms; 
-			
-			socket.emit('updaterooms', usersRooms);
+			updateRooms(worldRooms);
 		});
 	})
 	
@@ -140,6 +128,8 @@ io.sockets.on('connection', function (socket) {
 	socket.on('joinroom', function(room){
 		socket.join(room);
 
+		userCounts[room]++;
+
 		world.getRoomHistory(room, function(messages) {
 			socket.emit('loadroom', {"room": room, "messages": messages});
 		})
@@ -155,14 +145,17 @@ io.sockets.on('connection', function (socket) {
 		// TODO: Add user to the list of people in the room
 	});
 
+	// listen to users leaving rooms
 	socket.on('leaveroom', function(room){
 		socket.leave(room);
+
+		userCounts[room]--;
 
 		var joinedMsg = {
 			"room": room,
 			"firstName": undefined,
 			"lastInitial": undefined,
-			"message": socket.user.firstName + " " + socket.user.lastName.charAt(0) + ". has left the Locale"
+			"message": socket.user.firstName + " " + socket.user.lastName.charAt(0) + ". has left the Locale (" + userCounts[room] + " user(s) left)"
 		};
 
 		io.sockets.in(room).emit('broadcastchat', joinedMsg);
@@ -192,8 +185,21 @@ function switchRoom(socket, newroom){
 	
 	// Calculate the new active rooms for this user and push them
 	world.getValidRooms(socket.user.location.lat, socket.user.location.lon, function(worldRooms) {
-		var usersRooms = worldRooms; 
-		
-		socket.emit('updaterooms', usersRooms);
+		updateRooms(worldRooms);
 	});
+}
+
+function updateRooms(rooms) {
+	var usersRooms = rooms.map(function(obj){ 
+		if (!userCounts[obj.name]) {
+			obj["users"] = 0
+		} else {
+			obj["users"] = userCounts[obj.name];
+		}
+		return obj;
+	});
+
+	console.log(usersRooms);
+
+	socket.emit('updaterooms', usersRooms);
 }
