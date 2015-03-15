@@ -80,7 +80,6 @@ define([
 
 			      var pos = new google.maps.LatLng(position.coords.latitude,
 			                                       position.coords.longitude);
-
 			     var marker = new google.maps.Marker({
 				      position: pos,
 				      map: Map,
@@ -99,7 +98,6 @@ define([
 				    	+ '</div>' 
 				    	+ '<div class="waypoint-info-dismiss"><i class="fa fa-angle-up fa-lg"></i></div>'
 			     })*/
-
 	      		Map.setCenter(pos);
 			});
 		},
