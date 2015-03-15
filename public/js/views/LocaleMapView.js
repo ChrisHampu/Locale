@@ -46,6 +46,9 @@ define([
 			LocaleSocket.Handle('loadroom', function(data) {
 
 				_.each(ChatroomListView.getRooms(), function(chat) {
+
+					console.log(chat);
+
 					var roomName = chat.model.get("name");
 					var dataName = data.room;
 					if(roomName === dataName)
@@ -93,7 +96,6 @@ define([
 
 		renderRooms: function(rooms, current) {
 			$.each(rooms, function(key, value) {
-				console.log(value);
 				var pos = new google.maps.LatLng(value.location.latitude, value.location.longitude);
 
 			    var marker = new google.maps.Marker({
