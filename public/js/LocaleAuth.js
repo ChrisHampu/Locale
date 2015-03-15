@@ -49,7 +49,7 @@ define([
 			FB.api('/me', function(response) {
 				
 				UserModel.set("id", response.id);
-				UserModel.set("location", { lat: LocaleUtilities.GetCurrentLocation().coords.latitude, lon: LocaleUtilities.GetCurrentLocation().coords.longitude });
+				UserModel.set("location", { latitude: LocaleUtilities.GetCurrentLocation().coords.latitude, longitude: LocaleUtilities.GetCurrentLocation().coords.longitude });
 				UserModel.set("firstName", response.first_name);
 				UserModel.set("lastName", response.last_name);
 				UserModel.set("token", AuthToken);
