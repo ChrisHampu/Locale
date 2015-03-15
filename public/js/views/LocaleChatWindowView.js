@@ -5,8 +5,9 @@ define([
 	'bootstrapjs',
 	'LocaleChatMessageModel',
 	'LocaleChatUserModel',
-	'LocaleAuth'
-], function($, _, Backbone, Bootstrap, LocaleChatMessageModel, LocaleChatUserModel, LocaleAuth){
+	'LocaleAuth',
+	'LocaleSocket'
+], function($, _, Backbone, Bootstrap, LocaleChatMessageModel, LocaleChatUserModel, LocaleAuth, LocaleSocket){
 
 	var Weekdays = new Array("Sun","Mon","Tue","Wed","Thu","Fri","Sat");
 
@@ -31,8 +32,8 @@ define([
 		events: {
 			'click .chatbox-minimize' : 'minimize',
 			'click .chatbox-exit' : 'exit',
-			'click .chatbox-header' : 'maximize'
-
+			'click .chatbox-header' : 'maximize',
+			'click .send-message' : 'send'
 		},
 
 		initialize: function(options) {
@@ -48,7 +49,7 @@ define([
 "<div class='h2'>University of British Columbia</div> </div><div class=\"chatbox-controls\"><div class=\"chatbox-exit btn\" href='#'><i class=\"fa fa-close\"></i></div>" +
 "<div class=\"chatbox-minimize btn\" href='#'><i class=\"fa fa-minus\"></i></div></div></div><div class='chatbox-content'>" +
 "<div class='chatbox-messages'><div class=\"messages-wrapper\"></div> </div><div class='chatbox-input input-group'><input type=\"text\" class=\"form-control message-box\" placeholder=\"Enter Message\">" +
-"<span class=\"input-group-btn\"><button class=\"btn btn-default\" type=\"button\"><i class='fa fa-paper-plane'></i></button>";
+"<span class=\"input-group-btn send-message\"><button class=\"btn btn-default\" type=\"button\"><i class='fa fa-paper-plane'></i></button>";
 "</span></div></div>";
 
 			this.$el.html(chatStr);
@@ -105,6 +106,17 @@ define([
 				console.log("RUN");
 				this.$el.stop().animate({"bottom" :"384px"}, 400);
 			}
+		},
+
+		send: function() {
+			var input = this.$el.find(".message-box").val();
+
+			if(input === undefined || input === "")
+				return;
+
+
+			console.log("sending " + input);
+			//LocaleSocket.Emit('', input);
 		},
 
 		exit: function(){
