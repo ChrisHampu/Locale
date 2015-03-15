@@ -124,57 +124,69 @@ io.sockets.on('connection', function (socket) {
 			tags: data.tags
 		}
 
-		world.addRoom(newRoom);
-		
+		console.log("Adding room", newRoom);
 
-		// Calculate the new active rooms for this user and push them
-		world.getAllowedRoomNames(socket.user.location.latitude, socket.user.location.longitude, function(allowedRooms) {
-	
-			var usersRooms = allRooms.map(function(obj){ 
-								
-				obj.userCount = 0
+		world.addRoom(newRoom, function() {
+			allRooms.push(newRoom);
+			allRoomNames.push(newRoom.name);
 
-				if (allowedRooms.indexOf(obj.name) > -1) {
-					obj.canJoin = true;
-				} else {
-					obj.canJoin = false;
-				}
-	
-				return obj;
+			// Calculate the active rooms for this user and push them
+			world.getAllowedRoomNames(socket.user.location.latitude, socket.user.location.longitude, function(allowedRooms) {
+			
+				var usersRooms = allRooms.map(function(obj){ 
+
+					if (allowedRooms.indexOf(obj.name) > -1) {
+						obj.canJoin = true;
+					} else {
+						obj.canJoin = false;
+					}
+			
+					console.log(obj);
+			
+					return obj;
+				});
+				
+				console.log(usersRooms);
+			
+				socket.emit('updaterooms', usersRooms);
 			});
-	
-
-			socket.emit('updaterooms', usersRooms);
 		});
 	})
 
 	// listener, client asks for updaterooms, server sends back the list of rooms
 	socket.on('updaterooms', function (data) {
-		// Calculate the active rooms for this user and push them
-		// Calculate the active rooms for this user and push them
-		world.getAllowedRoomNames(newUser.location.lat, newUser.location.lon, function(allowedRooms) {
-
-			var usersRooms = allRooms.map(function(obj){ 
-
-				createCounter(obj.name);
-				obj.userCount = userCounts[obj.name];
-
-				if (allowedRooms.indexOf(obj.name) > -1) {
-					obj.canJoin = true;
-				} else {
-					obj.canJoin = false;
-				}
-
-				console.log(obj);
-
-				return obj;
+		// Pull all the available rooms on every connection to compare against rooms that a given user is permitted access to
+		world.getRooms(function(rooms) {
+			allRooms = rooms;
+			allRoomNames = allRooms.map(function(obj) {
+				return obj.name;
 			});
 
-			console.log(usersRooms);
+			// Calculate the active rooms for this user and push them
+			world.getAllowedRoomNames(socket.user.location.latitude, socket.user.location.longitude, function(allowedRooms) {
+			
+				var usersRooms = allRooms.map(function(obj){ 
+			
+					createCounter(obj.name);
+					obj.userCount = userCounts[obj.name];
+			
+					if (allowedRooms.indexOf(obj.name) > -1) {
+						obj.canJoin = true;
+					} else {
+						obj.canJoin = false;
+					}
+			
+					console.log(obj);
+			
+					return obj;
+				});
 
-			socket.emit('updaterooms', usersRooms);
-		});
-	})
+				console.log(usersRooms);
+			
+				socket.emit('updaterooms', usersRooms);
+			});
+		})
+	});
 	
 	// when the client emits 'sendchat', this listens and executes
 	socket.on('sendchat', function (data) {

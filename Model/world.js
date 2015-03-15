@@ -10,7 +10,7 @@
 }
 
 World.prototype.addRoom = function(room, callback) {
-    this.db.put('rooms', room.name, room)
+    this.db.put('rooms', room.name, room).then(callback());
 }
 
 World.prototype.deleteRoom = function(room, callback) {

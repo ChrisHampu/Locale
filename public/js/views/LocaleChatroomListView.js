@@ -68,6 +68,11 @@ define([
 			this.render();
 		},
 
+		deleteRoom: function(room) {
+			this.Rooms = _.without(this.Rooms, room);
+			this.render();
+		},
+
 		getRooms: function() {
 			return this.Rooms;
 		},
