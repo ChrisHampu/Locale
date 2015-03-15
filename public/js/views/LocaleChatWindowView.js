@@ -122,6 +122,8 @@ define([
 				return;
 
 			LocaleSocket.Emit('sendchat', {"room": room, "message": input});
+
+			this.$el.find(".message-box").val("");
 		},
 
 		exit: function(){
@@ -131,8 +133,7 @@ define([
 
 		sendMessage:function(e){
 			if(e.which === 13){
-				/*var message = $(e.currentTarget).val();
-				console.log(message);*/
+				this.send();
 			}
 		}
 	});
