@@ -40,6 +40,10 @@ define([
 			ChatroomListView = new LocaleChatroomListView( { collection: ChatroomCollection } );
 			
 			Map = new google.maps.Map(this.$el.find("#map-wrapper")[0], mapOptions);
+
+			LocaleSocket.Handle('loadroom', function(room, messages) {
+
+			});
 		},
 
 		render: function() {
