@@ -10,6 +10,7 @@ define([
 		el: '#my-room-container',
 
 		events: {
+			
 		},
 
 		initialize: function() {
