@@ -18,6 +18,7 @@ define([
 			location: undefined,
 			name: "Room",
 			radius: 1000,
+			canJoin: false,
 			messageCount: 0
 		}
 	});
