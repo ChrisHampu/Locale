@@ -232,30 +232,60 @@ define([
 		doSearchDropdown: function(tags, view) {
 			/*console.log("Found matches: " + tags);*/
 			$('.waypoint-info').empty();
+			$('.waypoint-info').addClass("btn-group-vertical");
+			$('.waypoint-info').attr("role", "group");
 			$('.waypoint-info').css({display: "block"});
-			$('.waypoint-info').stop().animate({height : "100px"});
 
 			//htmlContainer = '<ul>';
 			view.adjustMap(tags, function(obj){
-				console.log(obj.get("location")["latitude"]);
+				console.log(JSON.stringify(obj));
+				//console.log(obj.get("location")["latitude"]);
 				Map.panTo(new google.maps.LatLng(obj.get("location")["latitude"], obj.get("location")["longitude"]))
+				var name = '<h4>' + obj.get("name") + '</h4>';
+			   	var description = "We are a group of runners in our 20's and 30's, with members ranging from beginner runners to those who have been running for years. Nothing like knowing others are waiting for you to make sure you go out and run!";
+			   	var buttonHTML;
+			   	if(obj.get("canJoin")){
+			   		buttonHTML = '<button type="button" class="btn btn-success waypoint-join" data-name= "' +  obj.get("name") +'">Join</button>';
+			   	} else {
+			   		buttonHTML = '<button type="button" class="btn btn-success waypoint-join" disabled="disabled" data-name= "' +  obj.get("name") +'">Out of Range</button>'
+			   	}
+
+			    $('.waypoint-info').css({display: "block"});
+			    $('.waypoint-info').stop().animate({height: "250px"}, 500);
+
+			    $('.waypoint-info').html(
+                    '<div class="panel panel-default">' +
+                        '<div class="panel-heading">' +
+                            '<div class="chatbox-icon"></div>' +
+                            '<div class="waypoint-name">' +
+                                 name +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="panel-body">' +
+                            '<div class="waypoint-description">' +
+                                description +
+                            '</div>' +
+                           '<div class="btn-group">' +
+                                '<button type="button" class="btn btn-default waypoint-info-dismiss">' +
+                                    '<i class="fa fa-angle-up fa-lg"></i>' +
+                                '</button>' +
+                                buttonHTML +
+                            '</div>' +
+                        '</div>' +
+                '</div>');
 			});
 			
 			//console.log("Found match: " + tag.tag + " to object " + tag.model.get("name"));
 		},
 
 		adjustMap: function(tags, callback) {
-			$('<ul/>', {
-				'class' : 'searchcontainer'
-			}).appendTo('.waypoint-info');
-
 			_.each(tags, function(tag) {
-				$('<li/>', {
-					'class' : 'searchelement',
-					'text' : tag.tag
+				$('<button/>', {
+					'class' : 'btn btn-default searchelement',
+					'text' : tag.model.get("name")
 				}).on('click', function(){
 					callback(tag.model);
-				}).appendTo('.searchcontainer');
+				}).appendTo('.waypoint-info');
 				//htmlContainer += '<li>' + tag.tag + '</li>';
 			});
 		},
