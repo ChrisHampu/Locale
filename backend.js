@@ -170,6 +170,7 @@ io.sockets.on('connection', function (socket) {
 
 		// Plain message goes in, after it's persisted processedMessage has a timestamp
 		world.persistMessage(message, function(processedMessage) {
+			console.log(processedMessage);
 			io.sockets.in(data.room).emit('broadcastchat', processedMessage);
 		});
 
@@ -187,16 +188,6 @@ io.sockets.on('connection', function (socket) {
 		world.getRoomHistory(room, function(messages) {
 			socket.emit('loadroom', {"room": room, "messages": messages});
 		})
-
-		var joinedMsg = {
-			"room": room,
-			"firstName": socket.user.firstName,
-			"lastInitial": socket.user.lastName.charAt(0),
-			"message": "has joined the Locale"
-		};
-
-		io.sockets.in(room).emit('broadcastchat', joinedMsg);
-		// TODO: Add user to the list of people in the room
 	});
 
 	// listen to users leaving rooms
@@ -204,59 +195,11 @@ io.sockets.on('connection', function (socket) {
 		socket.leave(room);
 
 		userCounts[room]--;
-
-		var joinedMsg = {
-			"room": room,
-			"firstName": undefined,
-			"lastInitial": undefined,
-			"message": socket.user.firstName + " " + socket.user.lastName.charAt(0) + ". has left the Locale (" + userCounts[room] + " user(s) left)"
-		};
-
-		io.sockets.in(room).emit('broadcastchat', joinedMsg);
 	});
 	
-
 	socket.on('disconnect', function(){
-		// remove the username from global usernames list
-		//delete usernames[socket.username];
-		// update list of users in chat, client-side
-		//io.sockets.emit('updateusers', usernames);
-		// echo globally that this client has left
-		socket.broadcast.emit('updatechat', 'SERVER', socket.username + ' has disconnected');
 		socket.leave(socket.room);
 	});
 
 });
 
-function switchRoom(socket, newroom) {
-	socket.leave(socket.room);
-
-	// sent message to OLD room
-	socket.broadcast.to(socket.room).emit('updatechat', 'SERVER', socket.username+' has left this room');
-	// update socket session room title
-	socket.room = newroom;
-	socket.broadcast.to(newroom).emit('updatechat', 'SERVER', socket.username+' has joined this room');
-	
-		// Calculate the active rooms for this user and push them
-		world.getAllowedRoomNames(newUser.location.lat, newUser.location.lon, function(allowedRooms) {
-
-			var usersRooms = allRooms.map(function(obj){ 
-				if (!userCounts[obj.name]) {
-					obj["users"] = 0
-				} else {
-					obj["users"] = userCounts[obj.name];
-				}
-
-				if (allowedRooms.indexOf(obj.name) > -1) {
-					obj.canJoin = true;
-				} else {
-					obj.canJoin = false;
-				}
-
-				return obj;
-			});
-
-
-			socket.emit('updaterooms', usersRooms);
-		});
-}

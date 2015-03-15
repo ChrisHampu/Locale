@@ -53,6 +53,7 @@ define([
 					{
 						_.each(data.messages, function(message) {
 							chat.addMessage(message);
+							console.log("Load", message);
 						});
 					}
 				});
@@ -66,6 +67,7 @@ define([
 					if(roomName === dataName)
 					{
 						chat.addMessage(data);
+						console.log("Broadcast", data);
 					}
 				});
 			});
