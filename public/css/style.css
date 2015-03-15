@@ -299,7 +299,7 @@ footer
     z-index: 2;
     background: #fff;
     margin: 0px 5px;
-    border: 2px solid #234C47;
+    border: 2px solid #353535;
     border-radius: 3px 3px 0px 0px;
     width: 300px;
 }
@@ -333,7 +333,7 @@ footer
 
 .chatbox-header {
     height: 40px;
-    background: #234C47;
+    background: #353535;
 }
 
 .chatbox-controls {
@@ -368,7 +368,7 @@ footer
 .chatbox-title {
     float: left;
     position: relative;
-    width: 120px;
+    width: 205px;
     padding: 5px;
     color: #FFF;
 }
@@ -393,7 +393,6 @@ footer
 
 
 #profile-content-sidr {
-    font-size:;
     padding: 20px;
     padding-top: 50px;
     float: right;
@@ -422,7 +421,7 @@ footer
 
 .chatbox-content {
 /*    display: none;*/
-    background:#234C47;
+    background:#353535;
 }
 
 .messages-wrapper {
@@ -441,14 +440,14 @@ footer
 
 .foreign-message .message-content-wrapper
 {
-    border-top: 10px solid #161718;
+    border-top: 10px solid #2a2c2e;
     border-left: 10px solid transparent;
     float: left;
 }
 
 .foreign-message .message-content
 {
-    background: #161718;
+    background: #2a2c2e;
 }
 
 .local-message .message-content-wrapper
@@ -467,6 +466,7 @@ footer
 {
     margin-top: -10px;
     padding: 7px;
+    border-radius: 3px;
 }
 
 .chat-message {
