@@ -44,9 +44,10 @@ define([
 		},
 
 		add: function(room) {
-			if(!room.canJoin){
+			/*if(!room.canJoin){
 				return; //Too far away, don't add;
-			}
+			}*/
+			console.log(room.canJoin);
 			var RoomView = new LocaleChatroomView ( { model: room, parent: this });
 
 			this.$el.append(RoomView.renderButton().$el);
