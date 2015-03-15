@@ -179,7 +179,7 @@ define([
 					map: Map
 				});
 
-				ChatroomCollection.add( new LocaleChatModel( { location: value.location, name: value.name, radius: value.radius, canJoin: value.canJoin }));
+				ChatroomCollection.add( new LocaleChatModel( { location: value.location, name: value.name, radius: value.radius, canJoin: value.canJoin, userCount: value.userCount }));
 			});
 		},
 
