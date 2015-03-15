@@ -58,7 +58,6 @@ define([
 					{
 						_.each(data.messages, function(message) {
 							chat.addMessage(message);
-							console.log("Load", message);
 						});
 					}
 				});

@@ -40,7 +40,6 @@ define([
                                     '<div class="h1">' + this.model.get("name") + '</div>' +
                                     '<div class="h2">University of British Columbia</div>' +
                                 '</div>' +
-                                '<span class="badge">' + this.model.get("userCount") + '</span>' +
                             '</div>' +
                               '<div class="btn btn-default toggle-pencil">' +
                                 '<i class="fa fa-pencil fa-lg"></i>' +
@@ -67,6 +66,8 @@ define([
                             '</div>' +
                         '</div>' 
             );
+
+			console.log(this.model.get("userCount"));
 
 			return this;
 		},
