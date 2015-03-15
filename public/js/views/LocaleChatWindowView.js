@@ -62,7 +62,7 @@ define([
 			this.$el.find(".messages-wrapper").html("");
 
 			_.each(this.collection.models, function(model) {
-				this.$el.find(".messages-wrapper").prepend( this.renderMessage( model ));
+				this.$el.find(".messages-wrapper").append( this.renderMessage( model ));
 			}, this);
 		},
 
@@ -86,7 +86,7 @@ define([
 		},
 
 		add: function(message) {
-			this.$el.find(".messages-wrapper").prepend( this.renderMessage(message) );
+			this.$el.find(".messages-wrapper").append( this.renderMessage(message) );
 			this.$el.find(".messages-wrapper").scrollTop(1000000);
 		},
 
