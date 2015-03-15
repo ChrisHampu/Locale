@@ -33,7 +33,8 @@ define([
 			'click .chatbox-minimize' : 'minimize',
 			'click .chatbox-exit' : 'exit',
 			'click .chatbox-header' : 'maximize',
-			'click .send-message' : 'send'
+			'click .send-message' : 'send',
+			'keypress .chatbox-input' : 'sendMessage'
 		},
 
 		initialize: function(options) {
@@ -120,6 +121,12 @@ define([
 		exit: function(){
 			this.$el.closest(".chatbox").remove();
 			this.parent.model.set("joined", false);
+		},
+
+		sendMessage:function(e){
+			if(e.which === 13){
+					
+			}
 		}
 	});
 

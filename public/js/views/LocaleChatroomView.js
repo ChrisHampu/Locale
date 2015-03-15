@@ -15,7 +15,7 @@ define([
 
 		events: {
 			'click .room-button' : 'join',
-			'click .exit-room' : 'remove'
+			'keypress .exit-room' : 'remove'
 		},
 
 		initialize: function(options) {
@@ -90,7 +90,7 @@ define([
 			this.parent.render();
 			this.ChatMessages.reset();
 			LocaleSocket.Emit('joinroom', this.model.get("name"));
-			
+
 			var checkState = this.ChatWindow.$el.css("bottom");
 			if (checkState == "42px"){
 				this.ChatWindow.$el.children(".chatbox-content").css({display: "block"});
