@@ -50,6 +50,13 @@ World.prototype.getValidRooms = function (lat, lon, callback){
     })
 }
 
+// Persist a message, passes the data object back into the callback
+World.prototype.persistMessage = function (data, callback){
+    this.db.put('messages', data.id, data).then(function (result) {
+        callback(data);
+    })
+}
+
 // Return the last 10 messages for a room
 World.prototype.getRoomHistory = function (room, callback){
     var rooms = null;
@@ -65,7 +72,5 @@ World.prototype.getRoomHistory = function (room, callback){
         callback(rooms);
     })
 }
-
-
 
 module.exports = World;
