@@ -31,6 +31,7 @@ define([
 
 		events: {
 			'click #do-search' : 'search',
+			'click .waypoint-join' : 'join'
 		},
 
 		initialize: function() {
@@ -98,7 +99,7 @@ define([
 
 				google.maps.event.addListener(marker, 'click', function() {
 				   	//Pan to and do hovered
-				   	var numUsers = '<strong>' + value.users + '</strong>';
+				   	var numUsers = '<strong> ' + value.users + '</strong>';
 				   	var name = '<h4>' + value.name + '</h4>';
 				   	var description = "Description";
 
@@ -117,7 +118,7 @@ define([
 				    	+ '<div class="waypoint-numUsers"><i class="fa fa-users fa-lg"></i>' 
 				    		+ numUsers 
 				    	+ '</div>'
-				    	+ '<button type="button" class="btn btn-success">Join</button>');
+				    	+ '<button type="button" class="btn btn-success waypoint-join" data-name= "' +  value.name +'">Join</button>');
 					
 				});
 
@@ -168,6 +169,18 @@ define([
 		
 		getProfileView: function() {
 			return ProfileView;
+		},
+
+		join: function(e) {
+			var name = $(e.currentTarget).data()["name"];
+			_.each(ChatroomListView.getRooms(), function(chat) {
+				var roomName = chat.model.get("name");
+				if(roomName === name)
+				{	
+					console.log("joined chat" + roomName);
+					chat.join();
+				}
+			});
 		}
 	});
 
