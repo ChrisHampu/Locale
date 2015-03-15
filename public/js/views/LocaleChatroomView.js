@@ -43,7 +43,7 @@ define([
                                 '<span class="badge">' + this.model.get("userCount") + '</span>' +
                             '</div>' +
                               '<div class="btn btn-default">' +
-                                '<i class="fa fa-wrench fa-lg"></i>' +
+                                '<i class="fa fa-pencil fa-lg"></i>' +
                               '</div>' +
                         '</div>' +
                         '<div class="panel panel-default">' +
@@ -57,6 +57,7 @@ define([
                                     '<button id="delete-locale" type="button" class="btn btn-danger"><i class="fa fa-trash-o"></i> Delete</button>' +
                                     '<button id="update-locale" type="button" class="btn btn-success"><i class="fa fa-check"></i> Update</button>' +
                                 '</form>' +
+                            '</div>' +
                             '</div>' +
                         '</div>' 
             );
