@@ -82,7 +82,6 @@ define([
 
 			      var pos = new google.maps.LatLng(position.coords.latitude,
 			                                       position.coords.longitude);
-
 			     var marker = new google.maps.Marker({
 				      position: pos,
 				      map: Map,
@@ -101,7 +100,6 @@ define([
 				    	+ '</div>' 
 				    	+ '<div class="waypoint-info-dismiss"><i class="fa fa-angle-up fa-lg"></i></div>'
 			     })*/
-
 	      		Map.setCenter(pos);
 			});
 		},
@@ -125,9 +123,8 @@ define([
 
 				google.maps.event.addListener(marker, 'click', function() {
 				   	//Pan to and do hovered
-				   	var numUsers = '<strong> ' + value.users + '</strong>';
 				   	var name = '<h4>' + value.name + '</h4>';
-				   	var description = "Description";
+				   	var description = "Rachel and Chandler are our Junior Designers. Rachel is a web designer with knowledge of HTML and CSS and supports Ross on projects.";
 				   	var buttonHTML;
 				   	if(value.canJoin){
 				   		buttonHTML = '<button type="button" class="btn btn-success waypoint-join" data-name= "' +  value.name +'">Join</button>';
@@ -139,18 +136,27 @@ define([
 				    Map.panTo(marker.getPosition());
 				    $('.waypoint-info').css({display: "block"});
 				    $('.waypoint-info').stop().animate({height: "125px"});
-				    $('.waypoint-info').html('<div class="chatbox-icon"></div>'
-				    	+'<div class="waypoint-name">'
-				    		 + name 
-				    	+ '</div>' 
-				    	+ '<div class="waypoint-info-dismiss"><i class="fa fa-angle-up fa-lg"></i></div>'
-				    	+ '<div class="waypoint-description">' 
-				    		+   description
-				    	+ '</div>'
-				    	+ '<div class="waypoint-numUsers"><i class="fa fa-users fa-lg"></i>' 
-				    		+ numUsers 
-				    	+ '</div>'
-				    	+ buttonHTML);
+
+				    $('.waypoint-info').html(
+                        '<div class="panel panel-default">' +
+                            '<div class="panel-heading">' +
+                                '<div class="chatbox-icon"></div>' +
+                                '<div class="waypoint-name">' +
+                                     name +
+                                '</div>' +
+                            '</div>' +
+                            '<div class="panel-body">' +
+                                '<div class="waypoint-description">' +
+                                    description +
+                                '</div>' +
+                               '<div class="btn-group">' +
+                                    '<button type="button" class="btn btn-default waypoint-info-dismiss">' +
+                                        '<i class="fa fa-angle-up fa-lg"></i>' +
+                                    '</button>' +
+                                    buttonHTML +
+                                '</div>' +
+                            '</div>' +
+                    '</div>');
 					
 				});
 

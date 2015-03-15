@@ -8,7 +8,7 @@ define([
 	'LocaleSocket'
 ], function($, _, Backbone, Bootstrap, sidr, LocaleAuth, LocaleSocket){
 
-	var sidrOpened = false;
+	var sidrOpened = true;
 	var LocaleProfileView = Backbone.View.extend({
 		el: '#menubar',
 
@@ -19,7 +19,6 @@ define([
 
 		initialize: function() {
 			$('#profile-thumbnail').sidr();
-
 			this.$el.on('click', "#form-dialog-btn", function() {
 
 				var displayed = $("#add-room-dialog").css("display");
@@ -38,6 +37,11 @@ define([
 
 		render: function() {
 			LocaleAuth.FinalizeData();
+			setTimeout(function() {
+				$.sidr('open', 'sidr');
+				$('#search-bar-wrapper').stop().animate({ left: "-90px"});
+			}, 1000);
+			
 		},
 
 		profile: function() {

@@ -38,7 +38,7 @@ body
 .profilepic
 {
     background: url('../assets/profilepic/placeholder.png') no-repeat;
-    background-size: contain;
+    background-size: contain !important;
     cursor: pointer;
     -webkit-transition:0.5s ease;
     -moz-transition:0.5s ease;
@@ -578,49 +578,23 @@ footer
     top:-8px;
     position:relative;
     right:-86px;
-    background:white;
     width: 79.5%;
-    border-radius:4px;
-    border: 1px solid #DDD;
 }
 
-.waypoint-info >.btn {
-    float:right;
-    width: 20%;
-    position:relative;
-    top: 10px;
-    right:10px;
-}
-
-.waypoint-name {
-    float:left;
-    width: 80%;
-    position:relative;
-    top:-3px;
-    padding-top: 5px;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 5px;
+.waypoint-info .btn-group
+{
+    position: relative;
+    float: right;
 }
 
 .waypoint-numUsers {
-    float:left;
-    width: 80%;
-    padding-top: 5px;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 5px;
+    float:right;
     position: relative;
-    top:10px;
 }
 
 .waypoint-description {
     float:left;
-    width: 80%;
-    padding-top: 5px;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 5px;
+    width: 100%;
 }
 
 #search-bar-wrapper {
@@ -642,12 +616,4 @@ footer
 
 .sidebar-content {
     padding: 0px;
-}
-
-.waypoint-info-dismiss {
-    float:right;
-    position:relative;
-    top:-35px;
-    right:10px;
-    cursor: pointer;
 }

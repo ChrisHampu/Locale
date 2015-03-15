@@ -18,7 +18,7 @@ define([
 		UserModel,
 		UsingFB;
 
-	var PopulateFBData = function() {
+	var PopulateFBData = function(callback) {
 		FB.api(
 		    "/me/picture",
 		    {
@@ -29,8 +29,7 @@ define([
 		    },
 		    function (response) {
 				if (response && !response.error) {
-					UserModel.set("profile_url", response.data.url);
-					Locale.SetProfilePic(response.data.url);
+					callback(response);
 				}
 		    }
 		);
@@ -52,10 +51,15 @@ define([
 				UserModel.set("location", { lat: LocaleUtilities.GetCurrentLocation().coords.latitude, lon: LocaleUtilities.GetCurrentLocation().coords.longitude });
 				UserModel.set("firstName", response.first_name);
 				UserModel.set("lastName", response.last_name);
-				UserModel.set("profileUrl", response.profile_url);
+				//UserModel.set("profileUrl", response.profile_url);
 				UserModel.set("email", response.email);
 
-				LocaleSocket.Emit('join', JSON.stringify(UserModel));
+				PopulateFBData( function(response) {
+					UserModel.set("profileUrl", response.data.url);
+					LocaleSocket.Emit('join', JSON.stringify(UserModel));
+					Locale.SetProfilePic(response.data.url);
+				});
+
 			});
 		}
 		else
@@ -66,7 +70,7 @@ define([
 				firstName: "John", lastName: "Doe", token: AuthToken, email: "email@email.com" 
 			});
 
-			UserModel.set("profile_url", "assets/profilepic/placeholder.png");
+			UserModel.set("profileUrl", "assets/profilepic/placeholder.png");
 
 			LocaleSocket.Emit('join', JSON.stringify(UserModel));
 		}
@@ -107,6 +111,9 @@ define([
 	}
 
 	var Initialize = function (LocaleApp) {
+		
+		Locale = LocaleApp;
+
 		FB.init( {
 			appId      : '616102381854407',
       		xfbml      : true,
@@ -117,11 +124,9 @@ define([
       		FBAuthStateChanged(response);
       	});
 
-      	Locale = LocaleApp;
-
 	    UserModel = new LocaleUserAuthModel();
 		
-		UserModel.set("profile_url", "assets/profilepic/placeholder.png");
+		UserModel.set("profileUrl", "assets/profilepic/placeholder.png");
 	}
 
 	var GetAuthState = function() {
@@ -177,7 +182,7 @@ define([
 	}
 
 	var FinalizeData = function() {
-		PopulateFBData();
+		//PopulateFBData();
 		PopulateGPlusData();
 	}
 	
