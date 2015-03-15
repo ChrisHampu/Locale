@@ -86,7 +86,7 @@ define([
 				var last = LocaleAuth.GetUserModel().get("lastName");
 
 				$('#profile-content-sidr').children('h1'). html(first + " " + last);
-				$('#profile-content-sidr').children('p'). html('Something interesting should probably go here');
+				$('#profile-content-sidr').children('p'). html('University of British Columbia');
 			}, 100);
 		},
 
