@@ -88,18 +88,6 @@ define([
 				      icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
 				  });
 
-			    /* google.maps.event.addListener(marker, 'click', function(){
-			     	var name;
-			     	var 
-
-			     	$('.waypoint-info').css({display: "block"});
-				    $('.waypoint-info').stop().animate({height: "125px"});
-				    $('.waypoint-info').html('<div class="chatbox-icon"></div>'
-				    	+'<div class="waypoint-name">'
-				    		 + name 
-				    	+ '</div>' 
-				    	+ '<div class="waypoint-info-dismiss"><i class="fa fa-angle-up fa-lg"></i></div>'
-			     })*/
 	      		Map.setCenter(pos);
 			});
 		},
@@ -135,7 +123,7 @@ define([
 
 				    Map.panTo(marker.getPosition());
 				    $('.waypoint-info').css({display: "block"});
-				    $('.waypoint-info').stop().animate({height: "125px"});
+				    $('.waypoint-info').stop().animate({height: "250px"}, 500);
 
 				    $('.waypoint-info').html(
                         '<div class="panel panel-default">' +
