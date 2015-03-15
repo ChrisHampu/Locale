@@ -16,7 +16,7 @@
 
     <link href="css/jquery.sidr.dark.css" rel="stylesheet">
 	<!-- Locale CSS file -->
-	<link href="css/style.css" rel="stylesheet">
+	<link href="public/css/style.css" rel="stylesheet">
     <!-- App entry point bootstrapping -->
 	<script data-main="js/bootstrapper" src="js/libs/require/require.js"></script>
 </head>
@@ -54,7 +54,7 @@
                     </ul>
                 </div>
             </div>
-            <div id='profilepic' class="img-circle" href='#'></div>
+            <div id='profilepic' class="profilepic bigpic img-circle" href='#'></div>
             <div id='searchbar' class="input-group">
                 <input id="search-content" type="text" class="form-control" placeholder="Search for...">
                 <span class="input-group-btn">
@@ -76,7 +76,72 @@
                     </div>
                 </div>
                 <div class='chatbox-content'>
-                    <div class='chatbox-messages'>Hello World
+                    <div class='chatbox-messages'>
+                        <div class="messages-wrapper">
+                            <div class="chat-message local-message">
+                                <div class="profilepic chatpic img-circle"></div>
+                                <div class='message-content-wrapper'>
+                                    <div class='message-content' >
+                                        <p>Hey guys!</p>
+                                        <span class="message-subtext">Ben Hawker - Fri, 12:34 PM</span>
+                                </div>
+                                </div>
+                            </div>
+                            <div class="chat-message foreign-message">
+                                <div class="profilepic chatpic img-circle"></div>
+                                <div class='message-content-wrapper'>
+                                    <div class='message-content' >
+                                        <p>Hey Ben!</p>
+                                        <span class="message-subtext">Jake Cooper - Fri, 12:34 PM</span>
+                                </div>
+                                </div>
+                            </div>
+                            <div class="chat-message local-message">
+                                <div class="profilepic chatpic img-circle"></div>
+                                <div class='message-content-wrapper'>
+                                    <div class='message-content' >
+                                        <p>How's the hack going?</p>
+                                        <span class="message-subtext">Ben Hawker - Fri, 12:34 PM</span>
+                                </div>
+                                </div>
+                            </div>
+                            <div class="chat-message foreign-message">
+                                <div class="profilepic chatpic img-circle"></div>
+                                <div class='message-content-wrapper'>
+                                    <div class='message-content' >
+                                        <p>It's okay, I'm breaking shit. You know, like usual.</p>
+                                        <span class="message-subtext">Jake Cooper - Fri, 12:34 PM</span>
+                                </div>
+                                </div>
+                            </div>
+                            <div class="chat-message local-message">
+                                <div class="profilepic chatpic img-circle"></div>
+                                <div class='message-content-wrapper'>
+                                    <div class='message-content' >
+                                        <p>Lol.</p>
+                                        <span class="message-subtext">Ben Hawker - Fri, 12:34 PM</span>
+                                </div>
+                                </div>
+                            </div>
+                            <div class="chat-message foreign-message">
+                                <div class="profilepic chatpic img-circle"></div>
+                                <div class='message-content-wrapper'>
+                                    <div class='message-content' >
+                                        <p>It's not funny. Stuff's really busted.</p>
+                                        <span class="message-subtext">Jake Cooper - Fri, 12:34 PM</span>
+                                </div>
+                                </div>
+                            </div>
+                            <div class="chat-message local-message">
+                                <div class="profilepic chatpic img-circle"></div>
+                                <div class='message-content-wrapper'>
+                                    <div class='message-content' >
+                                        <p>...</p>
+                                        <span class="message-subtext">Ben Hawker - Fri, 12:34 PM</span>
+                                </div>
+                                </div>
+                            </div>
+                        </div> 
                     </div>
                     <div class='chatbox-input input-group'>
                         <input type="text" class="form-control message-box" placeholder="Enter Message">
