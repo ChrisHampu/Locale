@@ -436,7 +436,7 @@ footer
 }
 
 #my-room-container .chatbox-title{
-    width: auto;
+    width: 180px;
 }
 
 #my-room-container .fa-pencil{
@@ -518,7 +518,7 @@ footer
 }
 
 .room-button {
-    width:200px;
+    width:250px;
 }
 
 .exit-room {
@@ -587,6 +587,13 @@ footer
     margin-top:20px;
 }
 
+.waypoint-name h4
+{
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
 .waypoint-info{
     display: none;
     height: 0px;
@@ -610,6 +617,8 @@ footer
 .waypoint-description {
     float:left;
     width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
 }
 
 #search-bar-wrapper {
