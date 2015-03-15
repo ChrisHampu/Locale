@@ -55,7 +55,7 @@ define([
 				UserModel.set("email", response.email);
 
 				PopulateFBData( function(response) {
-					UserModel.set("profile_url", response.data.url);
+					UserModel.set("profileUrl", response.data.url);
 					LocaleSocket.Emit('join', JSON.stringify(UserModel));
 					Locale.SetProfilePic(response.data.url);
 				});
@@ -70,7 +70,7 @@ define([
 				firstName: "John", lastName: "Doe", token: AuthToken, email: "email@email.com" 
 			});
 
-			UserModel.set("profile_url", "assets/profilepic/placeholder.png");
+			UserModel.set("profileUrl", "assets/profilepic/placeholder.png");
 
 			LocaleSocket.Emit('join', JSON.stringify(UserModel));
 		}
@@ -126,7 +126,7 @@ define([
 
 	    UserModel = new LocaleUserAuthModel();
 		
-		UserModel.set("profile_url", "assets/profilepic/placeholder.png");
+		UserModel.set("profileUrl", "assets/profilepic/placeholder.png");
 	}
 
 	var GetAuthState = function() {
