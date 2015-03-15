@@ -226,7 +226,12 @@ define([
 		},
 
 		doSearchDropdown: function(tags) {
-			console.log("Found matches: " + tags);
+			/*console.log("Found matches: " + tags);*/
+			/*$('.waypoint-info').css("display", "block");
+			$('.waypoint-info').stop().animate({height : "100px"});
+			for(tag in tags){
+				console.log(tags[tag]);
+			}*/
 		},
 
 		getValue: function(callback, collection, searchCallback){
