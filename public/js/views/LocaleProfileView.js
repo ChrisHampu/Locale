@@ -80,7 +80,8 @@ define([
 				var first = LocaleAuth.GetUserModel().get("firstName");
 				var last = LocaleAuth.GetUserModel().get("lastName");
 
-				$('#profile-content-sidr').html(first + " " + last);
+				$('#profile-content-sidr').children('h1'). html(first + " " + last);
+				$('#profile-content-sidr').children('p'). html('Something interesting should probably go here');
 			}, 100);
 		}
 	});
