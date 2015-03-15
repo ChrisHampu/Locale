@@ -4,8 +4,9 @@ define([
 	'backbone',
 	'bootstrapjs',
 	'sidr',
-	'LocaleAuth'
-], function($, _, Backbone, Bootstrap, sidr, LocaleAuth){
+	'LocaleAuth',
+	'LocaleSocket'
+], function($, _, Backbone, Bootstrap, sidr, LocaleAuth, LocaleSocket){
 
 	var sidrOpened = false;
 	var LocaleProfileView = Backbone.View.extend({
@@ -13,6 +14,7 @@ define([
 
 		events: {
 			'click #profile-thumbnail' : 'profile',
+			'click #add-locale' : 'createLocale',
 			'click .toggle-delete' : 'toggle'
 		},
 
@@ -37,6 +39,24 @@ define([
 
 			$('#all-room-container').css("max-height", maxHeight);
 
+		},
+
+		createLocale: function () {
+			//event.preventDefault();
+			var name = this.$el.find("#roomName").val();
+			var description = this.$el.find("#roomDescription").val();
+
+			if(name === undefined || description === "")
+				return;
+
+			var roomData = {
+				"name": name,
+				"description": description
+			}
+
+			console.log("Adding " + name);
+			
+			LocaleSocket.Emit('addroom', roomData);
 		},
 
 		toggle: function(){
