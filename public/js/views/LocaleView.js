@@ -34,6 +34,10 @@ define([
 				console.log("Cannot render map. Not authed.")
 				LocaleAuth.EnsureAuthed();
 			}
+		},
+
+		getMapView: function() {
+			return MapView;
 		}
 	});
 

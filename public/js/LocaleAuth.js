@@ -15,9 +15,34 @@ define([
 		AppToken = 616102381854407,
 		RedirectURL = "http://getlocale.me",
 		Locale,
-		UserModel;
+		UserModel,
+		UsingFB;
+
+	var PopulateFBData = function() {
+		FB.api(
+		    "/me/picture",
+		    {
+		        "redirect": false,
+		        "height": 60,
+		        "width": 60,
+		        "type": "small"
+		    },
+		    function (response) {
+				if (response && !response.error) {
+					UserModel.set("profile_url", response.data.url);
+					Locale.SetProfilePic(response.data.url);
+				}
+		    }
+		);
+	}
+
+	var PopulateGPlusData = function() {
+
+	}
 
 	var SendAuthModel = function(useFB) {
+
+		UsingFB = useFB;
 
 		if(useFB === true)
 		{
@@ -25,6 +50,8 @@ define([
 			    UserModel = new LocaleUserAuthModel({ id: response.id, location: { lat: LocaleUtilities.GetCurrentLocation().coords.latitude, lon: LocaleUtilities.GetCurrentLocation().coords.longitude },
 			     firstName: response.first_name, lastName: response.last_name, token: AuthToken, email: response.email });
 				
+				UserModel.set("profile_url", "assets/profilepic/placeholder.png");
+
 				LocaleSocket.Emit('join', JSON.stringify(UserModel));
 			});
 		}
@@ -36,6 +63,7 @@ define([
 				firstName: "John", lastName: "Doe", token: AuthToken, email: "email@email.com" 
 			});
 
+			UserModel.set("profile_url", "assets/profilepic/placeholder.png");
 
 			LocaleSocket.Emit('join', JSON.stringify(UserModel));
 		}
@@ -55,7 +83,7 @@ define([
 
 			IsAuthed = true;
 
-			SendAuthModel();
+			SendAuthModel(true);
 		}
 		else if(response.status === 'not_authorized')
 		{
@@ -140,6 +168,11 @@ define([
 	var GetUserModel = function() {
 		return UserModel;
 	}
+
+	var FinalizeData = function() {
+		PopulateFBData();
+		PopulateGPlusData();
+	}
 	
 	// Map public API functions to internal functions
 	return {
@@ -150,6 +183,7 @@ define([
 		LoginGooglePlus: LoginGooglePlus,
 		Logout: Logout,
 		EnsureAuthed: EnsureAuthed,
-		GetUserModel: GetUserModel
+		GetUserModel: GetUserModel,
+		FinalizeData: FinalizeData
 	};
 });

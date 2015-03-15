@@ -57,6 +57,8 @@ define([
 		},
 
 		render: function() {
+			ProfileView.render();
+			
 			// Failed to get position, do nothing
 			LocaleUtilities.GetCurrentLocation(function(position) {
 				CurrentPosition = position;
@@ -87,25 +89,42 @@ define([
 
 				}
 
-			     var marker = new google.maps.Marker({
+			    var marker = new google.maps.Marker({
 				      position: pos,
 				      map: Map
 				  });
 
-				  google.maps.event.addListener(marker, 'mouseover', function() {
+				google.maps.event.addListener(marker, 'mouseover', function() {
 				    //display info about the room if it is a room, or if it is you, display your info.
 				    console.log("hovered");
 				});
 
-				  google.maps.event.addListener(marker, 'mouseout', function() {
+				google.maps.event.addListener(marker, 'mouseout', function() {
 				    //remove whatever info was displayed
 				    console.log("unhovered");
 				});
 
-				  google.maps.event.addListener(marker, 'click', function() {
+				google.maps.event.addListener(marker, 'click', function() {
 				   	//Pan to and do hovered
+				   	var numUsers = "10";
+				   	var name = "testing";
+				   	var description = "local group";
 				    Map.panTo(marker.getPosition());
 				    console.log("clicked");
+				    $('.waypoint-info').css({display: "block"});
+				    $('.waypoint-info').stop().animate({height: "100px"});
+				    $('.waypoint-info').html(
+				    	'<div class="waypoint-name">Locale Name: '
+				    		 + name 
+				    	+ '</div>' 
+				    	+ '<div class="waypoint-numUsers">Number of Users: ' 
+				    		+ numUsers 
+				    	+ '</div>'
+				    	+ '<div class="waypoint-description">Description: ' 
+				    		+   description
+				    	+ '</div>' 
+				    	+ '<button type="button" class="btn btn-success">Join</button>');
+					
 				});
 
 				var circle = new google.maps.Circle({
@@ -151,6 +170,10 @@ define([
 
 		getLocation: function() {
 			return CurrentPosition;
+		},
+		
+		getProfileView: function() {
+			return ProfileView;
 		}
 	});
 
