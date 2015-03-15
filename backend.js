@@ -84,8 +84,6 @@ io.sockets.on('connection', function (socket) {
 		newUser["location"]["longitude"] = newUser["location"]["lon"];
 		delete newUser["location"]["lon"];
 
-		console.log(newUser);
-
 		// Store the username in the socket session for this client
 		socket.username = newUser.firstName;
 		socket.user = newUser;
@@ -124,8 +122,6 @@ io.sockets.on('connection', function (socket) {
 			tags: data.tags
 		}
 
-		console.log("Adding room", newRoom);
-
 		world.addRoom(newRoom, function() {
 			allRooms.push(newRoom);
 			allRoomNames.push(newRoom.name);
@@ -142,8 +138,6 @@ io.sockets.on('connection', function (socket) {
 					} else {
 						obj.canJoin = false;
 					}
-			
-					console.log(obj);
 			
 					return obj;
 				});
@@ -176,12 +170,8 @@ io.sockets.on('connection', function (socket) {
 						obj.canJoin = false;
 					}
 			
-					console.log(obj);
-			
 					return obj;
 				});
-
-				console.log(usersRooms);
 			
 				socket.emit('updaterooms', usersRooms);
 			});
@@ -210,8 +200,6 @@ io.sockets.on('connection', function (socket) {
 	});
 
 	socket.on('deletelocale', function(room){
-		console.log(room);
-
 		world.deleteRoom(room);
 	});
 
@@ -250,13 +238,10 @@ function createCounter(room) {
 function incrementCount(room) {
 	if (userCounts.indexOf(room) > -1) {
 		userCounts[room]++;
-		console.log(room, userCounts[room]);
 	} else {
 		userCounts[room] = 1;
-		console.log(room, "Created count 1");
 	}
 
-	console.log(userCounts);
 }
 
 function decrementCount(room) {
