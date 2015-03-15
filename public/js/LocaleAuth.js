@@ -47,9 +47,13 @@ define([
 		if(useFB === true)
 		{
 			FB.api('/me', function(response) {
-			    UserModel = new LocaleUserAuthModel({ id: response.id, location: { lat: LocaleUtilities.GetCurrentLocation().coords.latitude, lon: LocaleUtilities.GetCurrentLocation().coords.longitude },
-			     firstName: response.first_name, lastName: response.last_name, token: AuthToken, email: response.email });
 				
+				UserModel.set("id", response.id);
+				UserModel.set("location", { lat: LocaleUtilities.GetCurrentLocation().coords.latitude, lon: LocaleUtilities.GetCurrentLocation().coords.longitude });
+				UserModel.set("firstName", response.first_name);
+				UserModel.set("lastName", response.last_name);
+				UserModel.set("token", AuthToken);
+				UserModel.set("email", response.email);
 				UserModel.set("profile_url", "assets/profilepic/placeholder.png");
 
 				LocaleSocket.Emit('join', JSON.stringify(UserModel));
@@ -115,6 +119,10 @@ define([
       	});
 
       	Locale = LocaleApp;
+
+	    UserModel = new LocaleUserAuthModel();
+		
+		UserModel.set("profile_url", "assets/profilepic/placeholder.png");
 	}
 
 	var GetAuthState = function() {
