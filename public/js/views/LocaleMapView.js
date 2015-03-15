@@ -118,6 +118,12 @@ define([
 				   	var numUsers = '<strong> ' + value.users + '</strong>';
 				   	var name = '<h4>' + value.name + '</h4>';
 				   	var description = "Description";
+				   	var buttonHTML;
+				   	if(value.canJoin){
+				   		buttonHTML = '<button type="button" class="btn btn-success waypoint-join" data-name= "' +  value.name +'">Join</button>';
+				   	} else {
+				   		buttonHTML = '<button type="button" class="btn btn-success waypoint-join" disabled="disabled" data-name= "' +  value.name +'">Join</button>'
+				   	}
 
 
 				    Map.panTo(marker.getPosition());
@@ -134,7 +140,7 @@ define([
 				    	+ '<div class="waypoint-numUsers"><i class="fa fa-users fa-lg"></i>' 
 				    		+ numUsers 
 				    	+ '</div>'
-				    	+ '<button type="button" class="btn btn-success waypoint-join" data-name= "' +  value.name +'">Join</button>');
+				    	+ buttonHTML);
 					
 				});
 
