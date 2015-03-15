@@ -29,6 +29,7 @@ define([
 		    function (response) {
 				if (response && !response.error) {
 					UserModel.set("profile_url", response.data.url);
+					$('.profilepic').css("background", "url(" + response.data.url + ")").css("background-size", "contain");
 				}
 		    }
 		);
