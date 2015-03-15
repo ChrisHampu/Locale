@@ -73,6 +73,11 @@ define([
 		},
 
 		createLocale: function() {
+
+			$("#add-room-dialog").stop().animate({height: "0"}, function(){
+				$("#add-room-dialog").css("display", "none");
+			})
+			
 			var name = this.$el.find("#roomName").val();
 			var description = this.$el.find("#roomDescription").val();
 			var tags = this.$el.find("#roomTags").val().split("#");
@@ -94,7 +99,6 @@ define([
 					"admin" : LocaleAuth.GetUserModel().get("profileUrl")
 				});
 			}
-			
 
 			console.log("creating locale named " + name);
 
