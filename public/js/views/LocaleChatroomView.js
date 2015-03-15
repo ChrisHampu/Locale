@@ -59,8 +59,8 @@ define([
 			//this.parent.remove(this);
 		},
 
-		addMessage: function() {
-
+		addMessage: function(newMessage) {
+			this.ChatMessages.add( { user: newMessage.user, newMessage: message, timestamp: newMessage.timestamp});
 		},
 
 		join: function() {
