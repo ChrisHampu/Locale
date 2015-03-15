@@ -68,8 +68,9 @@ define([
 
 		renderMessage: function(message) {
 			var UserSent = false;
-			//if(message.get("firstName") === LocaleAuth.GetUserModel.get("firstName") && message.get("lastInitial") === LocaleAuth.GetUserModel.get("lastName")[0])
-			//	UserSent = true;
+
+			if(message.get("profileUrl") === LocaleAuth.GetUserModel().get("profileUrl"))
+				UserSent = true;
 
 			if (message.get("profileUrl")) {
 				var style = "style=\"background: url(" + message.get("profileUrl") + ");\""
