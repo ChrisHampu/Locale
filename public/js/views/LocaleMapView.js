@@ -34,18 +34,21 @@ define([
 		},
 
 		initialize: function() {
-			ProfileView = new LocaleProfileView();
+			
 
 			ChatroomCollection = new LocaleChatroomCollection();
 			ChatroomListView = new LocaleChatroomListView( { collection: ChatroomCollection } );
 			
 			Map = new google.maps.Map(this.$el.find("#map-wrapper")[0], mapOptions);
 
-			LocaleSocket.Handle('loadroom', function(room, messages) {
+			LocaleSocket.Handle('loadroom', function(data) {
+
 				_.each(ChatroomListView.getRooms(), function(chat) {
-					if(chat.model.get("name") === room)
+					var roomName = chat.model.get("name");
+					var dataName = data.room;
+					if(roomName === dataName)
 					{
-						_.each(messages, function(message) {
+						_.each(data.messages, function(message) {
 							chat.addMessage(message);
 						});
 					}
@@ -54,6 +57,8 @@ define([
 		},
 
 		render: function() {
+			ProfileView = new LocaleProfileView();
+			
 			// Failed to get position, do nothing
 			LocaleUtilities.GetCurrentLocation(function(position) {
 				CurrentPosition = position;

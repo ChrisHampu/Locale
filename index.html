@@ -25,9 +25,12 @@
 	});
 
 	// listener, whenever the server emits 'updaterooms', update the client's room list
-	socket.on('updaterooms', function(rooms, current_room) {		
+	socket.on('updaterooms', function(rooms) {		
 		// Update the global list of available rooms
 		activeRooms = rooms;
+
+		console.log("A");
+		console.log(activeRooms);
 
 		// Call whatever we need to call to update the UI from that glboal list
 		renderRooms();
@@ -44,7 +47,6 @@
 		// Set the global chatmessages for this room to the received values
 		chatMessages = data.messages.reverse();
 
-		console.log(data);
 		// Render the historical room messages
 		renderMessages();
 	})
@@ -78,6 +80,7 @@
 	 * Render the rooms section of the page with the last received data
 	 */
 	function renderRooms() {
+		console.log("B");
 		$('#rooms').empty();
 
 		$.each(activeRooms, function(key, value) {
@@ -95,10 +98,8 @@
 	function renderMessages() {
 		$('#conversation').empty();
 
-		console.log(chatMessages);
-
 		$.each(chatMessages, function(key, value) {
-			$('#conversation').append('<b>'+ value["user"] + ':</b> ' + value["message"] + '<br>');
+			$('#conversation').append('<b>'+ value["firstName"] + " " + value['lastInitial'] + ':</b> ' + value["message"] + '<br>');
 		});
 	
 	}

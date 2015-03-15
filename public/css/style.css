@@ -298,9 +298,10 @@ footer
 
 .chatbox {
     z-index: 2;
-    background: #23262a;
+    background: #F5F5F5;
     margin: 0px 5px;
-    border-radius: 2px 2px 0px 0px;
+    border-radius: 3px 3px 0px 0px;
+    border: 1px solid #DDD;
     width: 300px;
     position: relative;
     float: right;
@@ -310,24 +311,9 @@ footer
 
 .chatbox-input {
     position: relative;
-    padding: 2px 1px 1px 1px;
+    padding: 3px 2px 2px 2px;
 }
 
-.chatbox-input .message-box
-{
-    border: none;
-    border-radius: 
-}
-
-.chatbox-input .input-group-btn
-{
-    border: none;
-}
-
-.chatbox-input .input-group-btn .btn
-{
-    border: 1px solid #FFF;
-}
 
 .chatbox-input .input-group-btn .btn:hover
 {
@@ -349,7 +335,7 @@ footer
     float: right;
     padding: 0px 5px;
     margin: 1px;
-    color: #FFF;
+    color: #808080;
 }
 
 .chatbox-controls .btn:hover {
@@ -372,7 +358,6 @@ footer
     position: relative;
     width: 205px;
     padding: 5px;
-    color: #FFF;
 }
 
 .chatbox-title div
@@ -390,32 +375,30 @@ footer
 }
 .chatbox-title .h2 {
     font-size: 11px;
-    color: #888888;
+    color: #808080;
 }
 
 
 #profile-content-sidr {
-    padding: 20px;
-    padding-top: 50px;
-    float: right;
-    right: 50px;
-    position: absolute;
+  padding: 42px 20px 20px 110px;
+  width: 100%;
 }
 
-#room-header {
-    top:125px;
-    position:relative;
-    left: 80px;
-    font-size: 20px;
+#my-rooms {
+    position: relative;
+    float: left;
+    width: 100%;
+    text-align: center;
 }
 
 #my-room-container{
-    top: 100px;
-    position:relative;
+    text-align: center;
 }
 
 .chatbox-messages {
     border-radius: 0px 0px 2px 2px;
+    border-top: 1px solid #DDD;
+    border-bottom: 1px solid #DDD;
     position: relative;
     height: 300px;
     background: #fff;
@@ -423,7 +406,6 @@ footer
 
 .chatbox-content {
 /*    display: none;*/
-    margin: 0px 1px 1px 1px;
 }
 
 .messages-wrapper {
@@ -489,12 +471,7 @@ footer
 }
 
 .room-button {
-    left:25%;
-    background-color: #888888;
-    position: relative;
-    color:white;
-    width: 125px;
-    height:35px;
+    
 }
 
 .exit-room {
@@ -524,12 +501,7 @@ footer
     background: rgba(136, 136, 136, 0.3);
 }
 
-#my-room-container {
-    overflow-y: auto; 
-    max-height: 100%;
-    padding-bottom:20px;
-    padding-top:20px;
-}
+
 
 #my-room-container li {
     position: relative;
@@ -572,6 +544,7 @@ footer
     margin-top:20px;
 }
 
+<<<<<<< HEAD
 .waypoint-info{
     display: none;
     height: 0px;
@@ -611,3 +584,15 @@ footer
 .waypoint-description {
     float:left;
 }*/
+=======
+#add-room-dialog {
+    margin: 40px 10px 10px 10px;
+    position:relative;
+    float: left;
+    width: 330px;
+}
+
+.sidebar-content {
+    padding: 0px;
+}
+>>>>>>> 7ddba607a68b6ef3be338531c585cf6104342bf9

@@ -17,6 +17,28 @@ define([
 		Locale,
 		UserModel;
 
+	var PopulateFBData = function() {
+		FB.api(
+		    "/me/picture",
+		    {
+		        "redirect": false,
+		        "height": 60,
+		        "width": 60,
+		        "type": "small"
+		    },
+		    function (response) {
+				if (response && !response.error) {
+					UserModel.set("profile_url", response.data.url);
+					$('.profilepic').css("background", "url(" + response.data.url + ")").css("background-size", "contain");
+				}
+		    }
+		);
+	}
+
+	var PopulateGPlusData = function() {
+		UserModel.set("profile_url", "assets/profilepic/placeholder.png");
+	}
+
 	var SendAuthModel = function(useFB) {
 
 		if(useFB === true)
@@ -26,6 +48,8 @@ define([
 			     firstName: response.first_name, lastName: response.last_name, token: AuthToken, email: response.email });
 				
 				LocaleSocket.Emit('join', JSON.stringify(UserModel));
+
+				PopulateFBData();
 			});
 		}
 		else
@@ -36,8 +60,9 @@ define([
 				firstName: "John", lastName: "Doe", token: AuthToken, email: "email@email.com" 
 			});
 
-
 			LocaleSocket.Emit('join', JSON.stringify(UserModel));
+
+			PopulateGPlusData();
 		}
 
 		// Navigate to actual site
@@ -55,7 +80,7 @@ define([
 
 			IsAuthed = true;
 
-			SendAuthModel();
+			SendAuthModel(true);
 		}
 		else if(response.status === 'not_authorized')
 		{
@@ -136,6 +161,10 @@ define([
 			Locale.RedirectLogin();
 		}
 	}
+
+	var GetUserModel = function() {
+		return UserModel;
+	}
 	
 	// Map public API functions to internal functions
 	return {
@@ -145,6 +174,7 @@ define([
 		LoginFacebook: LoginFacebook,
 		LoginGooglePlus: LoginGooglePlus,
 		Logout: Logout,
-		EnsureAuthed: EnsureAuthed
+		EnsureAuthed: EnsureAuthed,
+		GetUserModel: GetUserModel
 	};
 });
