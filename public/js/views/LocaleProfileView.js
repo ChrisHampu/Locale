@@ -99,7 +99,7 @@ define([
 				pencilExpanded = false;
 			} else {
 				$(e.currentTarget).parent().parent().children(".edit-locale").css("display","block");
-				$(e.currentTarget).parent().parent().children(".edit-locale").stop().animate({height: "150px"}, function(){
+				$(e.currentTarget).parent().parent().children(".edit-locale").stop().animate({height: "200px"}, function(){
 					console.log("NO")
 				});
 				pencilExpanded = true;

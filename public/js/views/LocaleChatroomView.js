@@ -54,6 +54,12 @@ define([
                                             this.model.get("description") +
                                         '</textarea>' +
                                     '</div>' +
+                                    '<div class="form-group">' +
+                                        '<textarea class="form-control" id="roomTags" placeholder="Tags" rows="1">' +
+                                            this.model.get("tags") +
+                                        '</textarea>' +
+                                    '</div>' +
+                                   
                                     '<button id="delete-locale" type="button" class="btn btn-danger"><i class="fa fa-trash-o"></i> Delete</button>' +
                                     '<button id="update-locale" type="button" class="btn btn-success"><i class="fa fa-check"></i> Update</button>' +
                                 '</form>' +
