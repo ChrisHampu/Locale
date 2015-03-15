@@ -96,6 +96,13 @@ io.sockets.on('connection', function (socket) {
 
 		var newUser = JSON.parse(user);
 	
+		newUser["location"]["latitude"] = newUser["location"]["lat"];
+		delete newUser["location"]["lat"];
+
+		newUser["location"]["longitude"] = newUser["location"]["lon"];
+		delete newUser["location"]["lon"];
+
+
 		// TODO: Create or update the user's db entry
 		//console.log(newUser);
 
@@ -130,8 +137,6 @@ io.sockets.on('connection', function (socket) {
 
 	// listener, add rooms to the database by user request
 	socket.on('addroom', function (data) {
-
-		console.log(data);
 
 		var newRoom = {
 			name: data.name,
