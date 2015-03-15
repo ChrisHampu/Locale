@@ -97,7 +97,7 @@ io.sockets.on('connection', function (socket) {
 		world.getAllowedRoomNames(newUser.location.latitude, newUser.location.longitude, function(allowedRooms) {
 
 			var usersRooms = allRooms.map(function(obj){ 
-				if (!userCounts.contains([obj.name])) {
+				if (!userCounts.contains(obj.name)) {
 					obj.userCount = 0
 				} else {
 					obj.userCount = userCounts[obj.name];
@@ -136,7 +136,7 @@ io.sockets.on('connection', function (socket) {
 		world.getAllowedRoomNames(socket.user.location.latitude, socket.user.location.longitude, function(allowedRooms) {
 	
 			var usersRooms = allRooms.map(function(obj){ 
-				if (!userCounts.contains([obj.name])) {
+				if (!userCounts.contains(obj.name)) {
 					obj.userCount = 0
 				} else {
 					obj.userCount = userCounts[obj.name];
@@ -163,7 +163,7 @@ io.sockets.on('connection', function (socket) {
 		world.getAllowedRoomNames(newUser.location.lat, newUser.location.lon, function(allowedRooms) {
 
 			var usersRooms = allRooms.map(function(obj){ 
-				if (!userCounts.contains([obj.name])) {
+				if (!userCounts.contains(obj.name)) {
 					obj.userCount = 0
 				} else {
 					obj.userCount = userCounts[obj.name];
