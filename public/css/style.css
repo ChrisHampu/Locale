@@ -395,23 +395,21 @@ footer
 
 
 #profile-content-sidr {
-    padding: 20px;
-    padding-top: 50px;
-    float: right;
-    right: 50px;
-    position: absolute;
+  padding: 42px 20px 20px 110px;
+  float: left;
+  position: relative;
+  width: 100%;
 }
 
-#room-header {
-    top:125px;
-    position:relative;
-    left: 80px;
-    font-size: 20px;
+#my-rooms {
+    position: relative;
+    float: left;
+    width: 100%;
+    text-align: center;
 }
 
 #my-room-container{
-    top: 100px;
-    position:relative;
+    text-align: center;
 }
 
 .chatbox-messages {
@@ -524,12 +522,7 @@ footer
     background: rgba(136, 136, 136, 0.3);
 }
 
-#my-room-container {
-    overflow-y: auto; 
-    max-height: 100%;
-    padding-bottom:20px;
-    padding-top:20px;
-}
+
 
 #my-room-container li {
     position: relative;
@@ -570,4 +563,11 @@ footer
     margin-left:40px;
     margin-bottom:-20px;
     margin-top:20px;
+}
+
+#add-room-dialog {
+    margin: 40px 10px 10px 10px;
+    position:relative;
+    float: left;
+    width: 340px;
 }
