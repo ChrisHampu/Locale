@@ -154,7 +154,7 @@ define([
 
 					    Map.panTo(marker.getPosition());
 					    $('.waypoint-info').css({display: "block"});
-					    $('.waypoint-info').stop().animate({height: "250px"}, 500);
+					    $('.waypoint-info').stop().animate({height: "190px"}, 500);
 
 					    $('.waypoint-info').html(
 	                        '<div class="panel panel-default">' +
@@ -251,7 +251,7 @@ define([
 			   	}
 
 			    $('.waypoint-info').css({display: "block"});
-			    $('.waypoint-info').stop().animate({height: "250px"}, 500);
+			    $('.waypoint-info').stop().animate({height: "190px"}, 500);
 
 			    $('.waypoint-info').html(
                     '<div class="panel panel-default">' +
