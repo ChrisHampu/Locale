@@ -18,16 +18,10 @@ define([
 
 		initialize: function() {
 			$('#profile-thumbnail').sidr();
-
-			var url = LocaleAuth.GetUserModel().get("profile_url");
-
-			if(url !== undefined)
-			{
-				$('.profilepic').css("background", "url(" + url + ")").css("background-size", "contain");
-			}
 		},
 
 		render: function() {
+			LocaleAuth.FinalizeData();
 		},
 
 		profile: function() {
@@ -61,6 +55,10 @@ define([
 		dismiss: function(){
 			console.log("clicked a dismiss");
 			console.log($(this));
+		},
+
+		setProfilePic: function(url) {
+			$('.profilepic').css("background", "url(" + url + ")").css("background-size", "contain");
 		}
 	});
 

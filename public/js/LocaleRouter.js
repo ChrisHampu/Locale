@@ -51,6 +51,10 @@ define([
 		default: function(action) {
 			// show error popup?
 			console.log("Undefined action: " + action);
+		},
+
+		getLocaleView: function() {
+			return LocaleView;
 		}
 	});
 

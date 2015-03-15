@@ -15,7 +15,8 @@ define([
 		AppToken = 616102381854407,
 		RedirectURL = "http://getlocale.me",
 		Locale,
-		UserModel;
+		UserModel,
+		UsingFB;
 
 	var PopulateFBData = function() {
 		FB.api(
@@ -29,17 +30,19 @@ define([
 		    function (response) {
 				if (response && !response.error) {
 					UserModel.set("profile_url", response.data.url);
-					$('.profilepic').css("background", "url(" + response.data.url + ")").css("background-size", "contain");
+					Locale.SetProfilePic(response.data.url);
 				}
 		    }
 		);
 	}
 
 	var PopulateGPlusData = function() {
-		UserModel.set("profile_url", "assets/profilepic/placeholder.png");
+
 	}
 
 	var SendAuthModel = function(useFB) {
+
+		UsingFB = useFB;
 
 		if(useFB === true)
 		{
@@ -47,9 +50,9 @@ define([
 			    UserModel = new LocaleUserAuthModel({ id: response.id, location: { lat: LocaleUtilities.GetCurrentLocation().coords.latitude, lon: LocaleUtilities.GetCurrentLocation().coords.longitude },
 			     firstName: response.first_name, lastName: response.last_name, token: AuthToken, email: response.email });
 				
-				LocaleSocket.Emit('join', JSON.stringify(UserModel));
+				UserModel.set("profile_url", "assets/profilepic/placeholder.png");
 
-				PopulateFBData();
+				LocaleSocket.Emit('join', JSON.stringify(UserModel));
 			});
 		}
 		else
@@ -60,9 +63,9 @@ define([
 				firstName: "John", lastName: "Doe", token: AuthToken, email: "email@email.com" 
 			});
 
-			LocaleSocket.Emit('join', JSON.stringify(UserModel));
+			UserModel.set("profile_url", "assets/profilepic/placeholder.png");
 
-			PopulateGPlusData();
+			LocaleSocket.Emit('join', JSON.stringify(UserModel));
 		}
 
 		// Navigate to actual site
@@ -164,6 +167,11 @@ define([
 
 	var GetUserModel = function() {
 		return UserModel;
+	}
+
+	var FinalizeData = function() {
+		PopulateFBData();
+		PopulateGPlusData();
 	}
 	
 	// Map public API functions to internal functions
