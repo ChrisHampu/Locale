@@ -106,23 +106,25 @@ define([
 
 				google.maps.event.addListener(marker, 'click', function() {
 				   	//Pan to and do hovered
-				   	var numUsers = "10";
-				   	var name = "testing";
+				   	var numUsers = '<strong>' + ' 10' + '</strong>';
+				   	var name = '<h4>' + "Testing" + '</h4>';
 				   	var description = "local group";
+
+
 				    Map.panTo(marker.getPosition());
 				    console.log("clicked");
 				    $('.waypoint-info').css({display: "block"});
-				    $('.waypoint-info').stop().animate({height: "100px"});
-				    $('.waypoint-info').html(
-				    	'<div class="waypoint-name">Locale Name: '
+				    $('.waypoint-info').stop().animate({height: "125px"});
+				    $('.waypoint-info').html('<div class="chatbox-icon"></div>'
+				    	+'<div class="waypoint-name">'
 				    		 + name 
 				    	+ '</div>' 
-				    	+ '<div class="waypoint-numUsers">Number of Users: ' 
+				    	+ '<div class="waypoint-description">' 
+				    		+   description
+				    	+ '</div>'
+				    	+ '<div class="waypoint-numUsers"><i class="fa fa-users fa-lg"></i>' 
 				    		+ numUsers 
 				    	+ '</div>'
-				    	+ '<div class="waypoint-description">Description: ' 
-				    		+   description
-				    	+ '</div>' 
 				    	+ '<button type="button" class="btn btn-success">Join</button>');
 					
 				});
