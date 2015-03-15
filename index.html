@@ -40,10 +40,11 @@
 	});
 
 	// The server will send an initial loadroom packet with the room's most recent messages when a user joins
-	socket.on('loadroom', function(messages) {
+	socket.on('loadroom', function(data) {
 		// Set the global chatmessages for this room to the received values
-		chatMessages = messages.reverse();
+		chatMessages = data.messages.reverse();
 
+		console.log(data);
 		// Render the historical room messages
 		renderMessages();
 	})

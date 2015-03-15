@@ -40,6 +40,17 @@ define([
 			ChatroomListView = new LocaleChatroomListView( { collection: ChatroomCollection } );
 			
 			Map = new google.maps.Map(this.$el.find("#map-wrapper")[0], mapOptions);
+
+			LocaleSocket.Handle('loadroom', function(room, messages) {
+				_.each(ChatroomListView.getRooms(), function(chat) {
+					if(chat.model.get("name") === room)
+					{
+						_.each(messages, function(message) {
+							chat.addMessage(message);
+						});
+					}
+				});
+			});
 		},
 
 		render: function() {

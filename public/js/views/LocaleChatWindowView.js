@@ -20,12 +20,13 @@ define([
 
 		initialize: function(options) {
 			this.parent = options.parent;
+			this.ChatUserModel = options.UserModel;
 			this.$el.html(""); // Remove dummy data
 			this.listenTo(this.collection, "add", this.add);
 		},
 
 		render: function() {
-			var chatStr = "<div class='chatbox-header'><div class='chatbox-icon'></div><div class='chatbox-title'><div class='h1'>nwHacks</div>" +
+			var chatStr = "<div class='chatbox-header'><div class='chatbox-icon'></div><div class='chatbox-title'><div class='h1'>" + this.ChatUserModel.get("name") + "</div>" +
 "<div class='h2'>University of British Columbia</div> </div><div class=\"chatbox-controls\"><div class=\"chatbox-exit btn\" href='#'><i class=\"fa fa-close\"></i></div>" +
 "<div class=\"chatbox-minimize btn\" href='#'><i class=\"fa fa-minus\"></i></div></div></div><div class='chatbox-content'>" +
 "<div class='chatbox-messages'><div class=\"messages-wrapper\"></div> </div><div class='chatbox-input input-group'><input type=\"text\" class=\"form-control message-box\" placeholder=\"Enter Message\">" +

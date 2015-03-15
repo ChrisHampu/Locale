@@ -5,13 +5,15 @@ define([
 	'bootstrapjs',
 	'LocaleChatUserModel',
 	'LocaleChatWindowView',
-	'LocaleChatroomMessageCollection'
-], function($, _, Backbone, Bootstrap, LocaleChatUserModel, LocaleChatWindowView, LocaleChatroomMessageCollection){
+	'LocaleChatroomMessageCollection',
+	'LocaleSocket'
+], function($, _, Backbone, Bootstrap, LocaleChatUserModel, LocaleChatWindowView, LocaleChatroomMessageCollection, LocaleSocket){
 
 	var LocaleChatroomView = Backbone.View.extend({
 		tagName: 'li',
 
 		events: {
+			'click' : 'join',
 			'click .exit-room' : 'remove'
 		},
 
@@ -20,16 +22,16 @@ define([
 			this.listenTo(this.model, "change", this.render);
 
 			this.ChatMessages = new LocaleChatroomMessageCollection();
-			this.ChatWindow = new LocaleChatWindowView( { collection: this.ChatMessages });
+			this.ChatWindow = new LocaleChatWindowView( { collection: this.ChatMessages, parent: this, UserModel: this.model });
 		},
 
 		render: function() {
 			this.renderButton();
-			this.renderRoom();
+			this.getRoomWindow().render();
 		},
 
 		renderButton: function() {
-			this.$el.html("<button class=\"btn btn-default room-button\" type=\"submit\">" + this.model.get("name") + "</button><i class=\"fa fa-minus-circle exit-room\"></i>");
+			this.$el.html("<button class=\"btn btn-default room-button\" type=\"submit\">" + this.model.get("name") + "<div class=\"badge\">"+this.model.get("messageCount")+"</div></button><i class=\"fa fa-minus-circle exit-room\"></i>");
 
 			return this;
 		},
@@ -54,7 +56,17 @@ define([
 				$('#all-room-container').css("max-height", maxHeight);
 			})
 
-			
+			//this.parent.remove(this);
+		},
+
+		addMessage: function(newMessage) {
+			this.ChatMessages.add( { user: newMessage.user, newMessage: message, timestamp: newMessage.timestamp});
+		},
+
+		join: function() {
+			this.model.set("joined", true);
+			this.parent.render();
+			LocaleSocket.Emit('joinroom', this.model.get("name"));
 		}
 	});
 

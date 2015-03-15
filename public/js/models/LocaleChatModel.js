@@ -17,7 +17,8 @@ define([
 		defaults: {
 			location: undefined,
 			name: "Room",
-			radius: 1000
+			radius: 1000,
+			messageCount: 0
 		}
 	});
 

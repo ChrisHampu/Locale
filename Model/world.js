@@ -1,8 +1,3 @@
-var schemas = require("./schemas.js");
-var _ = require("lodash");
-var Room = require("./room.js")
-
-
 /**
  * Creates an instance of World which can be used to acces
  * the application World
@@ -71,7 +66,11 @@ World.prototype.getRoomHistory = function (room, callback){
         .list()
         .then(function (res) {
             var messages = res.body.results.map(function(object) {
-                return object.value;
+                
+                message = object.value;
+                message.timestamp = object.timestamp;
+
+                return message;
             });
 
             callback(messages)
