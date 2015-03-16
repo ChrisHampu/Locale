@@ -83,7 +83,7 @@ define([
 
 			var msgStr = UserSent === true ? "<div class=\"chat-message local-message\">" : "<div class=\"chat-message foreign-message\">";
             msgStr += "<div class=\"profilepic chatpic img-circle\"" + style + "></div><div class='message-content-wrapper'><div class='message-content' ><p>" +
-                        message.get("message") + "</p><span class=\"message-subtext\">" + message.get("firstName") + " " + message.get("lastInitial") + " - " +
+                        $('<div/>').text(message.get("message")).html() + "</p><span class=\"message-subtext\">" + message.get("firstName") + " " + message.get("lastInitial") + " - " +
                         FormatTimestamp(message.get("timestamp")) + "</span></div></div></div>";
 
             return msgStr;
