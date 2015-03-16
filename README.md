@@ -1,6 +1,6 @@
 # Locale
 
-Locale is a location based chat service currently hosted on http://getLocale.me/
+Locale is a location based chat service currently available at http://getLocale.me/
 
 getRequests:
 
