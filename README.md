@@ -1,7 +1,6 @@
 # Locale
-nwHack project 2015
 
-nwHack 2015
+Locale is a location based chat service currently hosted on http://getLocale.me/
 
 getRequests:
 
