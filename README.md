@@ -1,4 +1,4 @@
-# nwHack2015
+# Locale
 nwHack project 2015
 
 nwHack 2015
