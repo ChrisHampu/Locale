@@ -15,6 +15,8 @@ require.config({
 		Locale: 'Locale',
 		LocaleRouter: 'LocaleRouter',
 		LocaleView: 'views/LocaleView',
+		LocaleAuthFB: 'LocaleAuthFB',
+		LocaleAuthGPlus: 'LocaleAuthGPlus',
 		LocaleAuthView: 'views/LocaleAuthView',
 		LocaleMapView: 'views/LocaleMapView',
 		LocaleSearchModel: 'models/LocaleSearchModel',

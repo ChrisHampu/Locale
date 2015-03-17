@@ -19,20 +19,25 @@ define([
 
 			LocaleSocket.Initialize();
 
-			AuthView = new LocaleAuthView();
+			AuthView = new LocaleAuthView(this);
 			LocaleView = new LocaleView();
 
 			Locale.Initialize(this);
 		},
 
 		routes: {
-			'': 'index', // Auth page
+			'': 'index',
+			'login': 'login',
 			'home': 'home',
 			'logout': 'logout'
 		},
 
 		index: function() {
 			
+		},
+
+		login: function() {
+			AuthView.render();
 		},
 
 		home: function() {
@@ -44,7 +49,7 @@ define([
 		},
 
 		loggedin: function() {
-			AuthView.loggedin();
+			//AuthView.loggedin();
 			this.navigate("home", { trigger: true });
 		},
 
