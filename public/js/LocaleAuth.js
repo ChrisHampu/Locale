@@ -7,8 +7,9 @@ define([
 	'LocaleAuthGPlus',
 	'LocaleUserAuthModel',
 	'LocaleUtilities',
-	'LocaleRouter'
-], function($, _, Backbone, Bootstrap, LocaleAuthFB, LocaleAuthGPlus, LocaleUserAuthModel, LocaleUtilities, LocaleRouter){
+	'LocaleRouter',
+	'LocaleSocket'
+], function($, _, Backbone, Bootstrap, LocaleAuthFB, LocaleAuthGPlus, LocaleUserAuthModel, LocaleUtilities, LocaleRouter, LocaleSocket){
 
 	var FBPolicy;
 	var GPlusPolicy;
