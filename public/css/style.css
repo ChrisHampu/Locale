@@ -204,7 +204,8 @@ display:block;
 {
     text-align:center;
     float:left;
-    background:#ce1f1f;
+    /* background:#ce1f1f; */
+    background: grey;
     padding:35px 10px 20px 10px;
     width:170px;
     height:170px; 

@@ -21,7 +21,7 @@ define([
 		};
 
 		var Login = function(callback) {
-			callback(this.GetApplicationData());
+			callback(this.GetPlatformData());
 		};
 
 		var GetPlatformData = function()
