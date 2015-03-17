@@ -42,7 +42,7 @@ define([
 		},
 
 		render: function() {
-			LocaleAuth.FinalizeData();
+			//LocaleAuth.FinalizeData();
 			setTimeout(function() {
 				$.sidr('open', 'sidr');
 				$('#search-bar-wrapper').stop().animate({ left: "-90px"});
