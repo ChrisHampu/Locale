@@ -10,8 +10,9 @@ define([
 	'LocaleChatroomCollection',
 	'LocaleSearchModel',
 	'LocaleSocket',
+	'LocaleAuth',
 	'async!http://maps.google.com/maps/api/js?sensor=false!callback'
-], function($, _, Backbone, Bootstrap, LocaleUtilities, LocaleProfileView, LocaleChatroomListView, LocaleChatModel, LocaleChatroomCollection, LocaleSearchModel, LocaleSocket, GMaps){
+], function($, _, Backbone, Bootstrap, LocaleUtilities, LocaleProfileView, LocaleChatroomListView, LocaleChatModel, LocaleChatroomCollection, LocaleSearchModel, LocaleSocket, LocaleAuth, GMaps){
 
 	var ProfileView,
 		ChatroomListView,
