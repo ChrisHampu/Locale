@@ -18,12 +18,6 @@ define([
 		UserModel,
 		AuthPolicy;
 
-	var SendAuthModel = function(useFB) {
-
-		// Navigate to actual site
-		Locale.OnLoggedIn(UserModel);
-	}
-
 	var Initialize = function (AuthView) {
 		View = AuthView;
 
@@ -49,6 +43,7 @@ define([
 			AuthPolicy.GetUserData(UserModel, function(data) {
 				// Pass data to view
 				LocaleSocket.Emit('join', JSON.stringify(UserModel));
+				View.loggedin();
 			})
 		}
 		else if(response.UserAuthed === true)
