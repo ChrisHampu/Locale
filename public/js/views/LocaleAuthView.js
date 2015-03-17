@@ -42,6 +42,10 @@ define([
 		loggedin: function() {
 			this.$el.css("z-index", -5);
 			Router.loggedin();
+		},
+
+		isLoggedIn: function() {
+			return LocaleAuth.
 		}
 	});
 

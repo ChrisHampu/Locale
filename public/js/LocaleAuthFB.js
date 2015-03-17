@@ -83,7 +83,7 @@ define([
 			}
 			else
 			{	
-				// If we're here, we're logged in
+				// If we're here, we're logged in already
 				callback(this.GetPlatformData());
 			}
 		};

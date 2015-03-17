@@ -41,7 +41,10 @@ define([
 		},
 
 		home: function() {
-			LocaleView.render();
+			if(AuthView.isLoggedIn() === true)
+				LocaleView.render();
+			else
+				this.navigate("login", { trigger: true });}
 		},
 
 		logout: function() {
