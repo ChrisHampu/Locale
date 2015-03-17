@@ -44,7 +44,7 @@ define([
 			if(AuthView.isLoggedIn() === true)
 				LocaleView.render();
 			else
-				this.navigate("login", { trigger: true });}
+				this.navigate("login", { trigger: true });
 		},
 
 		logout: function() {
