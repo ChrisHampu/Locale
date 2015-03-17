@@ -12,7 +12,15 @@ define([
 		LoggedIn = false,
 		Authorized = false,
 		CachedResponse = undefined,
-		ConnectedToFacebook = false;
+		ConnectedToGPlus = false;
+
+	var GetPlatformData = function() {
+		return {
+			UserAuthed: Authorized,
+			UserLoggedIn: LoggedIn,
+			ConnectedToPlatform: ConnectedToGPlus
+		}
+	};
 
 	var AuthGPlusPolicy = function() {
 
@@ -29,7 +37,7 @@ define([
 			return {
 				UserAuthed: Authorized,
 				UserLoggedIn: LoggedIn,
-				ConnectedToPlatform: ConnectedToFacebook
+				ConnectedToPlatform: ConnectedToGPlus
 			}
 		};
 

@@ -15,6 +15,14 @@ define([
 		CachedResponse = undefined,
 		ConnectedToFacebook = false;
 
+	var GetPlatformData = function() {
+		return {
+			UserAuthed: Authorized,
+			UserLoggedIn: LoggedIn,
+			ConnectedToPlatform: ConnectedToFacebook
+		}
+	};
+
 	var FBAuthStateChanged =  function(response) {
 		CachedResponse = response;
 
@@ -59,11 +67,11 @@ define([
 			/*
 			if(ConnectedToFacebook === false)
 			{
-				callback(this.GetPlatformData());
+				callback(GetPlatformDatathis);
 			}
 			else if(Authorized === false)
 			{
-				callback(this.GetPlatformData());
+				callback(GetPlatformDatathis);
 			}
 			*/
 			if(LoggedIn === false)
@@ -80,22 +88,14 @@ define([
 					{
 						console.log("User did not authenticate");
 					}
-					callback(this.GetPlatformData());
+					callback(GetPlatformDatathis);
 
 				}, { scope: 'public_profile' });
 			}
 			else
 			{	
 				// If we're here, we're logged in already
-				callback(this.GetPlatformData());
-			}
-		};
-
-		var GetPlatformData = function() {
-			return {
-				UserAuthed: Authorized,
-				UserLoggedIn: LoggedIn,
-				ConnectedToPlatform: ConnectedToFacebook
+				callback(GetPlatformDatathis);
 			}
 		};
 
