@@ -99,7 +99,7 @@ define([
 		},
 
 		render: function() {
-			LocalAuth.GetProfilePicture(function(response) {
+			LocalAuthe.GetProfilePicture(function(response) {
 
 				ProfileView.setProfilePic(response.data.url);
 				LocaleSocket.Emit('join', JSON.stringify(LocaleAuth.GetUserModel()));

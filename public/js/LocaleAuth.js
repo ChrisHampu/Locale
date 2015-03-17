@@ -116,7 +116,7 @@ define([
 		AuthPolicy.LoadProfilePicture(function(response) {
 
 			UserModel.set("profileUrl", response.data.url);
-			LocaleSocket.Emit('join', JSON.stringify(UserModel));
+			
 
 			callback(response);
 		});
@@ -132,6 +132,7 @@ define([
 		Logout: Logout,
 		EnsureAuthed: EnsureAuthed,
 		GetUserModel: GetUserModel,
-		GetPlatformData: GetPlatformData
+		GetPlatformData: GetPlatformData,
+		GetProfilePicture: GetProfilePicture
 	};
 });
