@@ -6,6 +6,8 @@ define([
 	'LocaleAuth'
 ], function($, _, Backbone, Bootstrap, LocaleAuth){
 
+	var Router;
+
 	var LocaleAuthView = Backbone.View.extend({
 		el: '#loginpage',
 
@@ -14,12 +16,15 @@ define([
 			'click #google-plus' : 'loginGoogle'
 		},
 
-		initialize: function() {
-			this.render();
+		initialize: function(router) {
+			//this.render();
+			Router = router;
+
+			LocaleAuth.Initialize(this);
 		},
 
 		render: function() {
-
+			this.$el.css("z-index", 5);
 		},
 
 		loginFB: function() {
@@ -36,6 +41,7 @@ define([
 
 		loggedin: function() {
 			this.$el.css("z-index", -5);
+			router.loggedin();
 		}
 	});
 

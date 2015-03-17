@@ -3,177 +3,103 @@ define([
 	'underscore',
 	'backbone',
 	'bootstrapjs',
+	'LocaleAuthFB',
+	'LocaleAuthGPlus',
 	'LocaleUserAuthModel',
 	'LocaleUtilities',
-	'LocaleSocket',
-	'facebook',
-], function($, _, Backbone, Bootstrap, LocaleUserAuthModel, LocaleUtilities, LocaleSocket){
+	'LocaleRouter'
+], function($, _, Backbone, Bootstrap, LocaleAuthFB, LocaleAuthGPlus, LocaleUserAuthModel, LocaleUtilities, LocaleRouter){
 
-	var IsAuthed = false,
-		AuthToken,
-		CachedResponse,
-		AppToken = 616102381854407,
-		RedirectURL = "http://getlocale.me",
-		Locale,
+	var FBPolicy;
+	var GPlusPolicy;
+
+	var View,
 		UserModel,
-		UsingFB;
-
-	var PopulateFBData = function(callback) {
-		FB.api(
-		    "/me/picture",
-		    {
-		        "redirect": false,
-		        "height": 60,
-		        "width": 60,
-		        "type": "small"
-		    },
-		    function (response) {
-				if (response && !response.error) {
-					callback(response);
-				}
-		    }
-		);
-	}
-
-	var PopulateGPlusData = function() {
-
-	}
+		AuthPolicy;
 
 	var SendAuthModel = function(useFB) {
-
-		UsingFB = useFB;
-
-		if(useFB === true)
-		{
-			FB.api('/me', function(response) {
-				
-				UserModel.set("id", response.id);
-				UserModel.set("location", { lat: LocaleUtilities.GetCurrentLocation().coords.latitude, lon: LocaleUtilities.GetCurrentLocation().coords.longitude });
-				UserModel.set("firstName", response.first_name);
-				UserModel.set("lastName", response.last_name);
-				//UserModel.set("profileUrl", response.profile_url);
-				UserModel.set("email", response.email);
-
-				PopulateFBData( function(response) {
-					UserModel.set("profileUrl", response.data.url);
-					LocaleSocket.Emit('join', JSON.stringify(UserModel));
-					Locale.SetProfilePic(response.data.url);
-				});
-
-			});
-		}
-		else
-		{
-			UserModel = new LocaleUserAuthModel({
-				id: 1, location: { lat: LocaleUtilities.GetCurrentLocation().coords.latitude, 
-				lon: LocaleUtilities.GetCurrentLocation().coords.longitude }, 
-				firstName: "John", lastName: "Doe", token: AuthToken, email: "email@email.com" 
-			});
-
-			UserModel.set("profileUrl", "assets/profilepic/placeholder.png");
-
-			LocaleSocket.Emit('join', JSON.stringify(UserModel));
-		}
 
 		// Navigate to actual site
 		Locale.OnLoggedIn(UserModel);
 	}
 
-	var FBAuthStateChanged = function(response) {
-		CachedResponse = response;
+	var Initialize = function (AuthView) {
+		View = AuthView;
 
-		if(response.status === 'connected')
-		{
-			AuthToken = response.authResponse.accessToken;
+		FBPolicy = new LocaleAuthFB();
+		GPlusPolicy = new LocaleAuthGPlus();
 
-			console.log("connected to fb by cache");
-
-			IsAuthed = true;
-
-			SendAuthModel(true);
-		}
-		else if(response.status === 'not_authorized')
-		{
-			// Attempt to authenticate
-			window.location.href = "https://www.facebook.com/dialog/oauth?client_id=" + AppToken + "&redirect_uri=" + RedirectURL;
-		}
-	}
-
-	var GPlusAuthStateChanged = function() {
-		AuthToken = "override";
-
-		console.log("connected by G+ override");
-
-		IsAuthed = true;
-
-		// Navigate to actual site
-		SendAuthModel();
-	}
-
-	var Initialize = function (LocaleApp) {
-		
-		Locale = LocaleApp;
-
-		FB.init( {
-			appId      : '616102381854407',
-      		xfbml      : true,
-      		version    : 'v2.2'
-      	});
-
-      	FB.getLoginStatus(function(response) {
-      		FBAuthStateChanged(response);
-      	});
-
-	    UserModel = new LocaleUserAuthModel();
-		
-		UserModel.set("profileUrl", "assets/profilepic/placeholder.png");
+		FBPolicy.Initialize();
+		GPlusPolicy.Initialize();
 	}
 
 	var GetAuthState = function() {
-		return IsAuthed;
+		return AuthPolicy.GetAuthState();
 	}
 
 	var GetAuthToken = function() {
-		return AuthToken;
+		return AuthPolicy.GetAuthToken();
+	}
+
+	var HandleLogin = function(response) {
+		if(response.UserLoggedIn === true)
+		{
+			// User logged in. Aquire more minerals
+			AuthPolicy.GetUserData(UserModel, function(data) {
+				// Pass data to view
+				LocaleSocket.Emit('join', JSON.stringify(UserModel));
+			})
+		}
+		else if(response.UserAuthed === true)
+		{
+			// user did not log in
+			console.log("User entered invalid login details");
+		}
+		else if(response.ConnectedToPlatform === true)
+		{
+			// user did not authorize
+			window.location.href = "https://www.facebook.com/dialog/oauth?client_id=" + AppToken + "&redirect_uri=" + RedirectURL;
+		}
+		else
+		{
+			// user did not connect to fb at all
+			console.log("Fatal login error");
+		}
+	}
+
+	var Login = function() {
+		UserModel = new LocaleUserAuthModel({
+			id: 1, location: { lat: LocaleUtilities.GetCurrentLocation().coords.latitude, 
+			lon: LocaleUtilities.GetCurrentLocation().coords.longitude }, 
+			firstName: "John", lastName: "Doe", token: AuthToken, email: "email@email.com",
+			profileUrl: "assets/profilepic/placeholder.png"
+		});
+
+		AuthPolicy.Login(HandleLogin);
 	}
 
 	var LoginFacebook = function() {
-		FB.login(function(response) {
-			if(response.authResponse) {
-				console.log("connected to fb by login");
-				AuthToken = response.authResponse.accessToken;
-				IsAuthed = true;
-				SendAuthModel();
-			}
-			else
-			{
-				console.log("User did not authenticate");
-			}
-		}, { scope: 'public_profile' });
+		AuthPolicy = FBPolicy;
+
+		Login();
 	}
 
 	var LoginGooglePlus = function() {
-		GPlusAuthStateChanged();
+		AuthPolicy = GPlusPolicy;
+
+		Login();
 	}
 
-	var LogoutFacebook = function() {
-		if(IsAuthed === true)
-			window.location.href = "https://api.facebook.com/restserver.php?method=auth.expireSession&format=json&access_token=" + AuthToken;
-	}
-
-	var LogoutGooglePlus = function() {
-		IsAuthed = false;
-	}
 
 	var Logout = function() {
-		LogoutFacebook();
-		LogoutGooglePlus();
+		//LogoutFacebook();
+		//LogoutGooglePlus();
 	}
 
 	var EnsureAuthed = function() {
-		if(IsAuthed === false)
+		if(GetAuthState() === false)
 		{
-			Locale.RedirectLogin();
+			// View should move back to login page
 		}
 	}
 
@@ -181,9 +107,8 @@ define([
 		return UserModel;
 	}
 
-	var FinalizeData = function() {
-		//PopulateFBData();
-		PopulateGPlusData();
+	var GetPlatformData = function() {
+		return AuthPolicy.GetPlatformData();
 	}
 	
 	// Map public API functions to internal functions
@@ -196,6 +121,6 @@ define([
 		Logout: Logout,
 		EnsureAuthed: EnsureAuthed,
 		GetUserModel: GetUserModel,
-		FinalizeData: FinalizeData
+		GetPlatformData: GetPlatformData
 	};
 });
