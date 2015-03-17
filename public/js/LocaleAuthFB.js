@@ -3,7 +3,8 @@ define([
 	'underscore',
 	'backbone',
 	'bootstrapjs',
-	'facebook'
+	'facebook',
+	'LocaleUtilities'
 ], function($, _, Backbone, Bootstrap){
 
 	var AppToken = 616102381854407,

@@ -2,7 +2,8 @@ define([
 	'jquery',
 	'underscore',
 	'backbone',
-	'bootstrapjs'
+	'bootstrapjs',
+	'LocaleUtilities'
 ], function($, _, Backbone, Bootstrap){
 
 	var AppToken = undefined
