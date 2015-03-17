@@ -309,7 +309,7 @@ footer
     width: 300px;
     position: relative;
     float: right;
-    bottom: 384px;
+    bottom: 0px;
     box-shadow: 2px 2px 2px 0px #a4a7aa;
 }
 

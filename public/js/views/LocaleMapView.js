@@ -314,6 +314,7 @@ define([
 			$('.waypoint-info').stop().animate({height: "0px"}, function(){
 				$('.waypoint-info').css("display", "none");
 			});
+			
 			var name = $(e.currentTarget).data()["name"];
 			_.each(ChatroomListView.getRooms(), function(chat) {
 				var roomName = chat.model.get("name");

@@ -112,6 +112,7 @@ define([
 
 		maximize: function(){
 			var checkState = this.$el.css("bottom");
+			console.log("THIS")
 			if (checkState == "42px"){
 				this.$el.children(".chatbox-content").css({display: "block"});
 				this.$el.stop().animate({"bottom" :"384px"}, 400);
@@ -130,9 +131,14 @@ define([
 			this.$el.find(".message-box").val("");
 		},
 
-		exit: function(){
-			this.$el.closest(".chatbox").remove();
+		exit: function(e){
+			console.log("NOPE")
+			this.$el.stop().animate({"bottom" :"0px"}, 400, function(){
+				this.$el.children(".chatbox-content").css({display: "none"});
+				this.$el.closest(".chatbox").remove();
+			});
 			this.parent.model.set("joined", false);
+			e.stopPropegate();
 		},
 
 		sendMessage:function(e){
