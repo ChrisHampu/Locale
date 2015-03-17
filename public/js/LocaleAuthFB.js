@@ -88,14 +88,14 @@ define([
 					{
 						console.log("User did not authenticate");
 					}
-					callback(GetPlatformData);
+					callback(GetPlatformData());
 
 				}, { scope: 'public_profile' });
 			}
 			else
 			{	
 				// If we're here, we're logged in already
-				callback(GetPlatformData);
+				callback(GetPlatformData());
 			}
 		};
 

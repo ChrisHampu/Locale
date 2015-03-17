@@ -29,16 +29,7 @@ define([
 		};
 
 		var Login = function(callback) {
-			callback(this.GetPlatformData());
-		};
-
-		var GetPlatformData = function()
-		{
-			return {
-				UserAuthed: Authorized,
-				UserLoggedIn: LoggedIn,
-				ConnectedToPlatform: ConnectedToGPlus
-			}
+			callback(GetPlatformData());
 		};
 
 		var GetUserData = function(model, callback) {
