@@ -17,7 +17,6 @@ define([
 		},
 
 		initialize: function(router) {
-			//this.render();
 			Router = router;
 
 			LocaleAuth.Initialize(this);

@@ -56,6 +56,7 @@ define([
 
 		var Login = function(callback) {
 
+			/*
 			if(ConnectedToFacebook === false)
 			{
 				callback(this.GetPlatformData());
@@ -64,7 +65,8 @@ define([
 			{
 				callback(this.GetPlatformData());
 			}
-			else if(LoggedIn === false)
+			*/
+			if(LoggedIn === false)
 			{
 				FB.login(function(response) {
 					if(response.authResponse) {
@@ -72,6 +74,7 @@ define([
 						AuthToken = response.authResponse.accessToken;
 						LoggedIn = true;
 						ConnectedToFacebook = true;
+						Authorized = true;
 					}
 					else
 					{
@@ -104,19 +107,9 @@ define([
 				model.set("location", { lat: LocaleUtilities.GetCurrentLocation().coords.latitude, lon: LocaleUtilities.GetCurrentLocation().coords.longitude });
 				model.set("firstName", response.first_name);
 				model.set("lastName", response.last_name);
-				//UserModel.set("profileUrl", response.profile_url);
-
 				model.set("email", response.email);
 
 				callback(model);
-
-				/*
-				PopulateFBData( function(response) {
-					UserModel.set("profileUrl", response.data.url);
-					LocaleSocket.Emit('join', JSON.stringify(UserModel));
-					Locale.SetProfilePic(response.data.url);
-				});
-				*/
 			});
 		};
 

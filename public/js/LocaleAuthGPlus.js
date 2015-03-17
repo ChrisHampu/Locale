@@ -49,8 +49,6 @@ define([
 			return LoggedIn;
 		};
 
-
-
 		return {
 			Initialize: Initialize,
 			Login: Login,

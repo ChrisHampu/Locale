@@ -116,7 +116,6 @@ define([
 		AuthPolicy.LoadProfilePicture(function(response) {
 
 			UserModel.set("profileUrl", response.data.url);
-			
 
 			callback(response);
 		});
