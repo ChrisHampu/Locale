@@ -56,7 +56,7 @@ define([
 					var dataName = data.room;
 					if(roomName === dataName)
 					{
-						_.each(data.messages, function(message) {
+						_.each(data.messages.reverse(), function(message) {
 							chat.addMessage(message);
 						});
 					}
