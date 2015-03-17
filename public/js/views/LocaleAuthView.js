@@ -45,7 +45,7 @@ define([
 		},
 
 		isLoggedIn: function() {
-			return LocaleAuth.
+			return LocaleAuth.GetAuthState();
 		}
 	});
 
