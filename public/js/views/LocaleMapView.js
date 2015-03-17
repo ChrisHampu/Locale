@@ -99,8 +99,12 @@ define([
 		},
 
 		render: function() {
-			ProfileView.render();
-			
+			LocalAuth.GetProfilePicture(function(response) {
+
+				ProfileView.setProfilePic(response.data.url);
+				LocaleSocket.Emit('join', JSON.stringify(LocaleAuth.GetUserModel()));
+			})
+
 			// Failed to get position, do nothing
 			LocaleUtilities.GetCurrentLocation(function(position) {
 				CurrentPosition = position;

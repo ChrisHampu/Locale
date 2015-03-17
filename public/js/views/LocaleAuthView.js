@@ -44,6 +44,10 @@ define([
 			Router.loggedin();
 		},
 
+		redirectToLogin: function() {
+			Router.navigate("login", { trigger: true });
+		},
+
 		isLoggedIn: function() {
 			return LocaleAuth.GetAuthState();
 		}

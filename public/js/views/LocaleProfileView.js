@@ -42,7 +42,6 @@ define([
 		},
 
 		render: function() {
-			//LocaleAuth.FinalizeData();
 			setTimeout(function() {
 				$.sidr('open', 'sidr');
 				$('#search-bar-wrapper').stop().animate({ left: "-90px"});
@@ -79,15 +78,13 @@ define([
 		},
 
 		setProfilePic: function(url) {
-			setTimeout(function() {
-				$('.profilepic').css("background", "url(" + url + ")");
+			$('.profilepic').css("background", "url(" + url + ")");
 
-				var first = LocaleAuth.GetUserModel().get("firstName");
-				var last = LocaleAuth.GetUserModel().get("lastName");
+			var first = LocaleAuth.GetUserModel().get("firstName");
+			var last = LocaleAuth.GetUserModel().get("lastName");
 
-				$('#profile-content-sidr').children('h1'). html(first + " " + last);
-				$('#profile-content-sidr').children('p'). html('University of British Columbia');
-			}, 100);
+			$('#profile-content-sidr').children('h1'). html(first + " " + last);
+			$('#profile-content-sidr').children('p'). html('University of British Columbia');
 		},
 
 		expandUpdate: function(e){

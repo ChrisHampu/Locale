@@ -116,7 +116,7 @@ define([
 					LocaleSocket.Emit('join', JSON.stringify(UserModel));
 					Locale.SetProfilePic(response.data.url);
 				});
-	*/
+				*/
 			});
 		};
 
@@ -152,7 +152,8 @@ define([
 			LoadProfilePicture: LoadProfilePicture,
 			GetAuthToken: GetAuthToken,
 			GetAuthState: GetAuthState,
-			GetPlatformData: GetPlatformData
+			GetPlatformData: GetPlatformData,
+			LoadProfilePicture: LoadProfilePicture
 		}
 	};
 

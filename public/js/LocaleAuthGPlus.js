@@ -38,7 +38,7 @@ define([
 		};
 
 		var LoadProfilePicture = function(callback) {
-			callback(response);
+			callback(undefined);
 		};
 
 		var GetAuthToken = function() {
@@ -49,6 +49,8 @@ define([
 			return LoggedIn;
 		};
 
+
+
 		return {
 			Initialize: Initialize,
 			Login: Login,
@@ -56,7 +58,8 @@ define([
 			LoadProfilePicture: LoadProfilePicture,
 			GetAuthToken: GetAuthToken,
 			GetAuthState: GetAuthState,
-			GetPlatformData: GetPlatformData
+			GetPlatformData: GetPlatformData,
+			LoadProfilePicture: LoadProfilePicture
 		}
 	};
 

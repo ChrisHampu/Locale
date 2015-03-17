@@ -11,16 +11,18 @@ define([
 	'LocaleSocket'
 ], function($, _, Backbone, Bootstrap, LocaleAuthFB, LocaleAuthGPlus, LocaleUserAuthModel, LocaleUtilities, LocaleRouter, LocaleSocket){
 
-	var FBPolicy;
-	var GPlusPolicy;
-
 	var View,
 		UserModel,
-		AuthPolicy = undefined;
+		AuthPolicy = undefined,
+		FBPolicy,
+		GPlusPolicy;
 
 	var Initialize = function (AuthView) {
 		View = AuthView;
 
+		// We try to initialize social networks immediately so that we can minimize the delay
+		// between a user clicking a social button and the actual login process. This is because the
+		// initial social init can take a while to complete due to API calls and other factors.
 		FBPolicy = new LocaleAuthFB();
 		GPlusPolicy = new LocaleAuthGPlus();
 
@@ -60,13 +62,14 @@ define([
 			window.location.href = "https://www.facebook.com/dialog/oauth?client_id=" + AppToken + "&redirect_uri=" + RedirectURL;
 		}
 		else
-		{
+		{ 
 			// user did not connect to fb at all
 			console.log("Fatal login error");
 		}
 	}
 
 	var Login = function() {
+		// Set up defaults
 		UserModel = new LocaleUserAuthModel({
 			id: 1, location: { lat: LocaleUtilities.GetCurrentLocation().coords.latitude, 
 			lon: LocaleUtilities.GetCurrentLocation().coords.longitude }, 
@@ -91,14 +94,13 @@ define([
 
 
 	var Logout = function() {
-		//LogoutFacebook();
-		//LogoutGooglePlus();
 	}
 
 	var EnsureAuthed = function() {
 		if(GetAuthState() === false)
 		{
 			// View should move back to login page
+			View.redirectToLogin();
 		}
 	}
 
@@ -108,6 +110,16 @@ define([
 
 	var GetPlatformData = function() {
 		return AuthPolicy.GetPlatformData();
+	}
+
+	var GetProfilePicture = function(callback) {
+		AuthPolicy.LoadProfilePicture(function(response) {
+
+			UserModel.set("profileUrl", response.data.url);
+			LocaleSocket.Emit('join', JSON.stringify(UserModel));
+
+			callback(response);
+		});
 	}
 	
 	// Map public API functions to internal functions
