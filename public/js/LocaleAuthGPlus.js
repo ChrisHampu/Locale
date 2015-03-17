@@ -4,7 +4,7 @@ define([
 	'backbone',
 	'bootstrapjs',
 	'LocaleUtilities'
-], function($, _, Backbone, Bootstrap){
+], function($, _, Backbone, Bootstrap, LocaleUtilities){
 
 	var AppToken = undefined
 		RedirectURL = "http://getlocale.me",
