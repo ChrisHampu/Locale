@@ -100,6 +100,8 @@ define([
 		},
 
 		render: function() {
+			ProfileView.render();
+			
 			LocaleAuth.GetProfilePicture(function(response) {
 
 				ProfileView.setProfilePic(response.data.url);
