@@ -16,7 +16,7 @@ define([
 
 	var View,
 		UserModel,
-		AuthPolicy;
+		AuthPolicy = undefined;
 
 	var Initialize = function (AuthView) {
 		View = AuthView;
@@ -29,8 +29,11 @@ define([
 	}
 
 	var GetAuthState = function() {
-		return AuthPolicy.GetAuthState();
-	}
+		if(AuthPolicy !== undefined)
+			return AuthPolicy.GetAuthState();
+		else
+			return false;
+	}	
 
 	var GetAuthToken = function() {
 		return AuthPolicy.GetAuthToken();
