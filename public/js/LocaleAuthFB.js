@@ -67,11 +67,11 @@ define([
 			/*
 			if(ConnectedToFacebook === false)
 			{
-				callback(GetPlatformDatathis);
+				callback(GetPlatformData);
 			}
 			else if(Authorized === false)
 			{
-				callback(GetPlatformDatathis);
+				callback(GetPlatformData);
 			}
 			*/
 			if(LoggedIn === false)
@@ -88,14 +88,14 @@ define([
 					{
 						console.log("User did not authenticate");
 					}
-					callback(GetPlatformDatathis);
+					callback(GetPlatformData);
 
 				}, { scope: 'public_profile' });
 			}
 			else
 			{	
 				// If we're here, we're logged in already
-				callback(GetPlatformDatathis);
+				callback(GetPlatformData);
 			}
 		};
 
