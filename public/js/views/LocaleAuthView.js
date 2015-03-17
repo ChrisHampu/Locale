@@ -41,7 +41,7 @@ define([
 
 		loggedin: function() {
 			this.$el.css("z-index", -5);
-			router.loggedin();
+			Router.loggedin();
 		}
 	});
 
