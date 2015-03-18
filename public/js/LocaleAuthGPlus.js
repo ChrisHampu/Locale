@@ -26,7 +26,9 @@ define([
 	var AuthGPlusPolicy = function() {
 
 		var Initialize = function() {
-
+			gapi.client.load('plus', 'v1', function() {
+				ConnectedToGPlus = true;
+			});
 		};
 
 		var Login = function(callback) {
@@ -71,13 +73,10 @@ define([
 					'requestvisibleactions': 'http://schema.org/AddAction',
 					'scope': 'https://www.googleapis.com/auth/plus.profile.emails.read'
 				};
-
-				gapi.client.load('plus', 'v1', function() {
-					ConnectedToGPlus = true;
-					gapi.auth.signIn( 
-						SigninData
-					);
-				});
+	
+				gapi.auth.signIn( 
+					SigninData
+				);
 			}
 			else
 			{	
