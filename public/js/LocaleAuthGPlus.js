@@ -26,9 +26,7 @@ define([
 	var AuthGPlusPolicy = function() {
 
 		var Initialize = function() {
-			gapi.client.load('plus', 'v1', function() {
-				ConnectedToGPlus = true;
-			});
+
 		};
 
 		var Login = function(callback) {
@@ -73,7 +71,7 @@ define([
 					'requestvisibleactions': 'http://schema.org/AddAction',
 					'scope': 'https://www.googleapis.com/auth/plus.profile.emails.read'
 				};
-	
+
 				gapi.auth.signIn( 
 					SigninData
 				);
@@ -90,20 +88,21 @@ define([
 		}
 
 		var GetUserData = function(model, callback) {
+			gapi.client.load('plus', 'v1', function() {
+				var request = gapi.client.plus.people.get({
+			  		'userId' : 'me'
+				});
 
-			var request = gapi.client.plus.people.get({
-			  'userId' : 'me'
-			});
+				request.execute(function(response) {
+					model.set("id", response.id);
+					model.set("location", { lat: LocaleUtilities.GetCurrentLocation().coords.latitude, lon: LocaleUtilities.GetCurrentLocation().coords.longitude });
+					model.set("firstName", response.name.givenName);
+					model.set("lastName", response.name.familyName);
+					model.set("email", response.emails[0].value);
+					model.set("profileUrl", response.image.url);
 
-			request.execute(function(response) {
-				model.set("id", response.id);
-				model.set("location", { lat: LocaleUtilities.GetCurrentLocation().coords.latitude, lon: LocaleUtilities.GetCurrentLocation().coords.longitude });
-				model.set("firstName", response.name.givenName);
-				model.set("lastName", response.name.familyName);
-				model.set("email", response.emails[0].value);
-				model.set("profileUrl", response.image.url);
-
-				callback(model);
+					callback(model);
+				});
 			});
 		};
 
