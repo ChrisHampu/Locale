@@ -106,13 +106,9 @@ define([
 			this.parent.render();
 			this.ChatMessages.reset();
 			LocaleSocket.Emit('joinroom', this.model.get("name"));
-			console.log(this.$el)
-
 			var checkState = this.ChatWindow.$el.css("bottom");
-			/*if (checkState == "42px"){*/
-			this.ChatWindow.$el.children(".chatbox-content").css({display: "block"});
+			this.ChatWindow.$el.css({display: "block"});
 			this.ChatWindow.$el.stop().animate({"bottom" :"384px"}, 400);
-			/*}*/
 		}
 	});
 

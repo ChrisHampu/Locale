@@ -100,21 +100,19 @@ define([
 
 		minimize: function(){
 			var checkState = this.$el.css("bottom");
+			var chatWindow = this.$el;
 			if (checkState == "42px"){
 				this.$el.children(".chatbox-content").css({display: "block"});
 				this.$el.stop().animate({"bottom" :"384px"}, 400);
 			} else {
-				this.$el.stop().animate({"bottom" :"42px"}, 400, function(){
-					this.$el.children(".chatbox-content").css({display: "none"});
-				});
+				this.$el.stop().animate({"bottom" :"42px"}, 400);
 			}
 		},
 
 		maximize: function(){
 			var checkState = this.$el.css("bottom");
-			console.log("THIS")
 			if (checkState == "42px"){
-				this.$el.children(".chatbox-content").css({display: "block"});
+				this.$el.css({display: "block"});
 				this.$el.stop().animate({"bottom" :"384px"}, 400);
 			}
 		},
@@ -132,10 +130,10 @@ define([
 		},
 
 		exit: function(e){
-			console.log("NOPE")
+			var chatWindow = this.$el
 			this.$el.stop().animate({"bottom" :"0px"}, 400, function(){
-				this.$el.children(".chatbox-content").css({display: "none"});
-				this.$el.closest(".chatbox").remove();
+				chatWindow.css({display: "none"});
+				chatWindow.remove();
 			});
 			this.parent.model.set("joined", false);
 			e.stopPropegate();
