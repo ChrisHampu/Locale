@@ -49,6 +49,29 @@ define([
 
 		isLoggedIn: function() {
 			return LocaleAuth.GetAuthState();
+		},
+
+		notSupported: function(features) {
+			var div = this.$el.find("#unsupportedFeatures");
+			div.css("display", "block");
+
+			div = div.find("#unsupportedFeaturesMessage")
+
+			var unsupported = [];
+			var html = "";
+
+			if(!features.SupportsGeolocation)
+				unsupported.push("Geolocation");
+			if(!features.SupportsWebsocket)
+				unsupported.push("WebSockets");
+
+			for(var i = 0; i < unsupported.length; i++) {
+				if(i != 0)
+					html += ', ';
+				html += unsupported[i];
+			}
+
+			div.html(html);
 		}
 	});
 

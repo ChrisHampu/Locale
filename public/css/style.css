@@ -153,6 +153,18 @@ textarea
     display: block;
 }
 
+#unsupportedFeatures {
+	font-size: 20pt;
+	text-align: center;
+	display: none;
+	top: 20px;
+	position: relative;
+}
+
+#unsupportedFeaturesMessage {
+	
+}
+
 #localelogo
 {
     position: relative;

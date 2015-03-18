@@ -17,11 +17,14 @@ define([
 	}
 
 	var Initialize = function (AppRouter) {
-		LocaleUtilities.Initialize();
-
 		Router = AppRouter;
 
-		//LocaleAuth.Initialize(this);
+		var Features = LocaleUtilities.GetSupportedFeatures();
+
+		if(Features.SupportGeolocation)
+			LocaleUtilities.Initialize();
+
+		Router.getAuthView().notSupported(Features);
 	}
 	
 	// Map public API functions to internal functions
