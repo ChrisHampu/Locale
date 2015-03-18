@@ -99,6 +99,10 @@ define([
 			}
 		};
 
+		var Authorize = function() {
+			window.location.href = "https://www.facebook.com/dialog/oauth?client_id=" + AppToken + "&redirect_uri=" + RedirectURL;
+		};
+
 		var GetUserData = function(model, callback) {
 
 			FB.api('/me', function(response) {
@@ -142,6 +146,7 @@ define([
 		return {
 			Initialize: Initialize,
 			Login: Login,
+			Authorize: Authorize,
 			GetUserData: GetUserData,
 			LoadProfilePicture: LoadProfilePicture,
 			GetAuthToken: GetAuthToken,

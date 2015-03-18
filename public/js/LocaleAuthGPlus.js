@@ -86,6 +86,10 @@ define([
 			}
 		};
 
+		var Authorize = function() {
+
+		}
+
 		var GetUserData = function(model, callback) {
 
 			var request = gapi.client.plus.people.get({
@@ -120,6 +124,7 @@ define([
 		return {
 			Initialize: Initialize,
 			Login: Login,
+			Authorize: Authorize,
 			GetUserData: GetUserData,
 			LoadProfilePicture: LoadProfilePicture,
 			GetAuthToken: GetAuthToken,

@@ -59,7 +59,7 @@ define([
 		else if(response.ConnectedToPlatform === true)
 		{
 			// user did not authorize
-			window.location.href = "https://www.facebook.com/dialog/oauth?client_id=" + AppToken + "&redirect_uri=" + RedirectURL;
+			AuthPolicy.Authorize();
 		}
 		else
 		{ 
