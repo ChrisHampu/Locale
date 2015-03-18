@@ -136,7 +136,7 @@ define([
 				chatWindow.remove();
 			});
 			this.parent.model.set("joined", false);
-			e.stopPropegate();
+			e.stopPropagation();
 		},
 
 		sendMessage:function(e){
