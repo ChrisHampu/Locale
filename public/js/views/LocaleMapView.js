@@ -101,12 +101,12 @@ define([
 
 		render: function() {
 			ProfileView.render();
-			
-			LocaleAuth.GetProfilePicture(function(response) {
 
-				ProfileView.setProfilePic(response.data.url);
-				LocaleSocket.Emit('join', JSON.stringify(LocaleAuth.GetUserModel()));
-			})
+			LocaleAuth.GetProfilePicture(function(model) {
+
+				ProfileView.setProfilePic(model.get("profileUrl"));
+				LocaleSocket.Emit('join', JSON.stringify(model));
+			});
 
 			// Failed to get position, do nothing
 			LocaleUtilities.GetCurrentLocation(function(position) {

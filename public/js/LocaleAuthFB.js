@@ -113,7 +113,7 @@ define([
 			});
 		};
 
-		var LoadProfilePicture = function(callback) {
+		var LoadProfilePicture = function(model, callback) {
 			FB.api(
 			    "/me/picture",
 			    {
@@ -124,7 +124,8 @@ define([
 			    },
 			    function (response) {
 					if (response && !response.error) {
-						callback(response);
+						model.set("profileUrl", response.data.url);
+						callback(model);
 					}
 			    }
 			);

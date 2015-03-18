@@ -2,7 +2,8 @@ require.config({
 	baseUrl: "js/", // Base directory for this application
 	shim: {
 		bootstrapjs: { "deps" : ['jquery'] },
-		facebook: { exports: 'FB' }
+		facebook: { exports: 'FB' },
+		google: { exports: 'gapi' }
 	},
 	paths: {
 		// Load all of the common modules
@@ -33,7 +34,8 @@ require.config({
 		LocaleChatroomCollection: 'collections/LocaleChatroomCollection',
 		LocaleChatroomMessageCollection: 'collections/LocaleChatroomMessageCollection',
 		LocaleChatWindowView: 'views/LocaleChatWindowView',
-		LocaleChatMessageModel: 'models/LocaleChatMessageModel'
+		LocaleChatMessageModel: 'models/LocaleChatMessageModel',
+		google: 'https://apis.google.com/js/client:platform'
 	}
 });
 

@@ -113,11 +113,9 @@ define([
 	}
 
 	var GetProfilePicture = function(callback) {
-		AuthPolicy.LoadProfilePicture(function(response) {
+		AuthPolicy.LoadProfilePicture(UserModel, function(model) {
 
-			UserModel.set("profileUrl", response.data.url);
-
-			callback(response);
+			callback(model);
 		});
 	}
 	
