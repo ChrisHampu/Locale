@@ -63,6 +63,10 @@ define([
 
 		getLocaleView: function() {
 			return LocaleView;
+		},
+
+		getAuthView: function() {
+			return AuthView;
 		}
 	});
 

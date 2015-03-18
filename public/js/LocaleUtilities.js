@@ -48,9 +48,30 @@ define([
 			return CurrentLocation;
 	}
 
+	var GetSupportedFeatures = function() {
+
+		var Geolocation = false,
+			WebSockets = false;
+
+		if('geolocation' in navigator)
+		{
+			Geolocation = true;
+		}
+		if(typeof(WebSocket) == "function" )
+		{
+			WebSockets = true;
+		}
+
+		return {
+			SupportGeolocation: Geolocation,
+			SupportsWebsocket: WebSockets
+		};
+	}
+
 	// Map public API functions to internal functions
 	return {
 		Initialize: Initialize,
-		GetCurrentLocation: GetCurrentLocation
+		GetCurrentLocation: GetCurrentLocation,
+		GetSupportedFeatures: GetSupportedFeatures
 	};
 });
