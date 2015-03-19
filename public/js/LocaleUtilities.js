@@ -63,7 +63,7 @@ define([
 		}
 
 		return {
-			SupportGeolocation: Geolocation,
+			SupportsGeolocation: Geolocation,
 			SupportsWebsocket: WebSockets
 		};
 	}

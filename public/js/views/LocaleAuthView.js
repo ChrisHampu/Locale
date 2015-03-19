@@ -53,9 +53,6 @@ define([
 
 		notSupported: function(features) {
 			var div = this.$el.find("#unsupportedFeatures");
-			div.css("display", "block");
-
-			div = div.find("#unsupportedFeaturesMessage")
 
 			var unsupported = [];
 			var html = "";
@@ -64,6 +61,13 @@ define([
 				unsupported.push("Geolocation");
 			if(!features.SupportsWebsocket)
 				unsupported.push("WebSockets");
+
+			if(unsupported.length > 0)
+			{
+				div.css("display", "block");
+			}
+
+			div = div.find("#unsupportedFeaturesMessage")
 
 			for(var i = 0; i < unsupported.length; i++) {
 				if(i != 0)
