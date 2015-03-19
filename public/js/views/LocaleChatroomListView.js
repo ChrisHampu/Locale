@@ -40,7 +40,6 @@ define([
 
 			if(RoomView.model.get("joined") === true) {
 				$("#chatarea").append(RoomView.getRoomWindow().render().$el);
-				RoomView.getRoomWindow().renderAllMessages();
 			}
 
 			RoomView.getRoomWindow().delegateEvents();
@@ -56,7 +55,6 @@ define([
 			
 			if(room.get("joined") === true) {
 				$("#chatarea").append(RoomView.getRoomWindow().render().$el);
-				RoomView.getRoomWindow().renderAllMessages();
 			}
 
 			this.Rooms.push(RoomView);

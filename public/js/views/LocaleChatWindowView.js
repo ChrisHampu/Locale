@@ -130,8 +130,8 @@ define([
 		},
 
 		exit: function(e){
-			var chatWindow = this.$el
-			this.$el.stop().animate({"bottom" :"0px"}, 400, function(){
+			var chatWindow = this.$el;
+			chatWindow.stop().animate({"bottom" :"0px"}, 400, function(){
 				chatWindow.css({display: "none"});
 				chatWindow.remove();
 			});
