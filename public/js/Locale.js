@@ -21,7 +21,7 @@ define([
 
 		var Features = LocaleUtilities.GetSupportedFeatures();
 
-		if(Features.SupportGeolocation)
+		if(Features.SupportsGeolocation)
 			LocaleUtilities.Initialize();
 
 		Router.getAuthView().notSupported(Features);
