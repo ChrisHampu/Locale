@@ -331,11 +331,11 @@ footer
     background:#F5F5F5;
     width:0px;
     right:5px;
-    height:300px;
+    border:1px solid #AAA;
+    height:340px;
     top:40px;
     pointer-events:none; /*DON'T LEAVE THIS IN HERE!*/
     z-index:7;
-    border-radius: 20px;
 }
 
 .chatbox-container {
@@ -415,8 +415,9 @@ footer
 
 .chatbox-settings {
     position:relative;
-    left: 275px;
+    left: 295px;
     margin-top:10px;
+    top:45px;
     z-index: 8;
 }
 

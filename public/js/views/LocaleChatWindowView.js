@@ -52,14 +52,17 @@ define([
 			var chatStr = "<div class='chatbox'><div class='chatbox-header'><div class='chatbox-icon'></div><div class='chatbox-title'><div class='h1 room-title'>" + this.ChatUserModel.get("name") + "</div>" +
 "<div class='h2'>University of British Columbia</div> </div><div class=\"chatbox-controls\"><div class=\"chatbox-exit btn\" href='#'><i class=\"fa fa-close\"></i></div>" +
 "<div class=\"chatbox-minimize btn\" href='#'><i class=\"fa fa-minus\"></i></div></div></div><div class='chatbox-content'>" +
-"<div class='chatbox-messages'><div class='chatbox-options'><i class='fa fa-cog fa-lg chatbox-settings'></i></div><div class=\"messages-wrapper\"></div> </div><div class='chatbox-input input-group'><input type=\"text\" class=\"form-control message-box\" placeholder=\"Enter Message\" maxlength=\"200\">" +
+"<div class='chatbox-messages'><div class=\"messages-wrapper\"></div> </div><div class='chatbox-input input-group'><input type=\"text\" class=\"form-control message-box\" placeholder=\"Enter Message\" maxlength=\"200\">" +
 "<span class=\"input-group-btn send-message\"><button class=\"btn btn-default\" type=\"button\"><i class='fa fa-paper-plane'></i></button>";
 "</span></div></div></div>";
 
-			var settingStr = '<div class="chatbox-settings-window"></div>';
+			var settingStr = '<div class="chatbox-settings-window"><div class="chatbox-settings-bottom"></div></div>';
 			
+			var chatboxIcon = "<i class='fa fa-cog fa-lg chatbox-settings'></i>"
+
 			this.$el.html(chatStr);
 			this.$el.append(settingStr);
+			this.$el.append(chatboxIcon);
 
 			return this;
 		},
@@ -152,13 +155,12 @@ define([
 		},
 
 		toggleSettings:function(){
-			console.log("BA");
 			if(this.$el.children(".chatbox-settings-window").css("display") == "none"){
 				this.$el.children(".chatbox-settings-window").css("display", "block");
-				this.$el.children(".chatbox-settings-window").stop().animate({"width": "200px"});
+				this.$el.children(".chatbox-settings-window").stop().animate({"width": "300px"}, 500);
 			} else {
 				var sideWindow = this.$el.children(".chatbox-settings-window");
-				this.$el.children(".chatbox-settings-window").stop().animate({"width": "0px"}, function(){
+				this.$el.children(".chatbox-settings-window").stop().animate({"width": "0px"},500, function(){
 					sideWindow.css("display", "none");
 				});
 			}
