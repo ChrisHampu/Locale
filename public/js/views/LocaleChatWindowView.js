@@ -34,7 +34,9 @@ define([
 			'click .chatbox-exit' : 'exit',
 			'click .chatbox-header' : 'maximize',
 			'click .send-message' : 'send',
-			'keypress .chatbox-input' : 'sendMessage'
+			'keypress .chatbox-input' : 'sendMessage',
+			'click .chatbox-settings' : 'toggleSettings',
+			'click .close-settings' : 'toggleSettings'
 		},
 
 		initialize: function(options) {
@@ -54,9 +56,10 @@ define([
 "<span class=\"input-group-btn send-message\"><button class=\"btn btn-default\" type=\"button\"><i class='fa fa-paper-plane'></i></button>";
 "</span></div></div></div>";
 
-
-
+			var settingStr = '<div class="chatbox-settings-window"></div>';
+			
 			this.$el.html(chatStr);
+			this.$el.append(settingStr);
 
 			return this;
 		},
@@ -105,18 +108,18 @@ define([
 			var checkState = this.$el.children(".chatbox").css("bottom");
 			var chatWindow = this.$el.children(".chatbox");
 			if (checkState == "42px"){
-				this.$el.children(".chatbox").children(".chatbox-content").css({display: "block"});
-				this.$el.children(".chatbox").stop().animate({"bottom" :"384px"}, 400);
+				this.$el.children(".chatbox-content").css({display: "block"});
+				this.$el.stop().animate({"bottom" :"384px"}, 400);
 			} else {
-				this.$el.children(".chatbox").stop().animate({"bottom" :"42px"}, 400);
+				this.$el.stop().animate({"bottom" :"42px"}, 400);
 			}
 		},
 
 		maximize: function(){
-			var checkState = this.$el.children(".chatbox").css("bottom");
+			var checkState = this.$el.css("bottom");
 			if (checkState == "42px"){
-				this.$el.children(".chatbox").css({display: "block"});
-				this.$el.children(".chatbox").stop().animate({"bottom" :"384px"}, 400);
+				this.$el.css({display: "block"});
+				this.$el.stop().animate({"bottom" :"384px"}, 400);
 			}
 		},
 
@@ -133,7 +136,7 @@ define([
 		},
 
 		exit: function(e){
-			var chatWindow = this.$el.children(".chatbox");
+			var chatWindow = this.$el;
 			chatWindow.stop().animate({"bottom" :"0px"}, 400, function(){
 				chatWindow.css({display: "none"});
 				chatWindow.remove();
@@ -146,6 +149,20 @@ define([
 			if(e.which === 13){
 				this.send();
 			}
+		},
+
+		toggleSettings:function(){
+			console.log("BA");
+			if(this.$el.children(".chatbox-settings-window").css("display") == "none"){
+				this.$el.children(".chatbox-settings-window").css("display", "block");
+				this.$el.children(".chatbox-settings-window").stop().animate({"width": "200px"});
+			} else {
+				var sideWindow = this.$el.children(".chatbox-settings-window");
+				this.$el.children(".chatbox-settings-window").stop().animate({"width": "0px"}, function(){
+					sideWindow.css("display", "none");
+				});
+			}
+			
 		}
 	});
 

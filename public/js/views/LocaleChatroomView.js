@@ -105,9 +105,10 @@ define([
 			if(this.ChatWindow.$el.children(".chatbox").css("bottom") != "384px" && this.ChatWindow.$el.children(".chatbox").css("bottom") != "42px"){
 				this.model.set("joined", true);
 				this.parent.render();
-				this.ChatWindow.$el.children(".chatbox").css({display: "block"});
-				this.ChatWindow.$el.children(".chatbox").stop().animate({"bottom" :"384px"}, 400);
 				LocaleSocket.Emit('joinroom', this.model.get("name"));
+				this.ChatWindow.$el.css({display: "block"});
+				this.ChatWindow.$el.stop().animate({"bottom" :"384px"}, 400);
+				
 			}
 			if(this.ChatWindow.$el.children(".chatbox").css("bottom") == "42px"){
 				this.ChatWindow.$el.children(".chatbox").stop().animate({"bottom" :"384px"}, 400);

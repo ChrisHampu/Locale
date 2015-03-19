@@ -325,6 +325,23 @@ footer
     box-shadow: 2px 2px 2px 0px #a4a7aa;
 }
 
+.chatbox-settings-window {
+    display: none;
+    position:absolute;
+    background:#F5F5F5;
+    width:0px;
+    right:5px;
+    height:300px;
+    top:40px;
+    pointer-events:none; /*DON'T LEAVE THIS IN HERE!*/
+    z-index:7;
+    border-radius: 20px;
+}
+
+.chatbox-container {
+    position:relative;
+}
+
 .chatbox-input {
     position: relative;
     padding: 3px 2px 2px 2px;
@@ -400,6 +417,7 @@ footer
     position:relative;
     left: 275px;
     margin-top:10px;
+    z-index: 8;
 }
 
 
