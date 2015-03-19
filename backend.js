@@ -185,7 +185,7 @@ io.sockets.on('connection', function (socket) {
 			"firstName": socket.user.firstName,
 			"lastInitial": socket.user.lastName.charAt(0),
 			"profileUrl": socket.user.profileUrl,
-			"message": data.message
+			"message": data.message.slice(0,200)
 		};
 
 		// Plain message goes in, after it's persisted processedMessage has a timestamp
