@@ -396,6 +396,12 @@ footer
     color: #808080;
 }
 
+.chatbox-settings {
+    position:relative;
+    left: 275px;
+    margin-top:10px;
+}
+
 
 #profile-content-sidr {
   padding: 0px 0px 0px 90px;

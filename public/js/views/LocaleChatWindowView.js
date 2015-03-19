@@ -27,7 +27,7 @@ define([
 	var LocaleChatWindowView = Backbone.View.extend({
 		tagName: 'div',
 
-		className: 'chatbox',
+		className: 'chatbox-container', //Change this to chatbox-container and defuckulate it all.
 
 		events: {
 			'click .chatbox-minimize' : 'minimize',
@@ -40,18 +40,21 @@ define([
 		initialize: function(options) {
 			this.parent = options.parent;
 			this.ChatUserModel = options.UserModel;
-			this.$el.html(""); // Remove dummy data
+			this.$el.children(".chatbox").html(""); // Remove dummy data
 			this.listenTo(this.collection, "add", this.add);
 			this.listenTo(this.collection, "change", this.render);
 		},
 
 		render: function() {
-			var chatStr = "<div class='chatbox-header'><div class='chatbox-icon'></div><div class='chatbox-title'><div class='h1 room-title'>" + this.ChatUserModel.get("name") + "</div>" +
+
+			var chatStr = "<div class='chatbox'><div class='chatbox-header'><div class='chatbox-icon'></div><div class='chatbox-title'><div class='h1 room-title'>" + this.ChatUserModel.get("name") + "</div>" +
 "<div class='h2'>University of British Columbia</div> </div><div class=\"chatbox-controls\"><div class=\"chatbox-exit btn\" href='#'><i class=\"fa fa-close\"></i></div>" +
 "<div class=\"chatbox-minimize btn\" href='#'><i class=\"fa fa-minus\"></i></div></div></div><div class='chatbox-content'>" +
-"<div class='chatbox-messages'><div class=\"messages-wrapper\"></div> </div><div class='chatbox-input input-group'><input type=\"text\" class=\"form-control message-box\" placeholder=\"Enter Message\" maxlength=\"200\">" +
+"<div class='chatbox-messages'><div class='chatbox-options'><i class='fa fa-cog fa-lg chatbox-settings'></i></div><div class=\"messages-wrapper\"></div> </div><div class='chatbox-input input-group'><input type=\"text\" class=\"form-control message-box\" placeholder=\"Enter Message\" maxlength=\"200\">" +
 "<span class=\"input-group-btn send-message\"><button class=\"btn btn-default\" type=\"button\"><i class='fa fa-paper-plane'></i></button>";
-"</span></div></div>";
+"</span></div></div></div>";
+
+
 
 			this.$el.html(chatStr);
 
@@ -59,10 +62,10 @@ define([
 		},
 
 		renderAllMessages: function() {
-			this.$el.find(".messages-wrapper").html("");
+			this.$el.children(".chatbox").find(".messages-wrapper").html("");
 
 			_.each(this.collection.models, function(model) {
-				this.$el.find(".messages-wrapper").append( this.renderMessage( model ));
+				this.$el.children(".chatbox").find(".messages-wrapper").append( this.renderMessage( model ));
 			}, this);
 		},
 
@@ -90,8 +93,8 @@ define([
 		},
 
 		add: function(message) {
-			this.$el.find(".messages-wrapper").append( this.renderMessage(message) );
-			this.$el.find(".messages-wrapper").scrollTop(1000000);
+			this.$el.children(".chatbox").find(".messages-wrapper").append( this.renderMessage(message) );
+			this.$el.children(".chatbox").find(".messages-wrapper").scrollTop(1000000);
 		},
 
 		remove: function(message) {
@@ -99,38 +102,38 @@ define([
 		},
 
 		minimize: function(){
-			var checkState = this.$el.css("bottom");
-			var chatWindow = this.$el;
+			var checkState = this.$el.children(".chatbox").css("bottom");
+			var chatWindow = this.$el.children(".chatbox");
 			if (checkState == "42px"){
-				this.$el.children(".chatbox-content").css({display: "block"});
-				this.$el.stop().animate({"bottom" :"384px"}, 400);
+				this.$el.children(".chatbox").children(".chatbox-content").css({display: "block"});
+				this.$el.children(".chatbox").stop().animate({"bottom" :"384px"}, 400);
 			} else {
-				this.$el.stop().animate({"bottom" :"42px"}, 400);
+				this.$el.children(".chatbox").stop().animate({"bottom" :"42px"}, 400);
 			}
 		},
 
 		maximize: function(){
-			var checkState = this.$el.css("bottom");
+			var checkState = this.$el.children(".chatbox").css("bottom");
 			if (checkState == "42px"){
-				this.$el.css({display: "block"});
-				this.$el.stop().animate({"bottom" :"384px"}, 400);
+				this.$el.children(".chatbox").css({display: "block"});
+				this.$el.children(".chatbox").stop().animate({"bottom" :"384px"}, 400);
 			}
 		},
 
 		send: function() {
-			var input = this.$el.find(".message-box").val();
-			var room = this.$el.find(".room-title").text();
+			var input = this.$el.children(".chatbox").find(".message-box").val();
+			var room = this.$el.children(".chatbox").find(".room-title").text();
 
 			if(input === undefined || input === "")
 				return;
 
 			LocaleSocket.Emit('sendchat', {"room": room, "message": input});
 
-			this.$el.find(".message-box").val("");
+			this.$el.children(".chatbox").find(".message-box").val("");
 		},
 
 		exit: function(e){
-			var chatWindow = this.$el;
+			var chatWindow = this.$el.children(".chatbox");
 			chatWindow.stop().animate({"bottom" :"0px"}, 400, function(){
 				chatWindow.css({display: "none"});
 				chatWindow.remove();
