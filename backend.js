@@ -82,7 +82,7 @@ io.sockets.on('connection', function (socket) {
 	// When the client emits 'join', this listens and executes
 	socket.on('join', function(user){
 		var newUser = JSON.parse(user);
-	
+
 		newUser["location"]["latitude"] = newUser["location"]["lat"];
 		delete newUser["location"]["lat"];
 
@@ -98,7 +98,7 @@ io.sockets.on('connection', function (socket) {
 
 			var usersRooms = allRooms.map( function (obj) { 
 				
-				createCounter(obj.name);
+				//createCounter(obj.name);
 				//obj.userCount = userCounts[obj.name];
 
 				if (allowedRooms.indexOf(obj.name) > -1) {
@@ -124,8 +124,10 @@ io.sockets.on('connection', function (socket) {
 			location: socket.user.location,
 			radius: '1000',
 			owner: socket.user.profileUrl,
-			tags: data.tags
-		}
+			tags: data.tags,
+			userCount: 0,
+			users: []
+		};
 
 		world.addRoom(newRoom, function() {
 			allRooms.push(newRoom);
@@ -166,9 +168,6 @@ io.sockets.on('connection', function (socket) {
 			
 				var usersRooms = allRooms.map(function(obj){ 
 			
-					createCounter(obj.name);
-					obj.userCount = userCounts[obj.name];
-			
 					if (allowedRooms.indexOf(obj.name) > -1) {
 						obj.canJoin = true;
 					} else {
@@ -208,54 +207,60 @@ io.sockets.on('connection', function (socket) {
 		world.deleteRoom(room);
 	});
 
-	socket.on('joinroom', function(room){
-		socket.join(room);
+	socket.on('joinroom', function(roomName){
 
-		incrementCount(room);
+		world.getRoomByName(roomName, function(room) {
+			socket.join(roomName);
 
+			room.userCount++;
 
-		world.getRoomHistory(room, function(messages) {
-			socket.emit('loadroom', {"room": room, "messages": messages});
-		})
+			var newUser = { profileUrl: socket.user.profileUrl,
+					firstName: socket.user.firstName,
+					lastInitial: socket.user.lastName.charAt(0)
+			};
+
+			room.users.push(newUser);
+			
+			world.addUserToRoom(roomName, newUser);
+			
+			world.getRoomHistory(roomName, function(messages) {
+				socket.emit('loadroom', {"room": roomName, "messages": messages, "users" : room.users, "userCount" : room.userCount});
+			});
+			
+			console.log("Joined room: " + room.name);
+		});
 	});
 
 	// listen to users leaving rooms
-	socket.on('leaveroom', function(room){
-		socket.leave(room);
-
-		userCounts[room]--;
+	socket.on('leaveroom', function(roomName){
+	
+		world.getRoomByName(roomName, function(room) {
+			socket.leave(roomName);
+			
+			var idx = -1;
+			
+			for(var i = 0; i < room.users.length; i++)
+				if(socket.user.profileUrl === room.users[i].profileUrl)
+					idx = i;
+			
+			room.users = room.users.splice(idx, 1);
+			
+			world.getRoomHistory(roomName, function(messages) {
+				socket.emit('loadroom', {"room": roomName, "messages": messages, "users" : room.users, "userCount" : room.users.length});
+			});
+			
+			console.log("Left room room: " + room.name);
+			
+			world.updateRoomUsers(roomName, room.users, room.users.length);
+		});
 	});
 	
 	socket.on('disconnect', function(){
-		socket.leave(socket.room);
+
+		if(socket.user !== undefined)
+			world.getRoomsByUser(socket.user, function(rooms) {
+				world.removeUserFromRooms(socket.user, rooms);
+			});
 	});
 
 });
-
-function createCounter(room) {
-	if (userCounts.indexOf(room) > -1) {
-		// Do nothing
-	} else {
-		userCounts.push({room: 0})
-	}
-}
-
-function incrementCount(room) {
-	if (userCounts.indexOf(room) > -1) {
-		userCounts[room]++;
-	} else {
-		userCounts[room] = 1;
-	}
-
-}
-
-function decrementCount(room) {
-	if (userCounts.indexOf(room) > -1) {
-		if (userCounts[room] > 0) {
-			userCounts[room]--;
-		}
-	} else {
-		userCounts.push(room);
-		userCounts[room] = 0;
-	}
-}

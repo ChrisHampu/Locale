@@ -60,6 +60,7 @@ define([
 						_.each(data.messages.reverse(), function(message) {
 							chat.addMessage(message);
 						});
+						console.log("Room " + data.room + " has users " + data.users);
 					}
 				});
 			});

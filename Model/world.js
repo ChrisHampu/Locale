@@ -19,6 +19,18 @@ World.prototype.deleteRoom = function(room, callback) {
     });
 }
 
+World.prototype.getRoomByName = function(name, callback) {
+
+	this.db.newSearchBuilder().collection("rooms").limit(1).query("value.name: " + name).then(function(res) {
+		console.log(res.body.results[0].value);
+		var room = res.body.results[0].value;
+		
+		console.log("Found: " + room.name);
+	
+		callback(room);
+	});
+};
+
 World.prototype.getRooms = function (callback) {
     this.db.list('rooms').then(function (result) {
         var roomObjects = result.body.results;
@@ -56,6 +68,70 @@ World.prototype.persistMessage = function (data, callback){
             data["timestamp"] = result.path["timestamp"];
             callback(data);
         });
+}
+
+World.prototype.saveRoom = function(room, callback) {
+	
+	this.addRoom(room, function(updatedRoom) {
+	
+		callback(updatedRoom);
+	});
+}
+
+World.prototype.addUserToRoom = function(name, user) {
+
+	this.db.newPatchBuilder("rooms", name).inc("userCount", 1)
+		.add("users.0", user)
+		.apply()
+		.then(function (res) {
+
+		})
+		.fail( function (error) {
+			console.log(error.body);
+		});
+}
+
+World.prototype.getRoomsByUser = function(user, callback) {
+	
+	this.db.newSearchBuilder()
+	.collection("rooms")
+	.limit(10)
+	.query("value.users.firstName: \"" + user.firstName + "\"")
+	.then(function(res) {
+		console.log("callback");
+		callback(res.body.results);
+	})
+	.fail( function(error) {
+		console.log(error.body);
+	});
+}
+
+World.prototype.removeUserFromRooms = function(user, rooms) {
+
+	for(var i = 0; i < rooms.length; i++)
+	{
+		// A new list of users is made which acts as a list of who to keep
+		var users = rooms[i].value.users;
+		var newUsers = [];
+
+		// Users that don't match the user we're deleting
+		// are added to the "safe" list
+		for(var j = 0; j < users.length; j++)
+		{
+			if(user.profileUrl !== users[j].profileUrl)
+				newUsers.push(users[j]);
+		}
+				
+		var usersRemoved = users.length - newUsers.length;
+		this.db.newPatchBuilder("rooms", rooms[i].value.name).inc("userCount", -usersRemoved)
+		.replace("users", newUsers)
+		.apply()
+		.then(function (res) {
+		})
+		.fail( function (error) {
+			console.log(error.body);
+		});			
+	}
 }
 
 // Return the last 10 messages for a room
