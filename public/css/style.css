@@ -709,3 +709,23 @@ footer
 .searchelement{
     width:100%;
 }
+
+.chatbox-settings-user {
+	padding: 5px 20px;
+}
+
+.chatbox-settings-user-profile {
+	background-size: contain !important;
+	border-radius: 50%;
+	width: 40px;
+	height: 40px;
+	vertical-align: middle;
+	display: inline-block;
+	margin-right: 15px;
+}
+
+.chatbox-settings-user-name {
+	font-size: 16pt;
+	display: inline-block;
+	vertical-align: middle;
+}

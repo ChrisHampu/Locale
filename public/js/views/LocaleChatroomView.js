@@ -101,6 +101,10 @@ define([
 				callback(this.model.get("location"), this.model.get("radius"));
 		},
 
+		updateUsers: function(users) {
+			this.ChatWindow.renderUsers(users);
+		},
+
 		join: function() {
 			if(this.ChatWindow.$el.children(".chatbox").css("bottom") != "384px" && this.ChatWindow.$el.children(".chatbox").css("bottom") != "42px"){
 				this.model.set("joined", true);

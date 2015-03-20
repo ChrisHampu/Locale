@@ -56,7 +56,7 @@ define([
 "<span class=\"input-group-btn send-message\"><button class=\"btn btn-default\" type=\"button\"><i class='fa fa-paper-plane'></i></button>";
 "</span></div></div></div>";
 
-			var settingStr = '<div class="chatbox-settings-window"><div class="chatbox-settings-bottom"></div></div>';
+			var settingStr = '<div class="chatbox-settings-window"><div class="chatbox-settings-user-container"></div><div class="chatbox-settings-bottom"></div></div>';
 			
 			var chatboxIcon = "<i class='fa fa-cog fa-lg chatbox-settings'></i>"
 
@@ -96,6 +96,23 @@ define([
                         FormatTimestamp(message.get("timestamp")) + "</span></div></div></div>";
 
             return msgStr;
+		},
+
+		renderUsers: function(users) {
+			var container = this.$el.find(".chatbox-settings-user-container");
+
+			console.log(users);
+
+			container.html("");
+
+			for(var i = 0; i < users.length; i++)
+			{
+				var userStr = "<div class=\"chatbox-settings-user\">" +
+				"<div class=\"chatbox-settings-user-profile\" style=\"background: url(" + users[i].profileUrl + ");\">" +
+				"</div><div class=\"chatbox-settings-user-name\">" + users[i].firstName + " " + users[i].lastInitial + "</div></div>";
+
+				container.append(userStr);
+			}
 		},
 
 		add: function(message) {
