@@ -29,6 +29,11 @@ app.get('/privacy', function (req, res) {
 	res.sendFile(__dirname + '/privacy.html');
 });
 
+app.get('/ourstack', function (req, res) {
+	//Loads index file.
+	res.sendFile(__dirname + '/ourstack.html');
+});
+
 /*
  * Open the main chat connection page
  */
