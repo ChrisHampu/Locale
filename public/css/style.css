@@ -589,10 +589,10 @@ footer
 
 
 #my-room-container .badge {
-  background: #858585;
-  position: relative;
-  float: right;
-  margin: 10px;
+	background: #858585;
+	margin: 10px;
+	position: absolute;
+	right: 0;
 }
 
 .button-title{

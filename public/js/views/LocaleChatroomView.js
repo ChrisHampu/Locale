@@ -41,6 +41,7 @@ define([
                                     '<div class="h1">' + this.model.get("name") + '</div>' +
                                     '<div class="h2">Vancouver, BC</div>' +
                                 '</div>' +
+                                '<div class="badge">0</div>' +
                             '</div>' +
                               '<div class="btn btn-default toggle-pencil">' +
                                 '<i class="fa fa-pencil fa-lg"></i>' +
@@ -103,6 +104,7 @@ define([
 		},
 
 		updateUsers: function(users) {
+			this.$el.find(".badge").html(users.length);
 			this.ChatWindow.renderUsers(users);
 		},
 
