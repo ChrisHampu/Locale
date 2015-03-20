@@ -141,7 +141,7 @@ World.prototype.removeUserFromRoomSub = function(room, count, callback) {
 	.replace("users", room.users)
 	.apply()
 	.then(function (res) {
-		callback([room]);
+		callback([ { name : room.name, users: room.users, userCount: room.userCount }]);
 	})
 	.fail( function (error) {
 		console.log(error.body);

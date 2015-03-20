@@ -229,7 +229,7 @@ io.sockets.on('connection', function (socket) {
 			world.getRoomHistory(roomName, function(messages) {
 				socket.emit('loadroom', {"room": roomName, "messages": messages, "users" : room.users, "userCount" : room.userCount});
 				// Tell all existing users that a new user has joined
-				io.sockets.emit('updateroomusers', [room]);
+				io.sockets.emit('updateroomusers', [{ name : room.name, users: room.users, userCount: room.userCount }]);
 			});
 		});
 	});
