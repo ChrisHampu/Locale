@@ -710,6 +710,10 @@ footer
     width:100%;
 }
 
+.chatbox-settings-user-container {
+	padding-top: 10px;
+}
+
 .chatbox-settings-user {
 	padding: 5px 20px;
 }

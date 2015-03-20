@@ -207,6 +207,9 @@ io.sockets.on('connection', function (socket) {
 		world.deleteRoom(room);
 	});
 
+	// TODO: Check for duplicate users.
+	// Example: A user opens 2+ browser windows/apps and connects to the same room on each.
+	// There would now be multiple entries.
 	socket.on('joinroom', function(roomName){
 
 		world.getRoomByName(roomName, function(room) {
@@ -225,42 +228,54 @@ io.sockets.on('connection', function (socket) {
 			
 			world.getRoomHistory(roomName, function(messages) {
 				socket.emit('loadroom', {"room": roomName, "messages": messages, "users" : room.users, "userCount" : room.userCount});
+				// Tell all existing users that a new user has joined
+				io.sockets.emit('updateroomusers', [room]);
 			});
-			
-			console.log("Joined room: " + room.name);
 		});
 	});
 
 	// listen to users leaving rooms
+	// TODO: Only emit updates to the users who are actually connected to the room who has
+	// a person leaving the room. Currently it emits updaterooms to ALL sockets which is
+	// a privacy, security, and performance concern
 	socket.on('leaveroom', function(roomName){
-	
+		
 		world.getRoomByName(roomName, function(room) {
-			socket.leave(roomName);
-			
+
 			var idx = -1;
 			
 			for(var i = 0; i < room.users.length; i++)
+			{
 				if(socket.user.profileUrl === room.users[i].profileUrl)
 					idx = i;
+			}
 			
-			room.users = room.users.splice(idx, 1);
-			
-			world.getRoomHistory(roomName, function(messages) {
-				socket.emit('loadroom', {"room": roomName, "messages": messages, "users" : room.users, "userCount" : room.users.length});
-			});
-			
-			console.log("Left room room: " + room.name);
-			
-			world.updateRoomUsers(roomName, room.users, room.users.length);
+			if(idx > -1)
+			{
+				room.users = room.users.splice(idx, 1);
+				room.userCount = room.users.length;
+				
+				var rooms = [ room ];
+				
+				socket.leave(roomName);
+				
+				world.removeUserFromRooms(socket.user, rooms, function(updatedRoom) {
+					io.sockets.emit('updateroomusers', updatedRoom);
+				});		
+			}
 		});
 	});
 	
 	socket.on('disconnect', function(){
 
 		if(socket.user !== undefined)
+		{
 			world.getRoomsByUser(socket.user, function(rooms) {
-				world.removeUserFromRooms(socket.user, rooms);
+				world.removeUserFromRooms(socket.user, rooms, function(updatedRoom) {
+					io.sockets.emit('updateroomusers', updatedRoom);
+				});
 			});
+		}
 	});
 
 });

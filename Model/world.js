@@ -22,10 +22,8 @@ World.prototype.deleteRoom = function(room, callback) {
 World.prototype.getRoomByName = function(name, callback) {
 
 	this.db.newSearchBuilder().collection("rooms").limit(1).query("value.name: " + name).then(function(res) {
-		console.log(res.body.results[0].value);
+
 		var room = res.body.results[0].value;
-		
-		console.log("Found: " + room.name);
 	
 		callback(room);
 	});
@@ -98,20 +96,24 @@ World.prototype.getRoomsByUser = function(user, callback) {
 	.limit(10)
 	.query("value.users.firstName: \"" + user.firstName + "\"")
 	.then(function(res) {
-		console.log("callback");
-		callback(res.body.results);
+	
+		var rooms = res.body.results.map(function(obj){ 
+            return obj.value;
+        });
+		
+		callback(rooms);
 	})
 	.fail( function(error) {
 		console.log(error.body);
 	});
 }
 
-World.prototype.removeUserFromRooms = function(user, rooms) {
+World.prototype.removeUserFromRooms = function(user, rooms, callback) {
 
 	for(var i = 0; i < rooms.length; i++)
 	{
 		// A new list of users is made which acts as a list of who to keep
-		var users = rooms[i].value.users;
+		var users = rooms[i].users;
 		var newUsers = [];
 
 		// Users that don't match the user we're deleting
@@ -121,17 +123,29 @@ World.prototype.removeUserFromRooms = function(user, rooms) {
 			if(user.profileUrl !== users[j].profileUrl)
 				newUsers.push(users[j]);
 		}
+		
+		rooms[i].users = newUsers;
+		rooms[i].userCount = newUsers.length;
 				
 		var usersRemoved = users.length - newUsers.length;
-		this.db.newPatchBuilder("rooms", rooms[i].value.name).inc("userCount", -usersRemoved)
-		.replace("users", newUsers)
-		.apply()
-		.then(function (res) {
-		})
-		.fail( function (error) {
-			console.log(error.body);
-		});			
+		
+		this.removeUserFromRoomSub(rooms[i], usersRemoved, function(newRooms) {
+			callback(newRooms);
+		});
 	}
+}
+
+World.prototype.removeUserFromRoomSub = function(room, count, callback) {
+
+	this.db.newPatchBuilder("rooms", room.name).inc("userCount", -count)
+	.replace("users", room.users)
+	.apply()
+	.then(function (res) {
+		callback([room]);
+	})
+	.fail( function (error) {
+		console.log(error.body);
+	});
 }
 
 // Return the last 10 messages for a room
@@ -152,7 +166,6 @@ World.prototype.getRoomHistory = function (room, callback){
 
             callback(messages)
         });
-
 }
 
 module.exports = World;

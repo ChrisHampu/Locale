@@ -70,10 +70,12 @@ define([
 			return this.ChatWindow;
 		},
 
+		// Deprecated
 		removeChatWindow: function() {
 			this.ChatWindow.$el.css("display: none");
 		},
 
+		// Deprecated
 		remove: function() {
 			
 			//this.stop().animate({left:"-200px"}, 2000);
@@ -89,8 +91,7 @@ define([
 
                     $('#all-room-container').css("max-height", maxHeight);
             });
-			
-
+		
 			this.parent.remove(this);
 		},
 

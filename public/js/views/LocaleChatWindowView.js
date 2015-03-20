@@ -101,8 +101,6 @@ define([
 		renderUsers: function(users) {
 			var container = this.$el.find(".chatbox-settings-user-container");
 
-			console.log(users);
-
 			container.html("");
 
 			for(var i = 0; i < users.length; i++)
@@ -156,6 +154,7 @@ define([
 		},
 
 		exit: function(e){
+			var room = this.$el.children(".chatbox").find(".room-title").text();
 			var chatWindow = this.$el;
 			chatWindow.stop().animate({"bottom" :"0px"}, 400, function(){
 				chatWindow.css({display: "none"});
@@ -163,6 +162,7 @@ define([
 			});
 			this.parent.model.set("joined", false);
 			e.stopPropagation();
+			LocaleSocket.Emit('leaveroom', room);
 		},
 
 		sendMessage:function(e){
