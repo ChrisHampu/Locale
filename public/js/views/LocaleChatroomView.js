@@ -96,6 +96,11 @@ define([
 			this.parent.remove(this);
 		},
 
+		resetMessages: function() {
+			this.ChatMessages.reset();
+			this.ChatWindow.renderAllMessages(); // This basically just forces the view to remove all messages
+		},
+
 		addMessage: function(newMessage, callback) {
 			this.ChatMessages.add( new LocaleChatMessageModel( { firstName: newMessage.firstName, lastInitial: newMessage.lastInitial, profileUrl: newMessage.profileUrl, message: newMessage.message, timestamp: newMessage.timestamp, room: newMessage.room } ) );
 
@@ -106,6 +111,7 @@ define([
 		updateUsers: function(users) {
 			this.$el.find(".badge").html(users.length);
 			this.model.set("userCount", users.length);
+			this.model.set("users", users);
 			this.ChatWindow.renderUsers(users);
 		},
 
