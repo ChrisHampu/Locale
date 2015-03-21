@@ -74,7 +74,7 @@ io.sockets.on('connection', function (socket) {
 	world.getRooms(function(rooms) {
 		allRooms = rooms;
 		
-		allRoomNames = allRooms.map(function(obj) {
+		allRoomNames = allRooms.map(function(obj) {			
 			return obj.name;
 		});
 	});

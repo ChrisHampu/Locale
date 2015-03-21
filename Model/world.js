@@ -7,6 +7,27 @@
  */
  function World (db) {
     this.db = db;
+	
+	this.getRooms( function(rooms) {
+
+		rooms.map( function(room) {
+		
+			// Copypasta since I can't call this.removeAllusersFromRoom()
+			
+			// At startup, empty out all the users that may have persisted
+			db.newPatchBuilder("rooms", room.name).replace("userCount", 0)
+			.replace("users", [])
+			.apply()
+			.then(function (res) {
+				console.log("Removed all users from " + room.name);
+			})
+			.fail( function (error) {
+				console.log(error.body);
+			});
+			
+			return room;
+		});
+	});
 }
 
 World.prototype.addRoom = function(room, callback) {
@@ -142,6 +163,19 @@ World.prototype.removeUserFromRoomSub = function(room, count, callback) {
 	.apply()
 	.then(function (res) {
 		callback([ { name : room.name, users: room.users, userCount: room.userCount }]);
+	})
+	.fail( function (error) {
+		console.log(error.body);
+	});
+}
+
+World.prototype.removeAllUsersFromRoom = function(room) {
+
+	this.db.newPatchBuilder("rooms", room.name).replace("userCount", 0)
+	.replace("users", [])
+	.apply()
+	.then(function (res) {
+		console.log("Removed all users from " + room.name);
 	})
 	.fail( function (error) {
 		console.log(error.body);
