@@ -22,7 +22,7 @@
 				console.log("Removed all users from " + room.name);
 			})
 			.fail( function (error) {
-				console.log(error.body);
+				console.log("Cannot clear users from room " + room.name + ". Room must be running from older server version.");
 			});
 			
 			return room;
