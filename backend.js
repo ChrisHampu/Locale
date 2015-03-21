@@ -6,7 +6,7 @@ var express = require('express')
 
 var db = require('orchestrate')('f3258a30-bca3-4567-9e60-d05422f4745f');
 
-server.listen(80, function(){
+server.listen(8080, function(){
 	var host = server.address().address;
 	var port = server.address().port;
 
@@ -27,6 +27,11 @@ app.get('', function (req, res) {
 app.get('/privacy', function (req, res) {
 	//Loads index file.
 	res.sendFile(__dirname + '/privacy.html');
+});
+
+app.get('/ourstack', function (req, res) {
+	//Loads index file.
+	res.sendFile(__dirname + '/ourstack.html');
 });
 
 /*
@@ -69,7 +74,7 @@ io.sockets.on('connection', function (socket) {
 	world.getRooms(function(rooms) {
 		allRooms = rooms;
 		
-		allRoomNames = allRooms.map(function(obj) {
+		allRoomNames = allRooms.map(function(obj) {			
 			return obj.name;
 		});
 	});
@@ -77,7 +82,7 @@ io.sockets.on('connection', function (socket) {
 	// When the client emits 'join', this listens and executes
 	socket.on('join', function(user){
 		var newUser = JSON.parse(user);
-	
+
 		newUser["location"]["latitude"] = newUser["location"]["lat"];
 		delete newUser["location"]["lat"];
 
@@ -92,9 +97,6 @@ io.sockets.on('connection', function (socket) {
 		world.getAllowedRoomNames(newUser.location.latitude, newUser.location.longitude, function(allowedRooms) {
 
 			var usersRooms = allRooms.map( function (obj) { 
-				
-				createCounter(obj.name);
-				//obj.userCount = userCounts[obj.name];
 
 				if (allowedRooms.indexOf(obj.name) > -1) {
 					obj.canJoin = true;
@@ -119,8 +121,10 @@ io.sockets.on('connection', function (socket) {
 			location: socket.user.location,
 			radius: '1000',
 			owner: socket.user.profileUrl,
-			tags: data.tags
-		}
+			tags: data.tags,
+			userCount: 0,
+			users: []
+		};
 
 		world.addRoom(newRoom, function() {
 			allRooms.push(newRoom);
@@ -161,9 +165,6 @@ io.sockets.on('connection', function (socket) {
 			
 				var usersRooms = allRooms.map(function(obj){ 
 			
-					createCounter(obj.name);
-					obj.userCount = userCounts[obj.name];
-			
 					if (allowedRooms.indexOf(obj.name) > -1) {
 						obj.canJoin = true;
 					} else {
@@ -203,54 +204,93 @@ io.sockets.on('connection', function (socket) {
 		world.deleteRoom(room);
 	});
 
-	socket.on('joinroom', function(room){
-		socket.join(room);
+	// TODO: Check for duplicate users.
+	// Example: A user opens 2+ browser windows/apps and connects to the same room on each.
+	// There would now be multiple entries.
+	socket.on('joinroom', function(roomName){
 
-		incrementCount(room);
+		world.getRoomByName(roomName, function(room) {
+			
+			// We check whether a user already is part of this room. If they are,
+			// then don't add them as another room user! This avoid duplicates
+			// from a user joining the same room repeatedly without emitting first
+			// that they are leaving the room. This happens by repeatedly pressing join,
+			// because the client doesn't leave the room first.
+			var idx = -1;
+			
+			for(var i = 0; i < room.users.length; i++)
+			{
+				if(socket.user.id === room.users[i].id)
+					idx = i;
+			}
+			
+			if(idx === -1)
+			{			
+				socket.join(roomName);
+				
+				room.userCount++;
 
+				var newUser = { profileUrl: socket.user.profileUrl,
+						firstName: socket.user.firstName,
+						lastInitial: socket.user.lastName.charAt(0),
+						id: socket.user.id
+				};
 
-		world.getRoomHistory(room, function(messages) {
-			socket.emit('loadroom', {"room": room, "messages": messages});
-		})
+				room.users.push(newUser);
+				
+				world.addUserToRoom(roomName, newUser);
+			}
+			
+			world.getRoomHistory(roomName, function(messages) {
+				socket.emit('loadroom', {"room": roomName, "messages": messages, "users" : room.users, "userCount" : room.userCount});
+				// Tell all existing users that a new user has joined
+				io.sockets.emit('updateroomusers', [{ name : room.name, users: room.users, userCount: room.userCount }]);
+			});
+		});
 	});
 
 	// listen to users leaving rooms
-	socket.on('leaveroom', function(room){
-		socket.leave(room);
+	// TODO: Only emit updates to the users who are actually connected to the room who has
+	// a person leaving the room. Currently it emits updaterooms to ALL sockets which is
+	// a privacy, security, and performance concern
+	socket.on('leaveroom', function(roomName){
+		
+		world.getRoomByName(roomName, function(room) {
 
-		userCounts[room]--;
+			var idx = -1;
+			
+			for(var i = 0; i < room.users.length; i++)
+			{
+				if(socket.user.id === room.users[i].id)
+					idx = i;
+			}
+			
+			if(idx > -1)
+			{
+				room.users = room.users.splice(idx, 1);
+				room.userCount = room.users.length;
+				
+				var rooms = [ room ];
+				
+				socket.leave(roomName);
+				
+				world.removeUserFromRooms(socket.user, rooms, function(updatedRoom) {
+					io.sockets.emit('updateroomusers', updatedRoom);
+				});		
+			}
+		});
 	});
 	
 	socket.on('disconnect', function(){
-		socket.leave(socket.room);
+
+		if(socket.user !== undefined)
+		{
+			world.getRoomsByUser(socket.user, function(rooms) {
+				world.removeUserFromRooms(socket.user, rooms, function(updatedRoom) {
+					io.sockets.emit('updateroomusers', updatedRoom);
+				});
+			});
+		}
 	});
 
 });
-
-function createCounter(room) {
-	if (userCounts.indexOf(room) > -1) {
-		// Do nothing
-	} else {
-		userCounts.push({room: 0})
-	}
-}
-
-function incrementCount(room) {
-	if (userCounts.indexOf(room) > -1) {
-		userCounts[room]++;
-	} else {
-		userCounts[room] = 1;
-	}
-
-}
-
-function decrementCount(room) {
-	if (userCounts.indexOf(room) > -1) {
-		if (userCounts[room] > 0) {
-			userCounts[room]--;
-		}
-	} else {
-		userCounts.push(room);
-		userCounts[room] = 0;
-	}
-}

@@ -1,0 +1,66 @@
+body {
+	background: url('../assets/backgrounds/forest-dim.jpg') no-repeat #161718;
+}
+
+a {
+	color:inherit;
+	text-decoration: none;
+}
+
+table {
+	padding:20px;
+}
+
+td {
+	padding: 20px;
+}
+
+.our-stack {
+	border:2px solid #AAA;
+	height:80%;
+	border-radius: 20px;
+	padding:20px;
+	background: #EEE;
+}
+
+.header {
+	font-family: 'Lato', sans-serif;
+	font-size:40px;
+	text-align: center;
+}
+
+.underscore-js {
+	padding-left: 95px;
+}
+
+.backbone-js {
+	padding-left: 40px;
+}
+
+.maps-api {
+	padding-left:75px;
+}
+
+.jquery {
+	padding-left:10px;
+}
+
+.google-plus-api {
+	padding-left: 25px;
+}
+
+.facebook-api {
+	padding-left: 85px; 
+}
+
+.socket-io {
+	margin-right:90px;
+	margin-left:150px;
+	right:75px;
+	position:relative;
+}
+
+.express {
+	left:-70px;
+	position:relative;
+}

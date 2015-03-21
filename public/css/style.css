@@ -331,11 +331,11 @@ footer
     background:#F5F5F5;
     width:0px;
     right:5px;
-    height:300px;
+    border:1px solid #AAA;
+    height:340px;
     top:40px;
     pointer-events:none; /*DON'T LEAVE THIS IN HERE!*/
     z-index:7;
-    border-radius: 20px;
 }
 
 .chatbox-container {
@@ -415,8 +415,9 @@ footer
 
 .chatbox-settings {
     position:relative;
-    left: 275px;
+    left: 295px;
     margin-top:10px;
+    top:45px;
     z-index: 8;
 }
 
@@ -493,6 +494,7 @@ footer
 }
 
 .messages-wrapper {
+    overflow-x:none;
     position: absolute;
     max-height: 100%;
     width: 100%;
@@ -587,10 +589,10 @@ footer
 
 
 #my-room-container .badge {
-  background: #858585;
-  position: relative;
-  float: right;
-  margin: 10px;
+	background: #858585;
+	margin: 10px;
+	position: absolute;
+	right: 0;
 }
 
 .button-title{
@@ -706,4 +708,28 @@ footer
 
 .searchelement{
     width:100%;
+}
+
+.chatbox-settings-user-container {
+	padding-top: 10px;
+}
+
+.chatbox-settings-user {
+	padding: 5px 20px;
+}
+
+.chatbox-settings-user-profile {
+	background-size: contain !important;
+	border-radius: 50%;
+	width: 40px;
+	height: 40px;
+	vertical-align: middle;
+	display: inline-block;
+	margin-right: 15px;
+}
+
+.chatbox-settings-user-name {
+	font-size: 16pt;
+	display: inline-block;
+	vertical-align: middle;
 }

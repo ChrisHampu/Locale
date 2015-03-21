@@ -60,7 +60,27 @@ define([
 						_.each(data.messages.reverse(), function(message) {
 							chat.addMessage(message);
 						});
+
+						chat.updateUsers(data.users);
+						//console.log("Room " + data.room + " has users " + data.users);
 					}
+				});
+			});
+
+			LocaleSocket.Handle('updateroomusers', function(rooms) {
+
+				_.each(ChatroomListView.getRooms(), function(chat) {
+
+					_.each(rooms, function(room) {
+						var chatName = chat.model.get("name");
+						var roomName = room.name;
+
+						if(chatName === roomName)
+						{
+							chat.updateUsers(room.users);
+						}
+
+					});
 				});
 			});
 
@@ -197,7 +217,6 @@ define([
 					});
 
 					ChatroomCollection.add( new LocaleChatModel( { location: value.location, name: value.name, radius: value.radius, canJoin: value.canJoin, userCount: value.userCount, tags: value.tags }));
-
 				}
 
 			}, this);
