@@ -94,7 +94,7 @@ World.prototype.getRoomsByUser = function(user, callback) {
 	this.db.newSearchBuilder()
 	.collection("rooms")
 	.limit(10)
-	.query("value.users.firstName: \"" + user.firstName + "\"")
+	.query("value.users.id: \"" + user.id + "\"")
 	.then(function(res) {
 	
 		var rooms = res.body.results.map(function(obj){ 
@@ -120,7 +120,7 @@ World.prototype.removeUserFromRooms = function(user, rooms, callback) {
 		// are added to the "safe" list
 		for(var j = 0; j < users.length; j++)
 		{
-			if(user.profileUrl !== users[j].profileUrl)
+			if(user.id !== users[j].id)
 				newUsers.push(users[j]);
 		}
 		

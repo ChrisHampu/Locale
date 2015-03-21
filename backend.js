@@ -6,7 +6,7 @@ var express = require('express')
 
 var db = require('orchestrate')('f3258a30-bca3-4567-9e60-d05422f4745f');
 
-server.listen(80, function(){
+server.listen(8080, function(){
 	var host = server.address().address;
 	var port = server.address().port;
 
@@ -97,9 +97,6 @@ io.sockets.on('connection', function (socket) {
 		world.getAllowedRoomNames(newUser.location.latitude, newUser.location.longitude, function(allowedRooms) {
 
 			var usersRooms = allRooms.map( function (obj) { 
-				
-				//createCounter(obj.name);
-				//obj.userCount = userCounts[obj.name];
 
 				if (allowedRooms.indexOf(obj.name) > -1) {
 					obj.canJoin = true;
@@ -213,18 +210,36 @@ io.sockets.on('connection', function (socket) {
 	socket.on('joinroom', function(roomName){
 
 		world.getRoomByName(roomName, function(room) {
-			socket.join(roomName);
-
-			room.userCount++;
-
-			var newUser = { profileUrl: socket.user.profileUrl,
-					firstName: socket.user.firstName,
-					lastInitial: socket.user.lastName.charAt(0)
-			};
-
-			room.users.push(newUser);
 			
-			world.addUserToRoom(roomName, newUser);
+			// We check whether a user already is part of this room. If they are,
+			// then don't add them as another room user! This avoid duplicates
+			// from a user joining the same room repeatedly without emitting first
+			// that they are leaving the room. This happens by repeatedly pressing join,
+			// because the client doesn't leave the room first.
+			var idx = -1;
+			
+			for(var i = 0; i < room.users.length; i++)
+			{
+				if(socket.user.id === room.users[i].id)
+					idx = i;
+			}
+			
+			if(idx === -1)
+			{			
+				socket.join(roomName);
+				
+				room.userCount++;
+
+				var newUser = { profileUrl: socket.user.profileUrl,
+						firstName: socket.user.firstName,
+						lastInitial: socket.user.lastName.charAt(0),
+						id: socket.user.id
+				};
+
+				room.users.push(newUser);
+				
+				world.addUserToRoom(roomName, newUser);
+			}
 			
 			world.getRoomHistory(roomName, function(messages) {
 				socket.emit('loadroom', {"room": roomName, "messages": messages, "users" : room.users, "userCount" : room.userCount});
@@ -246,7 +261,7 @@ io.sockets.on('connection', function (socket) {
 			
 			for(var i = 0; i < room.users.length; i++)
 			{
-				if(socket.user.profileUrl === room.users[i].profileUrl)
+				if(socket.user.id === room.users[i].id)
 					idx = i;
 			}
 			
