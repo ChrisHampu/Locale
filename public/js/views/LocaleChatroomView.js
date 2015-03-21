@@ -41,6 +41,7 @@ define([
                                     '<div class="h1">' + this.model.get("name") + '</div>' +
                                     '<div class="h2">Vancouver, BC</div>' +
                                 '</div>' +
+                                '<div class="badge">' + this.model.get("userCount") + '</div>' +
                             '</div>' +
                               '<div class="btn btn-default toggle-pencil">' +
                                 '<i class="fa fa-pencil fa-lg"></i>' +
@@ -70,10 +71,12 @@ define([
 			return this.ChatWindow;
 		},
 
+		// Deprecated
 		removeChatWindow: function() {
 			this.ChatWindow.$el.css("display: none");
 		},
 
+		// Deprecated
 		remove: function() {
 			
 			//this.stop().animate({left:"-200px"}, 2000);
@@ -89,8 +92,7 @@ define([
 
                     $('#all-room-container').css("max-height", maxHeight);
             });
-			
-
+		
 			this.parent.remove(this);
 		},
 
@@ -99,6 +101,12 @@ define([
 
 			if(callback !== undefined)
 				callback(this.model.get("location"), this.model.get("radius"));
+		},
+
+		updateUsers: function(users) {
+			this.$el.find(".badge").html(users.length);
+			this.model.set("userCount", users.length);
+			this.ChatWindow.renderUsers(users);
 		},
 
 		join: function() {
