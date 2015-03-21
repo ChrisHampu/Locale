@@ -114,7 +114,7 @@ define([
 				this.model.set("joined", true);
 				this.parent.render();
 				LocaleSocket.Emit('joinroom', this.model.get("name"));
-				this.ChatWindow.$el.css({display: "block"});
+				this.ChatWindow.$el.css({display: "inline-block"});
 				this.ChatWindow.$el.stop().animate({"bottom" :"384px"}, 400);
 				
 			}
