@@ -4,7 +4,7 @@ var express = require('express')
 , server = http.createServer(app)
 , io = require('socket.io').listen(server);
 
-var db = require('orchestrate')('f3258a30-bca3-4567-9e60-d05422f4745f');
+var couchbase = require('couchbase');
 
 server.listen(80, function(){
 	var host = server.address().address;
@@ -36,8 +36,8 @@ app.get('/ourstack', function (req, res) {
 //
 // "SUPERGLOBALS"
 //
-var World = require("./Model/world.js");
-var world = new World(db);
+var CouchDB = require("./Model/couch.js");
+var Couch = new CouchDB(couchbase);
 
 var allRooms = null;
 
@@ -88,11 +88,12 @@ io.sockets.on('connection', function (socket) {
 			name: data.name,
 			description: data.description,
 			location: socket.user.location,
-			radius: '1000',
+			radius: 1000,
 			owner: socket.user.profileUrl,
 			tags: data.tags,
 			userCount: 0,
-			users: []
+			users: [],
+			messages: []
 		};
 
 		world.addRoom(newRoom, function() {
