@@ -9,6 +9,17 @@ function Couch(couchbase) {
 	this.Locale = this.Cluster.openBucket("locale");
 };
 
+Couch.prototype.persistLocale = function(locale, callback) {
+
+	var key = "locale_" + locale.name;
+
+	this.Locale.insert(key, locale, function(err, result) {
+
+		if(callback !== undefined)
+			callback(key);
+	});
+};
+
 Couch.prototype.persistUser = function(user, callback) {
 
 	var key = "user_" + user.id.toString();

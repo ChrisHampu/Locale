@@ -87,39 +87,48 @@ io.sockets.on('connection', function (socket) {
 	// listener, add rooms to the database by user request
 	socket.on('addroom', function (data) {
 
-		var newRoom = {
+		var newLocale = {
 			name: data.name,
 			description: data.description,
 			location: socket.user.location,
 			radius: 1000,
-			owner: socket.user.profileUrl,
+			owner: "user_" + socket.user.id.toString(),
 			tags: data.tags,
-			userCount: 0,
 			users: [],
-			messages: []
+			messages: [],
+			type: "locale",
+			creationDate: Math.floor(new Date())
 		};
 
-		world.addRoom(newRoom, function() {
-			allRooms.push(newRoom);
+		Couch.persistLocale(newLocale, function() {
 
-			// Calculate the active rooms for this user and push them
-			world.getAllowedRoomNames(socket.user.location.latitude, socket.user.location.longitude, function(allowedRooms) {
-			
-				var usersRooms = allRooms.map(function(obj){ 
+			for(var i in io.sockets.connected) {
 
-					if (obj.name == newRoom.name) {
-						obj.canJoin = true;
-					} else if (allowedRooms.indexOf(obj.name) > -1) {
-						obj.canJoin = true;
-					} else {
-						obj.canJoin = false;
-					}
-			
-					return obj;
-				});
-							
-				socket.emit('updaterooms', usersRooms);
-			});
+				var key = "user_" + io.sockets.connected[i].user.id.toString();
+
+				Couch.getAllLocales( function(locales) {
+
+					Couch.getAllLocalesInRange(key, function(localesInRange) {
+
+						var updatedLocales = locales.map(function (locale) {
+
+							var join = !(localesInRange.indexof(locale.name) === -1);
+
+							// Put together the data that we want clients to receive
+							return {
+								name: locale.name,
+								description: locale.description,
+								location: locale.location,
+								radius: locale.radius,
+								tags: locale.tags,
+								canJoin: join
+							};
+						});
+
+						socket.emit('updaterooms', updatedLocales);
+					});
+				});				
+			}
 		});
 	})
 
