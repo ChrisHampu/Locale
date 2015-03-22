@@ -49,6 +49,16 @@ define([
 			
 			Map = new google.maps.Map(this.$el.find("#map-wrapper")[0], mapOptions);
 
+			LocaleSocket.Handle('deletelocale', function(roomName) {
+				_.each(ChatroomListView.getRooms(), function(chat) {
+
+					if(chat.model.get("name") === roomName)
+					{
+						ChatroomListView.deleteRoom(chat);
+					}
+				});
+			});
+
 			LocaleSocket.Handle('loadroom', function(data) {
 
 				_.each(ChatroomListView.getRooms(), function(chat) {

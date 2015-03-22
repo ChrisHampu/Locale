@@ -202,6 +202,8 @@ io.sockets.on('connection', function (socket) {
 
 	socket.on('deletelocale', function(room){
 		world.deleteRoom(room);
+		// Tell all our users that a locale has been deleted
+		io.sockets.emit('deletelocale', room);
 	});
 
 	// TODO: Check for duplicate users.
