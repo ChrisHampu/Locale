@@ -52,29 +52,36 @@ io.sockets.on('connection', function (socket) {
 	socket.on('join', function(user){
 		var newUser = JSON.parse(user);
 
-
-
 		// Store the username in the socket session for this client
 		socket.username = newUser.firstName;
 		socket.user = newUser;
 
-		// Calculate the active rooms for this user and push them
-		world.getAllowedRoomNames(newUser.location.latitude, newUser.location.longitude, function(allowedRooms) {
+		// Persist the user in the database, and return the key for the user data
+		Couch.persistUser(user, function(userKey) {
 
-			var usersRooms = allRooms.map( function (obj) { 
+			Couch.getAllLocales( function(locales) {
 
-				if (allowedRooms.indexOf(obj.name) > -1) {
-					obj.canJoin = true;
-				} else {
-					obj.canJoin = false;
-				}
+				Couch.getAllLocalesInRange(userKey, function(localesInRange) {
 
-				return obj;
+					var updatedLocales = locales.map(function (locale) {
+
+						var join = !(localesInRange.indexof(locale.name) === -1);
+
+						// Put together the data that we want clients to receive
+						return {
+							name: locale.name,
+							description: locale.description,
+							location: locale.location,
+							radius: locale.radius,
+							tags: locale.tags,
+							canJoin: join
+						};
+					});
+
+					socket.emit('updaterooms', updatedLocales);
+				});
 			});
-
-			socket.emit('updaterooms', usersRooms);
 		});
-
 	});
 
 	// listener, add rooms to the database by user request
