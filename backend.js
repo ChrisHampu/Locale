@@ -135,6 +135,7 @@ io.sockets.on('connection', function (socket) {
 	// listener, client asks for updaterooms, server sends back the list of rooms
 	socket.on('updaterooms', function (data) {
 		// Pull all the available rooms on every connection to compare against rooms that a given user is permitted access to
+		/*
 		world.getRooms(function(rooms) {
 			allRooms = rooms;
 
@@ -155,6 +156,7 @@ io.sockets.on('connection', function (socket) {
 				socket.emit('updaterooms', usersRooms);
 			});
 		})
+*/
 	});
 	
 	// when the client emits 'sendchat', this listens and executes
@@ -167,11 +169,9 @@ io.sockets.on('connection', function (socket) {
 			"message": data.message.slice(0,200)
 		};
 
-		// Plain message goes in, after it's persisted processedMessage has a timestamp
-		world.persistMessage(message, function(processedMessage) {
-			io.sockets.emit('broadcastchat', processedMessage);
+		Couch.persistChatMessage(data.room, socket.user.id, data.message.slice(0,200), function() {
+			io.sockets.emit('broadcastchat', data);
 		});
-
 	});
 	
 	socket.on('switchRoom', function(newroom){
