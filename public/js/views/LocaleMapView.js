@@ -49,6 +49,16 @@ define([
 			
 			Map = new google.maps.Map(this.$el.find("#map-wrapper")[0], mapOptions);
 
+			LocaleSocket.Handle('deletelocale', function(roomName) {
+				_.each(ChatroomListView.getRooms(), function(chat) {
+
+					if(chat.model.get("name") === roomName)
+					{
+						ChatroomListView.deleteRoom(chat);
+					}
+				});
+			});
+
 			LocaleSocket.Handle('loadroom', function(data) {
 
 				_.each(ChatroomListView.getRooms(), function(chat) {
@@ -57,6 +67,12 @@ define([
 					var dataName = data.room;
 					if(roomName === dataName)
 					{
+						// We don't know what messages we have vs what we're receiving when we load
+						// there could be many reasons for inconsistencies.
+						// What we do is reset our list of messages, reset the view, and simply
+						// re-render all the messages we're being given by the server
+						chat.resetMessages();
+
 						_.each(data.messages.reverse(), function(message) {
 							chat.addMessage(message);
 						});

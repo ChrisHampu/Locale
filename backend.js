@@ -15,7 +15,6 @@ server.listen(80, function(){
 
 app.use(express.static(__dirname + '/public'));
 
-
 app.get('', function (req, res) {
 	//Loads index file.
 	res.sendFile(__dirname + '/locale.html');
@@ -34,26 +33,6 @@ app.get('/ourstack', function (req, res) {
 	res.sendFile(__dirname + '/ourstack.html');
 });
 
-/*
- * Open the main chat connection page
- */
-app.get('/chat_connect', function (req, res) {
-	connectToRoom = req.query.room_id;
-	res.sendFile(__dirname + '/index.html');
-});
-
-app.get('/add_room', function(req, res){
-	var name = req.query.name;
-	World.addRoom(name, function(err, response){
-		res.send(response);
-	});
-
-});
-
-app.get('/main', function(req, res){
-	res.sendFile(__dirname + '/main.html');
-});
-
 //
 // "SUPERGLOBALS"
 //
@@ -61,22 +40,12 @@ var World = require("./Model/world.js");
 var world = new World(db);
 
 var allRooms = null;
-var allRoomNames = null;
-
-// users connected to each room
-var userCounts = [];
-
-var roomNames = null;
 
 io.sockets.on('connection', function (socket) {
 
 	// Pull all the available rooms on every connection to compare against rooms that a given user is permitted access to
 	world.getRooms(function(rooms) {
 		allRooms = rooms;
-		
-		allRoomNames = allRooms.map(function(obj) {			
-			return obj.name;
-		});
 	});
 
 	// When the client emits 'join', this listens and executes
@@ -128,7 +97,6 @@ io.sockets.on('connection', function (socket) {
 
 		world.addRoom(newRoom, function() {
 			allRooms.push(newRoom);
-			allRoomNames.push(newRoom.name);
 
 			// Calculate the active rooms for this user and push them
 			world.getAllowedRoomNames(socket.user.location.latitude, socket.user.location.longitude, function(allowedRooms) {
@@ -156,9 +124,6 @@ io.sockets.on('connection', function (socket) {
 		// Pull all the available rooms on every connection to compare against rooms that a given user is permitted access to
 		world.getRooms(function(rooms) {
 			allRooms = rooms;
-			allRoomNames = allRooms.map(function(obj) {
-				return obj.name;
-			});
 
 			// Calculate the active rooms for this user and push them
 			world.getAllowedRoomNames(socket.user.location.latitude, socket.user.location.longitude, function(allowedRooms) {
@@ -202,6 +167,8 @@ io.sockets.on('connection', function (socket) {
 
 	socket.on('deletelocale', function(room){
 		world.deleteRoom(room);
+		// Tell all our users that a locale has been deleted
+		io.sockets.emit('deletelocale', room);
 	});
 
 	// TODO: Check for duplicate users.

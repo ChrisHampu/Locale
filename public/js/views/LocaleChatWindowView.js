@@ -64,6 +64,9 @@ define([
 			this.$el.append(settingStr);
 			this.$el.append(chatboxIcon);
 
+			this.renderUsers(this.ChatUserModel.get("users"));
+			this.renderAllMessages();
+
 			return this;
 		},
 
