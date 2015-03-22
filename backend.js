@@ -52,11 +52,7 @@ io.sockets.on('connection', function (socket) {
 	socket.on('join', function(user){
 		var newUser = JSON.parse(user);
 
-		newUser["location"]["latitude"] = newUser["location"]["lat"];
-		delete newUser["location"]["lat"];
 
-		newUser["location"]["longitude"] = newUser["location"]["lon"];
-		delete newUser["location"]["lon"];
 
 		// Store the username in the socket session for this client
 		socket.username = newUser.firstName;
@@ -151,7 +147,7 @@ io.sockets.on('connection', function (socket) {
 			"room": data.room,
 			"firstName": socket.user.firstName,
 			"lastInitial": socket.user.lastName.charAt(0),
-			"profileUrl": socket.user.profileUrl,
+			"profilePicture": socket.user.profilePicture,
 			"message": data.message.slice(0,200)
 		};
 
@@ -198,11 +194,15 @@ io.sockets.on('connection', function (socket) {
 				
 				room.userCount++;
 
-				var newUser = { profileUrl: socket.user.profileUrl,
+				var newUser = { 
+						profilePicture: socket.user.profilePicture,
+						profileUrl: socket.user.profileUrl,
 						firstName: socket.user.firstName,
-						lastInitial: socket.user.lastName.charAt(0),
+						lastName: socket.user.lastName,
+						location: socket.user.location,	
+						email: socket.user.email,
 						id: socket.user.id
-				};
+				}
 
 				room.users.push(newUser);
 				

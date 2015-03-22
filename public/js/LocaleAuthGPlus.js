@@ -95,11 +95,12 @@ define([
 
 				request.execute(function(response) {
 					model.set("id", response.id);
-					model.set("location", { lat: LocaleUtilities.GetCurrentLocation().coords.latitude, lon: LocaleUtilities.GetCurrentLocation().coords.longitude });
+					model.set("location", { latitude: LocaleUtilities.GetCurrentLocation().coords.latitude, longitude: LocaleUtilities.GetCurrentLocation().coords.longitude });
 					model.set("firstName", response.name.givenName);
 					model.set("lastName", response.name.familyName);
 					model.set("email", response.emails[0].value);
-					model.set("profileUrl", response.image.url);
+					model.set("profilePicture", response.image.url);
+					model.set("ProfileUrl", response.url)
 
 					callback(model);
 				});

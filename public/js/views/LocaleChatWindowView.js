@@ -81,8 +81,8 @@ define([
 		renderMessage: function(message) {
 			var UserSent = false;
 
-			var msgUrl = message.get("profileUrl");
-			var localUrl = LocaleAuth.GetUserModel().get("profileUrl");
+			var msgUrl = message.get("profilePicture");
+			var localUrl = LocaleAuth.GetUserModel().get("profilePicture");
 
 			if(msgUrl === localUrl)
 				UserSent = true;
@@ -109,7 +109,7 @@ define([
 			for(var i = 0; i < users.length; i++)
 			{
 				var userStr = "<div class=\"chatbox-settings-user\">" +
-				"<div class=\"chatbox-settings-user-profile\" style=\"background: url(" + users[i].profileUrl + ");\">" +
+				"<div class=\"chatbox-settings-user-profile\" style=\"background: url(" + users[i].profilePicture + ");\">" +
 				"</div><div class=\"chatbox-settings-user-name\">" + users[i].firstName + " " + users[i].lastInitial + "</div></div>";
 
 				container.append(userStr);
