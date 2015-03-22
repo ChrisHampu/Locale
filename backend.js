@@ -162,14 +162,13 @@ io.sockets.on('connection', function (socket) {
 	// when the client emits 'sendchat', this listens and executes
 	socket.on('sendchat', function (data) {
 		var message = {
-			"room": data.room,
 			"firstName": socket.user.firstName,
 			"lastInitial": socket.user.lastName.charAt(0),
 			"profilePicture": socket.user.profilePicture,
 			"message": data.message.slice(0,200)
 		};
 
-		Couch.persistChatMessage(data.room, socket.user.id, data.message.slice(0,200), function() {
+		Couch.persistChatMessage(data.room, socket.user.id, message, function() {
 			io.sockets.emit('broadcastchat', data);
 		});
 	});
@@ -179,7 +178,9 @@ io.sockets.on('connection', function (socket) {
 	});
 
 	socket.on('deletelocale', function(room){
-		world.deleteRoom(room);
+
+		Couch.deleteLocale(room);
+
 		// Tell all our users that a locale has been deleted
 		io.sockets.emit('deletelocale', room);
 	});

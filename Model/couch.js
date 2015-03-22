@@ -15,13 +15,14 @@ Couch.prototype.persistChatMessage = function(localeName, userId, message, callb
 		var key = "message_" + res.value.toString();
 
 		this.Locale.insert(key, { locale: "locale_" + localeName, user: "user_" + userId.toString(), 
-									message: message, type: "message", timestamp: Math.floor(new Date()) },
+									message: message.message, type: "message", timestamp: Math.floor(new Date()),
+									firstName: message.firstName, lastInitial: message.lastInitial,
+									profilePicture: message.profilePicture },
 									function(err, result) {
 
 			callback();
 		})
 	})
-
 };
 
 Couch.prototype.persistLocale = function(locale, callback) {
@@ -84,6 +85,41 @@ Couch.prototype.getAllLocalesInRange = function(user, range, callback) {
 		});
 
 		callback(locales);
+	});
+};
+
+Couch.prototype.deleteLocale = function(locale) {
+
+	var key = "locale_" + locale;
+
+	this.Locale.remove(key, function(err, result) {
+		this.deleteLocaleMessages(key);
+	});
+};
+
+Couch.prototype._getAllLocaleMessages = function(callback) {
+	var query = this.Query.from("_design/dev_getlocales", "GetLocaleMessages");
+
+	this.Locale.query(query, function(err, results) {
+
+		callback(results.map( function(res) {
+			return { key: res.key, locale: res.value };
+		}));
+	});
+}
+
+Couch.prototype.deleteLocaleMessages = function(locale) {
+
+	this._getAllLocaleMessages(function(messages) {
+		for(var i = 0; i < messages.length; i++)
+		{
+			if(messages[i].locale === locale)
+			{
+				this.Locale.remove(messages[i].key, function(err, result) {
+
+				};
+			}
+		}
 	});
 };
 
