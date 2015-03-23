@@ -2,9 +2,8 @@ var express = require('express')
 , app = express()
 , http = require('http')
 , server = http.createServer(app)
-, io = require('socket.io').listen(server);
-
-var couchbase = require('couchbase');
+, io = require('socket.io').listen(server)
+, couchbase = require('couchbase');
 
 server.listen(80, function(){
 	var host = server.address().address;
@@ -36,8 +35,11 @@ app.get('/ourstack', function (req, res) {
 //
 // "SUPERGLOBALS"
 //
+
+var InDev = false;
+
 var CouchDB = require("./Model/couch.js");
-var Couch = new CouchDB(couchbase);
+var Couch = new CouchDB(couchbase, InDev);
 
 io.sockets.on('connection', function (socket) {
 

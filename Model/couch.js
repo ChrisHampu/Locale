@@ -1,13 +1,23 @@
 var makeBoundingBox = require('./util.js');
 var request = require("request");
 
-function Couch(couchbase) {
+function Couch(couchbase, inDev) {
 
 	this.Couchbase = couchbase;
 	this.Query = this.Couchbase.ViewQuery;
-	this.Cluster = new this.Couchbase.Cluster('couchbase://getlocale.me');
+
+	if(inDev === true)
+		this.Cluster = new this.Couchbase.Cluster('couchbase://getlocale.me');
+	else
+		this.Cluster = new this.Couchbase.Cluster('couchbase://localhost');
+
 	this.Locale = this.Cluster.openBucket("locale");
 	this.Locale.operationTimeout = 60 * 1000;
+
+	if(inDev === true)
+		this.SpatialQuery = "http://getlocale.me:8092/locale/_design/dev_getlocales/_spatial/GetLocalesInRange?stale=false&bbox=";
+	else
+		this.SpatialQuery = "http://localhost:8092/locale/_design/dev_getlocales/_spatial/GetLocalesInRange?stale=false&bbox="
 };
 
 Couch.prototype.persistChatMessage = function(localeName, userId, message, callback) {
@@ -141,7 +151,7 @@ Couch.prototype.getAllLocalesInRange = function(user, range, callback) {
 	// Range is stored in meters, we need to pass kilometers
 	var bbox = makeBoundingBox(user.location, range / 1000.0);
 
-	var reqUri = "http://getlocale.me:8092/locale/_design/dev_getlocales/_spatial/GetLocalesInRange?stale=false&bbox="+bbox[0]+","+bbox[1]+","+bbox[2]+","+bbox[3];
+	var reqUri = this.SpatialQuery +bbox[0]+","+bbox[1]+","+bbox[2]+","+bbox[3];
 
 	request({ uri: reqUri,
 				 method: "GET"}, function(error, response, body) {
