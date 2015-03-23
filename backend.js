@@ -2,9 +2,8 @@ var express = require('express')
 , app = express()
 , http = require('http')
 , server = http.createServer(app)
-, io = require('socket.io').listen(server);
-
-var db = require('orchestrate')('f3258a30-bca3-4567-9e60-d05422f4745f');
+, io = require('socket.io').listen(server)
+, couchbase = require('couchbase');
 
 server.listen(80, function(){
 	var host = server.address().address;
@@ -36,92 +35,121 @@ app.get('/ourstack', function (req, res) {
 //
 // "SUPERGLOBALS"
 //
-var World = require("./Model/world.js");
-var world = new World(db);
 
-var allRooms = null;
+var InDev = true;
+
+// Live server will be passed this by command line to signal we're in production
+process.argv.forEach(function(val, index, array) {
+	if(val === "production") {
+		InDev = false;
+		console.log("Running in production mode");
+	}
+});
+
+var CouchDB = require("./Model/couch.js");
+var Couch = new CouchDB(couchbase, InDev);
 
 io.sockets.on('connection', function (socket) {
-
-	// Pull all the available rooms on every connection to compare against rooms that a given user is permitted access to
-	world.getRooms(function(rooms) {
-		allRooms = rooms;
-	});
 
 	// When the client emits 'join', this listens and executes
 	socket.on('join', function(user){
 		var newUser = JSON.parse(user);
 
-		newUser["location"]["latitude"] = newUser["location"]["lat"];
-		delete newUser["location"]["lat"];
-
-		newUser["location"]["longitude"] = newUser["location"]["lon"];
-		delete newUser["location"]["lon"];
-
 		// Store the username in the socket session for this client
 		socket.username = newUser.firstName;
 		socket.user = newUser;
 
-		// Calculate the active rooms for this user and push them
-		world.getAllowedRoomNames(newUser.location.latitude, newUser.location.longitude, function(allowedRooms) {
+		// Persist the user in the database, and return the key for the user data
+		Couch.persistUser(newUser, function(userKey) {
 
-			var usersRooms = allRooms.map( function (obj) { 
+			Couch.getAllLocales( function(locales) {
 
-				if (allowedRooms.indexOf(obj.name) > -1) {
-					obj.canJoin = true;
-				} else {
-					obj.canJoin = false;
-				}
+				Couch.getAllLocalesInRange(newUser, 1000.0, function(localesInRange) {
 
-				return obj;
+					var updatedLocales = locales.map(function (locale) {
+
+						var join = !(localesInRange.indexOf(locale.name) === -1);
+
+						// Put together the data that we want clients to receive
+						return {
+							name: locale.name,
+							description: locale.description,
+							location: locale.location,
+							radius: locale.radius,
+							tags: locale.tags,
+							canJoin: join
+						};
+					});
+
+					socket.emit('updaterooms', updatedLocales);
+				});
 			});
-
-			socket.emit('updaterooms', usersRooms);
 		});
-
 	});
 
 	// listener, add rooms to the database by user request
 	socket.on('addroom', function (data) {
 
-		var newRoom = {
+		var newLocale = {
 			name: data.name,
 			description: data.description,
 			location: socket.user.location,
-			radius: '1000',
-			owner: socket.user.profileUrl,
+			radius: 1000,
+			owner: "user_" + socket.user.id.toString(),
 			tags: data.tags,
-			userCount: 0,
-			users: []
+			users: [],
+			messages: [],
+			type: "locale",
+			creationDate: Math.floor(new Date())
 		};
 
-		world.addRoom(newRoom, function() {
-			allRooms.push(newRoom);
+		Couch.persistLocale(newLocale, function(exists) {
 
-			// Calculate the active rooms for this user and push them
-			world.getAllowedRoomNames(socket.user.location.latitude, socket.user.location.longitude, function(allowedRooms) {
-			
-				var usersRooms = allRooms.map(function(obj){ 
+			if(exists === false)
+			{
+				for(var i in io.sockets.connected) {
 
-					if (obj.name == newRoom.name) {
-						obj.canJoin = true;
-					} else if (allowedRooms.indexOf(obj.name) > -1) {
-						obj.canJoin = true;
-					} else {
-						obj.canJoin = false;
-					}
-			
-					return obj;
-				});
-							
-				socket.emit('updaterooms', usersRooms);
-			});
+					var curSocket = io.sockets.connected[i];
+
+					if(curSocket.user === undefined)
+						continue;
+
+					Couch.getAllLocales( function(locales) {
+
+						Couch.getAllLocalesInRange(curSocket.user, 1000, function(localesInRange) {
+
+							var updatedLocales = locales.map(function (locale) {
+
+								var join = !(localesInRange.indexOf(locale.name) === -1);
+
+								// Put together the data that we want clients to receive
+								return {
+									name: locale.name,
+									description: locale.description,
+									location: locale.location,
+									radius: locale.radius,
+									tags: locale.tags,
+									canJoin: join
+								};
+							});
+
+							socket.emit('updaterooms', updatedLocales);
+						});
+					});				
+				}				
+			}
+			else
+			{
+				console.log("Locale name taken");
+				// TODO: Notify user that locale name is taken
+			}
 		});
 	})
 
 	// listener, client asks for updaterooms, server sends back the list of rooms
 	socket.on('updaterooms', function (data) {
 		// Pull all the available rooms on every connection to compare against rooms that a given user is permitted access to
+		/*
 		world.getRooms(function(rooms) {
 			allRooms = rooms;
 
@@ -142,23 +170,28 @@ io.sockets.on('connection', function (socket) {
 				socket.emit('updaterooms', usersRooms);
 			});
 		})
+*/
 	});
 	
 	// when the client emits 'sendchat', this listens and executes
 	socket.on('sendchat', function (data) {
 		var message = {
-			"room": data.room,
+			"locale": "locale_" + data.room,
 			"firstName": socket.user.firstName,
 			"lastInitial": socket.user.lastName.charAt(0),
-			"profileUrl": socket.user.profileUrl,
-			"message": data.message.slice(0,200)
+			"profilePicture": socket.user.profilePicture,
+			"message": data.message.slice(0,200),
+			"timestamp": Math.floor(new Date())
 		};
 
-		// Plain message goes in, after it's persisted processedMessage has a timestamp
-		world.persistMessage(message, function(processedMessage) {
-			io.sockets.emit('broadcastchat', processedMessage);
-		});
+		Couch.persistChatMessage(data.room, socket.user.id, message, function() {
+			
+			// Prepare for sending back to user
+			message.room = data.room;
+			delete message.locale;
 
+			io.sockets.emit('broadcastchat', message);
+		});
 	});
 	
 	socket.on('switchRoom', function(newroom){
@@ -166,53 +199,90 @@ io.sockets.on('connection', function (socket) {
 	});
 
 	socket.on('deletelocale', function(room){
-		world.deleteRoom(room);
+
+		Couch.deleteLocale(room);
+
 		// Tell all our users that a locale has been deleted
 		io.sockets.emit('deletelocale', room);
 	});
 
-	// TODO: Check for duplicate users.
-	// Example: A user opens 2+ browser windows/apps and connects to the same room on each.
-	// There would now be multiple entries.
 	socket.on('joinroom', function(roomName){
 
-		world.getRoomByName(roomName, function(room) {
-			
-			// We check whether a user already is part of this room. If they are,
-			// then don't add them as another room user! This avoid duplicates
-			// from a user joining the same room repeatedly without emitting first
-			// that they are leaving the room. This happens by repeatedly pressing join,
-			// because the client doesn't leave the room first.
-			var idx = -1;
-			
-			for(var i = 0; i < room.users.length; i++)
+		Couch.hasUserInRoom(roomName, socket.user.id, function(hasUser, users) {
+
+			if(hasUser === false)
 			{
-				if(socket.user.id === room.users[i].id)
-					idx = i;
-			}
-			
-			if(idx === -1)
-			{			
-				socket.join(roomName);
-				
-				room.userCount++;
+				Couch.addUserToRoom(roomName, socket.user.id, function(newUsers) {
 
-				var newUser = { profileUrl: socket.user.profileUrl,
-						firstName: socket.user.firstName,
-						lastInitial: socket.user.lastName.charAt(0),
-						id: socket.user.id
-				};
+					Couch.getUsersFromKeys(newUsers, function(allUsers) {
 
-				room.users.push(newUser);
-				
-				world.addUserToRoom(roomName, newUser);
+						var roomUsers = allUsers.map(function(user) {
+
+							return {
+								profilePicture: user.profilePicture,
+								profileUrl: user.profileUrl,
+								firstName: user.firstName,
+								lastInitial: user.lastName.charAt(0),
+								location: user.location
+							};
+						});
+						
+						io.sockets.emit('updateroomusers', [{ name: roomName, users: roomUsers, userCount: roomUsers.length }]);
+
+						Couch.getAllLocaleMessages(roomName, function(messages) {
+
+							var roomMessages = messages.map(function(msg) {
+								return {
+									message: msg.message,
+									firstName: msg.firstName,
+									lastInitial: msg.lastInitial,
+									profilePicture: msg.profilePicture,
+									profileUrl: msg.profileUrl,
+									timestamp: msg.timestamp
+								};
+							});
+
+							socket.emit('loadroom', {"room": roomName, "messages": roomMessages, "users" : roomUsers, "userCount" : roomUsers.length});
+						});
+					});
+				});
+
 			}
-			
-			world.getRoomHistory(roomName, function(messages) {
-				socket.emit('loadroom', {"room": roomName, "messages": messages, "users" : room.users, "userCount" : room.userCount});
-				// Tell all existing users that a new user has joined
-				io.sockets.emit('updateroomusers', [{ name : room.name, users: room.users, userCount: room.userCount }]);
-			});
+			else
+			{
+				Couch.getUsersFromKeys(users, function(allUsers) {
+
+					var roomUsers = allUsers.map(function(user) {
+
+						return {
+							profilePicture: user.profilePicture,
+							profileUrl: user.profileUrl,
+							firstName: user.firstName,
+							lastInitial: user.lastName.charAt(0),
+							location: user.location
+						};
+					});
+					
+					io.sockets.emit('updateroomusers', [{ name: roomName, users: roomUsers, userCount: roomUsers.length }]);
+
+					Couch.getAllLocaleMessages(roomName, function(messages) {
+
+						var roomMessages = messages.map(function(msg) {
+							return {
+								message: msg.message,
+								firstName: msg.firstName,
+								lastInitial: msg.lastInitial,
+								profilePicture: msg.profilePicture,
+								profileUrl: msg.profileUrl,
+								timestamp: msg.timestamp
+							};
+						});
+
+						socket.emit('loadroom', {"room": roomName, "messages": roomMessages, "users" : roomUsers, "userCount" : roomUsers.length});
+					});
+				});
+			}
+
 		});
 	});
 
@@ -222,42 +292,62 @@ io.sockets.on('connection', function (socket) {
 	// a privacy, security, and performance concern
 	socket.on('leaveroom', function(roomName){
 		
-		world.getRoomByName(roomName, function(room) {
+		Couch.getLocaleByName(roomName, function(locale) {
 
-			var idx = -1;
-			
-			for(var i = 0; i < room.users.length; i++)
-			{
-				if(socket.user.id === room.users[i].id)
-					idx = i;
-			}
-			
-			if(idx > -1)
-			{
-				room.users = room.users.splice(idx, 1);
-				room.userCount = room.users.length;
-				
-				var rooms = [ room ];
-				
-				socket.leave(roomName);
-				
-				world.removeUserFromRooms(socket.user, rooms, function(updatedRoom) {
-					io.sockets.emit('updateroomusers', updatedRoom);
-				});		
+			var userKey = "user_" + socket.user.id.toString();
+
+			var idx = locale.users.indexOf(userKey);
+
+			if(idx > -1) {
+
+				locale.users.splice(idx, 1);
+
+				Couch.replaceLocaleByName(roomName, locale, function() {
+
+					socket.leave(roomName);
+
+					var updatedRoom = {
+						name: roomName,
+						users: locale.users
+					}
+
+					io.sockets.emit('updateroomusers', [updatedRoom]);
+				});
 			}
 		});
 	});
 	
 	socket.on('disconnect', function(){
 
-		if(socket.user !== undefined)
-		{
-			world.getRoomsByUser(socket.user, function(rooms) {
-				world.removeUserFromRooms(socket.user, rooms, function(updatedRoom) {
-					io.sockets.emit('updateroomusers', updatedRoom);
+		// Invalid sessions
+		if(socket.user === undefined)
+			return;
+
+		if(socket.user.id === undefined)
+			return;
+
+		Couch.getRoomsByUser(socket.user.id, function(rooms) {
+
+			var userKey = "user_" + socket.user.id.toString();
+
+			var updatedRooms = [];
+
+			for(var i in rooms) {
+				Couch.getLocale(rooms[i], function(locale) {
+
+					var idx = locale.users.indexOf(userKey);
+
+					Couch.replaceLocaleByKey(rooms[i], locale, function(data) {
+
+						updatedRooms.push( { room: data.name, users: data.users });
+
+						// Emit the update once we have all the room data
+						if(updatedRooms.length === rooms.length)
+							io.sockets.emit('updateroomusers', updatedRooms);
+					});
 				});
-			});
-		}
+			}
+		});
 	});
 
 });
