@@ -1,11 +1,11 @@
-var Geo = require('util.js');
+var Geo = require('./util.js');
 var request = require("request");
 
 function Couch(couchbase) {
 
 	this.Couchbase = couchbase;
 	this.Query = this.Couchbase.ViewQuery;
-	this.Cluster = new this.Couchbase.Cluster('couchbase://127.0.0.1');
+	this.Cluster = new this.Couchbase.Cluster('couchbase://getlocale.me');
 	this.Locale = this.Cluster.openBucket("locale");
 };
 

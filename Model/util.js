@@ -31,7 +31,7 @@ function WGS84EarthRadius(lat) {
   return Math.sqrt( (An*An + Bn*Bn)/(Ad*Ad + Bd*Bd) );
 }
 
-exports.makeBoundingBox = function(location, halfSideInKm) {
+function makeBoundingBox(location, halfSideInKm) {
   var lat = deg2rad(location.latitude);
   var lon = deg2rad(location.longitude);
   var halfSide = 1000 * halfSideInKm;
@@ -50,3 +50,5 @@ exports.makeBoundingBox = function(location, halfSideInKm) {
 
   return bbox;
 }
+
+module.exports = makeBoundingBox;
