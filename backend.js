@@ -196,9 +196,6 @@ io.sockets.on('connection', function (socket) {
 		io.sockets.emit('deletelocale', room);
 	});
 
-	// TODO: Check for duplicate users.
-	// Example: A user opens 2+ browser windows/apps and connects to the same room on each.
-	// There would now be multiple entries.
 	socket.on('joinroom', function(roomName){
 
 		Couch.hasUserInRoom(roomName, socket.user.id, function(hasUser, users) {

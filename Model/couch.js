@@ -67,7 +67,7 @@ Couch.prototype.persistUser = function(user, callback) {
 	this.Locale.insert(key, user, function(err, result) {
 
 		if(err) {
-			// Error code 12 means key already exists, which is fine
+			// Error code 12 means key already exists, which is fine. Means there's nothing more to do
 			if(err.code !== 12)
 				throw err;
 		}
@@ -147,9 +147,6 @@ Couch.prototype.getAllLocalesInRange = function(user, range, callback) {
 				 method: "GET"}, function(error, response, body) {
 
 		var res = JSON.parse(body);
-
-		console.log("in range");
-		console.log(res);
 
 		var locales = res.rows.map( function(keys) {
 			return keys.value;
