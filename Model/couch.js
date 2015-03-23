@@ -47,11 +47,14 @@ Couch.prototype.persistLocale = function(locale, callback) {
 
 	this.Locale.insert(key, locale, function(err, result) {
 
-		if(err)
-			throw err;
-
-		if(callback !== undefined)
-			callback(key);
+		if(err) {
+			if(callback !== undefined)
+				callback(true);
+		}
+		else {
+			if(callback !== undefined)
+				callback(false);			
+		}
 	});
 };
 
@@ -76,7 +79,7 @@ Couch.prototype.persistUser = function(user, callback) {
 
 Couch.prototype._getAllLocaleKeys = function(callback) {
 
-	var query = this.Query.from("dev_getlocales", "GetLocales");
+	var query = this.Query.from("dev_getlocales", "GetLocales").stale(1);
 
 	this.Locale.query(query, function(err, results) {
 
@@ -96,8 +99,11 @@ Couch.prototype.getAllLocales = function(callback) {
 	this._getAllLocaleKeys( function(keys) {
 		self.Locale.getMulti(keys, function(err, results) {
 
-			if(err)
+			if(err) {
+				console.log("error");
+				console.log(err);
 				throw err;
+			}
 
 			var locales = [];
 
@@ -135,12 +141,15 @@ Couch.prototype.getAllLocalesInRange = function(user, range, callback) {
 	// Range is stored in meters, we need to pass kilometers
 	var bbox = makeBoundingBox(user.location, range / 1000.0);
 
-	var reqUri = "http://getlocale.me:8092/locale/_design/dev_getlocales/_spatial/GetLocalesInRange?bbox="+bbox[0]+","+bbox[1]+","+bbox[2]+","+bbox[3];
+	var reqUri = "http://getlocale.me:8092/locale/_design/dev_getlocales/_spatial/GetLocalesInRange?stale=false&bbox="+bbox[0]+","+bbox[1]+","+bbox[2]+","+bbox[3];
 
 	request({ uri: reqUri,
 				 method: "GET"}, function(error, response, body) {
 
 		var res = JSON.parse(body);
+
+		console.log("in range");
+		console.log(res);
 
 		var locales = res.rows.map( function(keys) {
 			return keys.value;

@@ -93,34 +93,45 @@ io.sockets.on('connection', function (socket) {
 			creationDate: Math.floor(new Date())
 		};
 
-		Couch.persistLocale(newLocale, function() {
+		Couch.persistLocale(newLocale, function(exists) {
 
-			for(var i in io.sockets.connected) {
+			if(exists === false)
+			{
+				for(var i in io.sockets.connected) {
 
-				var key = "user_" + io.sockets.connected[i].user.id.toString();
+					var curSocket = io.sockets.connected[i];
 
-				Couch.getAllLocales( function(locales) {
+					if(curSocket.user === undefined)
+						continue;
 
-					Couch.getAllLocalesInRange(key, function(localesInRange) {
+					Couch.getAllLocales( function(locales) {
 
-						var updatedLocales = locales.map(function (locale) {
+						Couch.getAllLocalesInRange(curSocket.user, 1000, function(localesInRange) {
 
-							var join = !(localesInRange.indexof(locale.name) === -1);
+							var updatedLocales = locales.map(function (locale) {
 
-							// Put together the data that we want clients to receive
-							return {
-								name: locale.name,
-								description: locale.description,
-								location: locale.location,
-								radius: locale.radius,
-								tags: locale.tags,
-								canJoin: join
-							};
+								var join = !(localesInRange.indexOf(locale.name) === -1);
+
+								// Put together the data that we want clients to receive
+								return {
+									name: locale.name,
+									description: locale.description,
+									location: locale.location,
+									radius: locale.radius,
+									tags: locale.tags,
+									canJoin: join
+								};
+							});
+
+							socket.emit('updaterooms', updatedLocales);
 						});
-
-						socket.emit('updaterooms', updatedLocales);
-					});
-				});				
+					});				
+				}				
+			}
+			else
+			{
+				console.log("Locale name taken");
+				// TODO: Notify user that locale name is taken
 			}
 		});
 	})
@@ -191,9 +202,6 @@ io.sockets.on('connection', function (socket) {
 
 					Couch.getUsersFromKeys(newUsers, function(allUsers) {
 
-						console.log("allusers");
-						console.log(allUsers);
-
 						var roomUsers = allUsers.map(function(user) {
 
 							return {
@@ -229,8 +237,6 @@ io.sockets.on('connection', function (socket) {
 			else
 			{
 				Couch.getUsersFromKeys(users, function(allUsers) {
-
-					console.log(allUsers);
 
 					var roomUsers = allUsers.map(function(user) {
 
