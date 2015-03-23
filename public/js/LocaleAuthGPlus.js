@@ -100,7 +100,7 @@ define([
 					model.set("lastName", response.name.familyName);
 					model.set("email", response.emails[0].value);
 					model.set("profilePicture", response.image.url);
-					model.set("ProfileUrl", response.url)
+					model.set("profileUrl", response.url)
 
 					callback(model);
 				});
