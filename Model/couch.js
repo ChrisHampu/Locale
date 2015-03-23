@@ -107,21 +107,27 @@ Couch.prototype.getAllLocales = function(callback) {
 	var self = this;
 
 	this._getAllLocaleKeys( function(keys) {
-		self.Locale.getMulti(keys, function(err, results) {
 
-			if(err) {
-				console.log("error");
-				console.log(err);
-				throw err;
-			}
+		if(keys === undefined || keys.length === 0)
+			callback([]);
+		else
+		{
+			self.Locale.getMulti(keys, function(err, results) {
 
-			var locales = [];
+				if(err) {
+					console.log("error");
+					console.log(err);
+					throw err;
+				}
 
-			for(var i in results)
-				locales.push(results[i].value);
+				var locales = [];
 
-			callback(locales);
-		});
+				for(var i in results)
+					locales.push(results[i].value);
+
+				callback(locales);
+			});
+		}
 	});
 };
 
@@ -227,7 +233,7 @@ Couch.prototype.getAllLocaleMessages = function(localeName, callback) {
 	this._getAllLocaleMessages(localeKey, function(messageKeys) {
 
 		if(messageKeys === undefined || messageKeys.length === 0)
-			callback([])
+			callback([]);
 		else
 		{
 			self.Locale.getMulti(messageKeys, function(err, results) {
@@ -309,15 +315,20 @@ Couch.prototype.addUserToRoom = function(localeName, userId , callback) {
 
 Couch.prototype.getUsersFromKeys = function(userKeys, callback) {
 
-	this.Locale.getMulti(userKeys, function(err, results) {
+	if(userKeys === undefined || userKeys.length === 0)
+		callback([]);
+	else
+	{
+		this.Locale.getMulti(userKeys, function(err, results) {
 
-		var users = [];
+			var users = [];
 
-		for(var i in results)
-			users.push(results[i].value);
+			for(var i in results)
+				users.push(results[i].value);
 
-		callback(users);
-	});
+			callback(users);
+		});
+	}
 };
 
 Couch.prototype.getRoomsByUser = function(userId, callback) {
