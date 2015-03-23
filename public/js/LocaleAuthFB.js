@@ -108,10 +108,11 @@ define([
 			FB.api('/me', function(response) {
 					
 				model.set("id", response.id);
-				model.set("location", { lat: LocaleUtilities.GetCurrentLocation().coords.latitude, lon: LocaleUtilities.GetCurrentLocation().coords.longitude });
+				model.set("location", { latitude: LocaleUtilities.GetCurrentLocation().coords.latitude, longitude: LocaleUtilities.GetCurrentLocation().coords.longitude });
 				model.set("firstName", response.first_name);
 				model.set("lastName", response.last_name);
 				model.set("email", response.email);
+				model.set("profileUrl", response.link);
 
 				callback(model);
 			});
@@ -128,7 +129,7 @@ define([
 			    },
 			    function (response) {
 					if (response && !response.error) {
-						model.set("profileUrl", response.data.url);
+						model.set("profilePicture", response.data.url);
 						callback(model);
 					}
 			    }

@@ -140,7 +140,7 @@ define([
 
 			LocaleAuth.GetProfilePicture(function(model) {
 
-				ProfileView.setProfilePic(model.get("profileUrl"));
+				ProfileView.setProfilePic(model.get("profilePicture"));
 				LocaleSocket.Emit('join', JSON.stringify(model));
 			});
 
