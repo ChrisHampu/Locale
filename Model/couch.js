@@ -13,6 +13,7 @@ Couch.prototype.persistChatMessage = function(localeName, userId, message, callb
 
 	this.Locale.counter("locale_message_counter", 1, function(err, res) {
 		var key = "message_" + res.value.toString();
+		var locale = "locale_" + localeName;
 
 		this.Locale.insert(key, { locale: "locale_" + localeName, user: "user_" + userId.toString(), 
 									message: message.message, type: "message", timestamp: Math.floor(new Date()),
@@ -20,9 +21,18 @@ Couch.prototype.persistChatMessage = function(localeName, userId, message, callb
 									profilePicture: message.profilePicture },
 									function(err, result) {
 
-			callback();
-		})
-	})
+			this.Locale.get(locale, function(err, result) {
+
+				result.value.messages.push(key);
+
+				this.Locale.replace(locale, result.value, function(err, result) {
+
+					callback();
+
+				});
+			});
+		});
+	});
 };
 
 Couch.prototype.persistLocale = function(locale, callback) {
@@ -70,6 +80,22 @@ Couch.prototype.getAllLocales = function(callback) {
 	});
 };
 
+Couch.prototype.getLocale = function(locale, callback) {
+
+	this.Locale.get(locale, function(err, res) {
+		callback(res.value);
+	});
+}
+
+Couch.prototype.getLocaleByName = function(localeName, callback) {
+
+	var localeKey = "locale_" + localeName;
+
+	this.Locale.get(localeKey, function(err, res) {
+		callback(res.value);
+	});
+};
+
 // Returns an array containing the valid keys in a range of the user
 Couch.prototype.getAllLocalesInRange = function(user, range, callback) {
 
@@ -92,96 +118,109 @@ Couch.prototype.deleteLocale = function(locale) {
 
 	var key = "locale_" + locale;
 
-	this.Locale.remove(key, function(err, result) {
-		this.deleteLocaleMessages(key);
+
+	this.deleteLocaleMessages(key, function() {
+		this.Locale.remove(key, function(err, res) {
+
+		});
 	});
 };
 
-Couch.prototype._getAllLocaleMessages = function(callback) {
-	var query = this.Query.from("_design/dev_getlocales", "GetLocaleMessages");
+Couch.prototype.replaceLocaleByName = function(localeName, localeData, callback) {
 
-	this.Locale.query(query, function(err, results) {
+	var key = "locale_" + localeName;
 
-		callback(results.map( function(res) {
-			return { key: res.key, locale: res.value };
-		}));
+	this.Locale.replace(key, localeData, function(err, res) {
+
+		callback(localeData);
 	});
-}
+};
 
-Couch.prototype.deleteLocaleMessages = function(locale) {
 
-	this._getAllLocaleMessages(function(messages) {
-		for(var i = 0; i < messages.length; i++)
-		{
-			if(messages[i].locale === locale)
-			{
-				this.Locale.remove(messages[i].key, function(err, result) {
+// Returns the message keys from a locale
+Couch.prototype._getAllLocaleMessages = function(locale, callback) {
+	
+	this.Locale.get(locale, function(err, res) {
+		callback(res.messages);
+	});
+};
 
-				};
-			}
+// Takes an array of message keys and returns the corresponding messages
+Couch.prototype.getAllLocaleMessages = function(localeName, callback) {
+
+	var localeKey = "locale_" + localeName;
+
+	this._getAllLocaleMessages(localeKey, function(messageKeys) {
+
+		this.Locale.getMulti(messageKeys, function(err, results) {
+
+			callback(results.value);
+		});
+	});
+};
+
+Couch.prototype.deleteLocaleMessages = function(locale, callback) {
+
+	this._getAllLocaleMessages(locale, function(keys) {
+		for(var i in keys) {
+			this.Locale.remove(i, function(err, res) {
+			});
+		}
+
+		callback();
+	});
+};
+
+Couch.prototype.hasUserInRoom = function(localeName, userId, callback) {
+
+	var keyLocale = "locale_" + localeName;
+	var keyUser = "user_" + userId;
+
+	this.Locale.get(keyLocale, function(error, res) {
+
+		if(res.value.users.indexOf(keyUser) !== -1) {
+			callback(true, res.value.users);
+		} else {
+			callback(false, res.value.users);
 		}
 	});
 };
 
-// Old API
+// Will replace the users in the specified locale with the new array of users
+Couch.prototype.addUserToRoom = function(localeName, userId , callback) {
 
-Couch.prototype.addRoom = function(room, callback) {
+	var keyLocale = "locale_" + localeName;
+	var keyUser = "user_" + userId;
 
+	this.Locale.get(keyLocale, function(err, result) {
+
+		result.value.push(keyUser);
+
+		this.Locale.replace(keyLocale, result.value, function(err, result) {
+
+			// Send updated list of user keys
+			callback(res.value.users);
+		});
+	});
 };
 
-Couch.prototype.deleteRoom = function(room, callback) {
+Couch.prototype.getUsersFromKeys = function(userKeys, callback) {
 
+	this.Locale.getMulti(userKeys, function(err, result) {
+		callback(result.value);
+	});
 };
 
-Couch.prototype.getRoomByName = function(name, callback) {
+Couch.prototype.getRoomsByUser = function(userId, callback) {
 
-};
+	var query = this.Query.from("_design/dev_getlocales", "GetLocalesByUser").key("user_" + userId.toString());
 
-Couch.prototype.getRooms = function (callback) {
+	this.Locale.query(query, function(err, results) {
 
-};
-
-Couch.prototype.getAllowedRoomNames = function (lat, lon, callback){
-
-};
-
-// Persist a message, passes the data object back into the callback
-Couch.prototype.persistMessage = function (data, callback){
-
-};
-
-Couch.prototype.saveRoom = function(room, callback) {
-	
-
-};
-
-Couch.prototype.addUserToRoom = function(name, user) {
-
-
-};
-
-Couch.prototype.getRoomsByUser = function(user, callback) {
-	
-
-};
-
-Couch.prototype.removeUserFromRooms = function(user, rooms, callback) {
-
-
-};
-
-Couch.prototype.removeUserFromRoomSub = function(room, count, callback) {
-
-
-};
-
-Couch.prototype.removeAllUsersFromRoom = function(room) {
-
-
-};
-
-// Return the last 10 messages for a room
-Couch.prototype.getRoomHistory = function (room, callback){
+		callback(results.map( function(res) {
+			return res.value;
+		}));
+	});
 
 };
 

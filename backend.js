@@ -39,14 +39,7 @@ app.get('/ourstack', function (req, res) {
 var CouchDB = require("./Model/couch.js");
 var Couch = new CouchDB(couchbase);
 
-var allRooms = null;
-
 io.sockets.on('connection', function (socket) {
-
-	// Pull all the available rooms on every connection to compare against rooms that a given user is permitted access to
-	world.getRooms(function(rooms) {
-		allRooms = rooms;
-	});
 
 	// When the client emits 'join', this listens and executes
 	socket.on('join', function(user){
@@ -190,47 +183,81 @@ io.sockets.on('connection', function (socket) {
 	// There would now be multiple entries.
 	socket.on('joinroom', function(roomName){
 
-		world.getRoomByName(roomName, function(room) {
-			
-			// We check whether a user already is part of this room. If they are,
-			// then don't add them as another room user! This avoid duplicates
-			// from a user joining the same room repeatedly without emitting first
-			// that they are leaving the room. This happens by repeatedly pressing join,
-			// because the client doesn't leave the room first.
-			var idx = -1;
-			
-			for(var i = 0; i < room.users.length; i++)
+		Couch.hasUserInRoom(roomName, socket.user.id, function(hasUser, users) {
+
+			if(hasUser === false)
 			{
-				if(socket.user.id === room.users[i].id)
-					idx = i;
-			}
-			
-			if(idx === -1)
-			{			
-				socket.join(roomName);
-				
-				room.userCount++;
+				Couch.addUserToRoom(roomName, socket.user.id, function(newUsers) {
 
-				var newUser = { 
-						profilePicture: socket.user.profilePicture,
-						profileUrl: socket.user.profileUrl,
-						firstName: socket.user.firstName,
-						lastName: socket.user.lastName,
-						location: socket.user.location,	
-						email: socket.user.email,
-						id: socket.user.id
-				}
+					Couch.getUsersFromKeys(newUsers, function(allUsers) {
 
-				room.users.push(newUser);
-				
-				world.addUserToRoom(roomName, newUser);
+						var roomUsers = allUsers.map(function(user) {
+
+							return {
+								profilePicture: user.profilePicture,
+								profileUrl: user.profileUrl,
+								firstName: user.firstName,
+								lastName: user.lastName,
+								location: user.location
+							};
+						});
+						
+						io.sockets.emit('updateroomusers', [{ name: roomName, users: roomUsers, userCount: roomUsers.length }]);
+
+						Couch.getAllLocaleMessages(roomName, function(messages) {
+
+							var roomMessages = messages.map(function(msg) {
+								return {
+									message: msg.message,
+									firstName: msg.firstName,
+									lastInitial: msg.lastInitial,
+									profilePicture: msg.profilePicture,
+									profileUrl: msg.profileUrl,
+									timestamp: msg.timestamp
+								};
+							});
+
+							socket.emit('loadroom', {"room": roomName, "messages": roomMessages, "users" : roomUsers, "userCount" : roomUsers.length});
+						});
+					});
+				});
+
 			}
-			
-			world.getRoomHistory(roomName, function(messages) {
-				socket.emit('loadroom', {"room": roomName, "messages": messages, "users" : room.users, "userCount" : room.userCount});
-				// Tell all existing users that a new user has joined
-				io.sockets.emit('updateroomusers', [{ name : room.name, users: room.users, userCount: room.userCount }]);
-			});
+			else
+			{
+				Couch.getUsersFromKeys(newUsers, function(users) {
+
+					var roomUsers = allUsers.map(function(user) {
+
+						return {
+							profilePicture: user.profilePicture,
+							profileUrl: user.profileUrl,
+							firstName: user.firstName,
+							lastName: user.lastName,
+							location: user.location
+						};
+					});
+					
+					io.sockets.emit('updateroomusers', [{ name: roomName, users: roomUsers, userCount: roomUsers.length }]);
+
+					Couch.getAllLocaleMessages(roomName, function(messages) {
+
+						var roomMessages = messages.map(function(msg) {
+							return {
+								message: msg.message,
+								firstName: msg.firstName,
+								lastInitial: msg.lastInitial,
+								profilePicture: msg.profilePicture,
+								profileUrl: msg.profileUrl,
+								timestamp: msg.timestamp
+							};
+						});
+
+						socket.emit('loadroom', {"room": roomName, "messages": roomMessages, "users" : roomUsers, "userCount" : roomUsers.length});
+					});
+				});
+			}
+
 		});
 	});
 
@@ -240,42 +267,58 @@ io.sockets.on('connection', function (socket) {
 	// a privacy, security, and performance concern
 	socket.on('leaveroom', function(roomName){
 		
-		world.getRoomByName(roomName, function(room) {
 
-			var idx = -1;
-			
-			for(var i = 0; i < room.users.length; i++)
-			{
-				if(socket.user.id === room.users[i].id)
-					idx = i;
+		Couch.getLocaleByName(roomName, function(locale) {
+
+			var userKey = "user_" + socket.user.id.toString();
+
+			var idx = locale.users.indexOf(userKey);
+
+			if(idx > -1) {
+				locale.users = locale.users.splice(idx, 1);
+
+				Couch.replaceLocaleByName(roomName, locale, function() {
+
+					socket.leave(roomName);
+
+					var updatedRoom = {
+						name: roomName,
+						users: locale.users
+					}
+
+					io.sockets.emit('updateroomusers', [updatedRoom]);
+				});
 			}
-			
-			if(idx > -1)
-			{
-				room.users = room.users.splice(idx, 1);
-				room.userCount = room.users.length;
-				
-				var rooms = [ room ];
-				
-				socket.leave(roomName);
-				
-				world.removeUserFromRooms(socket.user, rooms, function(updatedRoom) {
-					io.sockets.emit('updateroomusers', updatedRoom);
-				});		
-			}
+
 		});
 	});
 	
 	socket.on('disconnect', function(){
 
-		if(socket.user !== undefined)
-		{
-			world.getRoomsByUser(socket.user, function(rooms) {
-				world.removeUserFromRooms(socket.user, rooms, function(updatedRoom) {
-					io.sockets.emit('updateroomusers', updatedRoom);
+		Couch.getRoomsByUser(socket.user.id, function(rooms) {
+
+			var userKey = "user_" + socket.user.id.toString();
+
+			var updatedRooms = [];
+
+			for(var i in rooms) {
+				Couch.getLocale(rooms[i], function(locale) {
+
+					var idx = locale.users.indexOf(userKey);
+
+					locale.users = locale.users.splice(idx, 1);			
+
+					Couch.replaceLocaleByName(roomName, locale, function(data) {
+
+						updatedRooms.push( { room: data.name, users: data.users });
+
+						// Emit the update once we have all the room data
+						if(updatedRooms.length === rooms.length)
+							io.sockets.emit('updateroomusers', updatedRooms);
+					});
 				});
-			});
-		}
+			}
+		});
 	});
 
 });
