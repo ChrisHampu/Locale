@@ -285,7 +285,6 @@ io.sockets.on('connection', function (socket) {
 	// a privacy, security, and performance concern
 	socket.on('leaveroom', function(roomName){
 		
-
 		Couch.getLocaleByName(roomName, function(locale) {
 
 			var userKey = "user_" + socket.user.id.toString();
@@ -293,7 +292,8 @@ io.sockets.on('connection', function (socket) {
 			var idx = locale.users.indexOf(userKey);
 
 			if(idx > -1) {
-				locale.users = locale.users.splice(idx, 1);
+
+				locale.users.splice(idx, 1);
 
 				Couch.replaceLocaleByName(roomName, locale, function() {
 
@@ -307,7 +307,6 @@ io.sockets.on('connection', function (socket) {
 					io.sockets.emit('updateroomusers', [updatedRoom]);
 				});
 			}
-
 		});
 	});
 	
@@ -331,9 +330,7 @@ io.sockets.on('connection', function (socket) {
 
 					var idx = locale.users.indexOf(userKey);
 
-					locale.users = locale.users.splice(idx, 1);			
-
-					Couch.replaceLocaleByName(roomName, locale, function(data) {
+					Couch.replaceLocaleByKey(rooms[i], locale, function(data) {
 
 						updatedRooms.push( { room: data.name, users: data.users });
 

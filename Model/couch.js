@@ -187,6 +187,16 @@ Couch.prototype.replaceLocaleByName = function(localeName, localeData, callback)
 	});
 };
 
+Couch.prototype.replaceLocaleByKey = function(key, localeData, callback) {
+
+	this.Locale.replace(key, localeData, function(err, res) {
+
+		if(err)
+			throw err;
+
+		callback(localeData);
+	});
+};
 
 // Returns the message keys from a locale
 Couch.prototype._getAllLocaleMessages = function(locale, callback) {
@@ -303,7 +313,7 @@ Couch.prototype.getUsersFromKeys = function(userKeys, callback) {
 
 Couch.prototype.getRoomsByUser = function(userId, callback) {
 
-	var query = this.Query.from("dev_getlocales", "GetLocalesByUser").key("user_" + userId);
+	var query = this.Query.from("dev_getlocales", "GetLocalesByUser").key("user_" + userId).stale(1);
 
 	this.Locale.query(query, function(err, results) {
 
