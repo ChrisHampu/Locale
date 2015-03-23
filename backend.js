@@ -46,6 +46,9 @@ process.argv.forEach(function(val, index, array) {
 	}
 });
 
+if(InDev === true)
+	console.log("Running in development mode");
+
 var CouchDB = require("./Model/couch.js");
 var Couch = new CouchDB(couchbase, InDev);
 

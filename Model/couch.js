@@ -169,10 +169,10 @@ Couch.prototype.getAllLocalesInRange = function(user, range, callback) {
 Couch.prototype.deleteLocale = function(locale) {
 
 	var key = "locale_" + locale;
-
+	var self = this;
 
 	this.deleteLocaleMessages(key, function() {
-		this.Locale.remove(key, function(err, res) {
+		self.Locale.remove(key, function(err, res) {
 
 		if(err)
 			throw err;
@@ -248,9 +248,11 @@ Couch.prototype.getAllLocaleMessages = function(localeName, callback) {
 
 Couch.prototype.deleteLocaleMessages = function(locale, callback) {
 
+	var self = this;
+
 	this._getAllLocaleMessages(locale, function(keys) {
 		for(var i in keys) {
-			this.Locale.remove(i, function(err, res) {
+			self.Locale.remove(keys[i], function(err, res) {
 
 				if(err)
 					throw err;
