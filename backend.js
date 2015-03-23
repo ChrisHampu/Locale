@@ -191,13 +191,16 @@ io.sockets.on('connection', function (socket) {
 
 					Couch.getUsersFromKeys(newUsers, function(allUsers) {
 
+						console.log("allusers");
+						console.log(allUsers);
+
 						var roomUsers = allUsers.map(function(user) {
 
 							return {
 								profilePicture: user.profilePicture,
 								profileUrl: user.profileUrl,
 								firstName: user.firstName,
-								lastName: user.lastName,
+								lastInitial: user.lastName.charAt(0),
 								location: user.location
 							};
 						});
@@ -225,7 +228,9 @@ io.sockets.on('connection', function (socket) {
 			}
 			else
 			{
-				Couch.getUsersFromKeys(newUsers, function(users) {
+				Couch.getUsersFromKeys(users, function(allUsers) {
+
+					console.log(allUsers);
 
 					var roomUsers = allUsers.map(function(user) {
 
@@ -233,7 +238,7 @@ io.sockets.on('connection', function (socket) {
 							profilePicture: user.profilePicture,
 							profileUrl: user.profileUrl,
 							firstName: user.firstName,
-							lastName: user.lastName,
+							lastInitial: user.lastName.charAt(0),
 							location: user.location
 						};
 					});

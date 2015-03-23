@@ -7,28 +7,31 @@ function Couch(couchbase) {
 	this.Query = this.Couchbase.ViewQuery;
 	this.Cluster = new this.Couchbase.Cluster('couchbase://getlocale.me');
 	this.Locale = this.Cluster.openBucket("locale");
+	this.Locale.operationTimeout = 60 * 1000;
 };
 
 Couch.prototype.persistChatMessage = function(localeName, userId, message, callback) {
 
-	this.Locale.counter("locale_message_counter", 1, function(err, res) {
+	var self = this;
+
+	this.Locale.counter("locale_message_counter", 1, { initial: 0 }, function(err, res) {
 		var key = "message_" + res.value.toString();
 		var locale = "locale_" + localeName;
 
-		this.Locale.insert(key, { locale: "locale_" + localeName, user: "user_" + userId, 
+		self.Locale.insert(key, { locale: "locale_" + localeName, user: "user_" + userId, 
 									message: message.message, type: "message", timestamp: Math.floor(new Date()),
 									firstName: message.firstName, lastInitial: message.lastInitial,
 									profilePicture: message.profilePicture },
 									function(err, result) {
 
-			this.Locale.get(locale, function(err, result) {
+			self.Locale.get(locale, function(err, result) {
 
 				if(err)
 					throw err;
 
 				result.value.messages.push(key);
 
-				this.Locale.replace(locale, result.value, function(err, result) {
+				self.Locale.replace(locale, result.value, function(err, result) {
 
 					callback();
 
@@ -184,7 +187,7 @@ Couch.prototype._getAllLocaleMessages = function(locale, callback) {
 		if(err)
 			throw err;
 
-		callback(res.messages);
+		callback(res.value.messages);
 	});
 };
 
@@ -193,20 +196,27 @@ Couch.prototype.getAllLocaleMessages = function(localeName, callback) {
 
 	var localeKey = "locale_" + localeName;
 
+	var self = this;
+
 	this._getAllLocaleMessages(localeKey, function(messageKeys) {
 
-		this.Locale.getMulti(messageKeys, function(err, results) {
+		if(messageKeys === undefined || messageKeys.length === 0)
+			callback([])
+		else
+		{
+			self.Locale.getMulti(messageKeys, function(err, results) {
 
-			if(err)
-				throw err;
+				if(err)
+					throw err;
 
-			var messages = [];
+				var messages = [];
 
-			for(var i in results)
-				messages.push(results[i].value);
+				for(var i in results)
+					messages.push(results[i].value);
 
-			callback(messages);
-		});
+				callback(messages);
+			});
+		}
 	});
 };
 
@@ -249,25 +259,36 @@ Couch.prototype.addUserToRoom = function(localeName, userId , callback) {
 	var keyLocale = "locale_" + localeName;
 	var keyUser = "user_" + userId;
 
+	var self = this;
+
 	this.Locale.get(keyLocale, function(err, result) {
 
 		if(err)
 			throw err;
 
-		result.value.push(keyUser);
+		var users = result.value.users;
+		users.push(keyUser);
 
-		this.Locale.replace(keyLocale, result.value, function(err, result) {
+		result.value.users = users;
+
+		self.Locale.replace(keyLocale, result.value, function(err, result) {
 
 			// Send updated list of user keys
-			callback(res.value.users);
+			callback(users);
 		});
 	});
 };
 
 Couch.prototype.getUsersFromKeys = function(userKeys, callback) {
 
-	this.Locale.getMulti(userKeys, function(err, result) {
-		callback(result.value);
+	this.Locale.getMulti(userKeys, function(err, results) {
+
+		var users = [];
+
+		for(var i in results)
+			users.push(results[i].value);
+
+		callback(users);
 	});
 };
 
