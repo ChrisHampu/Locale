@@ -36,7 +36,15 @@ app.get('/ourstack', function (req, res) {
 // "SUPERGLOBALS"
 //
 
-var InDev = false;
+var InDev = true;
+
+// Live server will be passed this by command line to signal we're in production
+process.argv.forEach(function(val, index, array) {
+	if(val === "production") {
+		InDev = false;
+		console.log("Running in production mode");
+	}
+});
 
 var CouchDB = require("./Model/couch.js");
 var Couch = new CouchDB(couchbase, InDev);
