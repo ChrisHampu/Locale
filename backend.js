@@ -166,14 +166,21 @@ io.sockets.on('connection', function (socket) {
 	// when the client emits 'sendchat', this listens and executes
 	socket.on('sendchat', function (data) {
 		var message = {
+			"locale": "locale_" + data.room,
 			"firstName": socket.user.firstName,
 			"lastInitial": socket.user.lastName.charAt(0),
 			"profilePicture": socket.user.profilePicture,
-			"message": data.message.slice(0,200)
+			"message": data.message.slice(0,200),
+			"timestamp": Math.floor(new Date())
 		};
 
 		Couch.persistChatMessage(data.room, socket.user.id, message, function() {
-			io.sockets.emit('broadcastchat', data);
+			
+			// Prepare for sending back to user
+			message.room = data.room;
+			delete message.locale;
+
+			io.sockets.emit('broadcastchat', message);
 		});
 	});
 	
