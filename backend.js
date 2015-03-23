@@ -50,15 +50,15 @@ io.sockets.on('connection', function (socket) {
 		socket.user = newUser;
 
 		// Persist the user in the database, and return the key for the user data
-		Couch.persistUser(user, function(userKey) {
+		Couch.persistUser(newUser, function(userKey) {
 
 			Couch.getAllLocales( function(locales) {
 
-				Couch.getAllLocalesInRange(userKey, function(localesInRange) {
+				Couch.getAllLocalesInRange(newUser, 1000.0, function(localesInRange) {
 
 					var updatedLocales = locales.map(function (locale) {
 
-						var join = !(localesInRange.indexof(locale.name) === -1);
+						var join = !(localesInRange.indexOf(locale.name) === -1);
 
 						// Put together the data that we want clients to receive
 						return {
@@ -294,6 +294,13 @@ io.sockets.on('connection', function (socket) {
 	});
 	
 	socket.on('disconnect', function(){
+
+		// Invalid sessions
+		if(socket.user === undefined)
+			return;
+
+		if(socket.user.id === undefined)
+			return;
 
 		Couch.getRoomsByUser(socket.user.id, function(rooms) {
 

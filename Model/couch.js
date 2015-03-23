@@ -1,4 +1,4 @@
-var Geo = require('./util.js');
+var makeBoundingBox = require('./util.js');
 var request = require("request");
 
 function Couch(couchbase) {
@@ -15,13 +15,16 @@ Couch.prototype.persistChatMessage = function(localeName, userId, message, callb
 		var key = "message_" + res.value.toString();
 		var locale = "locale_" + localeName;
 
-		this.Locale.insert(key, { locale: "locale_" + localeName, user: "user_" + userId.toString(), 
+		this.Locale.insert(key, { locale: "locale_" + localeName, user: "user_" + userId, 
 									message: message.message, type: "message", timestamp: Math.floor(new Date()),
 									firstName: message.firstName, lastInitial: message.lastInitial,
 									profilePicture: message.profilePicture },
 									function(err, result) {
 
 			this.Locale.get(locale, function(err, result) {
+
+				if(err)
+					throw err;
 
 				result.value.messages.push(key);
 
@@ -41,6 +44,9 @@ Couch.prototype.persistLocale = function(locale, callback) {
 
 	this.Locale.insert(key, locale, function(err, result) {
 
+		if(err)
+			throw err;
+
 		if(callback !== undefined)
 			callback(key);
 	});
@@ -48,11 +54,17 @@ Couch.prototype.persistLocale = function(locale, callback) {
 
 Couch.prototype.persistUser = function(user, callback) {
 
-	var key = "user_" + user.id.toString();
+	var key = "user_" + user.id;
 
 	user.type = "user";
 
 	this.Locale.insert(key, user, function(err, result) {
+
+		if(err) {
+			// Error code 12 means key already exists, which is fine
+			if(err.code !== 12)
+				throw err;
+		}
 
 		if(callback !== undefined)
 			callback(key);
@@ -61,9 +73,12 @@ Couch.prototype.persistUser = function(user, callback) {
 
 Couch.prototype._getAllLocaleKeys = function(callback) {
 
-	var query = this.Query.from("_design/dev_getlocales", "GetLocales");
+	var query = this.Query.from("dev_getlocales", "GetLocales");
 
 	this.Locale.query(query, function(err, results) {
+
+		if(err)
+			throw err;
 
 		callback(results.map( function(res) {
 			return res.key;
@@ -73,9 +88,20 @@ Couch.prototype._getAllLocaleKeys = function(callback) {
 
 Couch.prototype.getAllLocales = function(callback) {
 
+	var self = this;
+
 	this._getAllLocaleKeys( function(keys) {
-		this.Locale.getMulti(keys, function(err, results) {
-			callback(results);
+		self.Locale.getMulti(keys, function(err, results) {
+
+			if(err)
+				throw err;
+
+			var locales = [];
+
+			for(var i in results)
+				locales.push(results[i].value);
+
+			callback(locales);
 		});
 	});
 };
@@ -92,6 +118,10 @@ Couch.prototype.getLocaleByName = function(localeName, callback) {
 	var localeKey = "locale_" + localeName;
 
 	this.Locale.get(localeKey, function(err, res) {
+
+		if(err)
+			throw err;
+
 		callback(res.value);
 	});
 };
@@ -100,10 +130,13 @@ Couch.prototype.getLocaleByName = function(localeName, callback) {
 Couch.prototype.getAllLocalesInRange = function(user, range, callback) {
 
 	// Range is stored in meters, we need to pass kilometers
-	var bbox = Geo.makeBoundingBox(user.location, range / 1000.0);
+	var bbox = makeBoundingBox(user.location, range / 1000.0);
 
-	request({ uri: "http://localhost:8092/locale/_desgin/dev_getlocales/_spatial/GetLocalesInRange?bbox="+bbox[0]+","+bbox[1]+","+bbox[2]+","+bbox[3],
+	var reqUri = "http://getlocale.me:8092/locale/_design/dev_getlocales/_spatial/GetLocalesInRange?bbox="+bbox[0]+","+bbox[1]+","+bbox[2]+","+bbox[3];
+
+	request({ uri: reqUri,
 				 method: "GET"}, function(error, response, body) {
+
 		var res = JSON.parse(body);
 
 		var locales = res.rows.map( function(keys) {
@@ -122,6 +155,9 @@ Couch.prototype.deleteLocale = function(locale) {
 	this.deleteLocaleMessages(key, function() {
 		this.Locale.remove(key, function(err, res) {
 
+		if(err)
+			throw err;
+
 		});
 	});
 };
@@ -132,6 +168,9 @@ Couch.prototype.replaceLocaleByName = function(localeName, localeData, callback)
 
 	this.Locale.replace(key, localeData, function(err, res) {
 
+		if(err)
+			throw err;
+
 		callback(localeData);
 	});
 };
@@ -141,6 +180,10 @@ Couch.prototype.replaceLocaleByName = function(localeName, localeData, callback)
 Couch.prototype._getAllLocaleMessages = function(locale, callback) {
 	
 	this.Locale.get(locale, function(err, res) {
+
+		if(err)
+			throw err;
+
 		callback(res.messages);
 	});
 };
@@ -154,7 +197,15 @@ Couch.prototype.getAllLocaleMessages = function(localeName, callback) {
 
 		this.Locale.getMulti(messageKeys, function(err, results) {
 
-			callback(results.value);
+			if(err)
+				throw err;
+
+			var messages = [];
+
+			for(var i in results)
+				messages.push(results[i].value);
+
+			callback(messages);
 		});
 	});
 };
@@ -164,6 +215,9 @@ Couch.prototype.deleteLocaleMessages = function(locale, callback) {
 	this._getAllLocaleMessages(locale, function(keys) {
 		for(var i in keys) {
 			this.Locale.remove(i, function(err, res) {
+
+				if(err)
+					throw err;
 			});
 		}
 
@@ -176,7 +230,10 @@ Couch.prototype.hasUserInRoom = function(localeName, userId, callback) {
 	var keyLocale = "locale_" + localeName;
 	var keyUser = "user_" + userId;
 
-	this.Locale.get(keyLocale, function(error, res) {
+	this.Locale.get(keyLocale, function(err, res) {
+
+		if(err)
+			throw err;
 
 		if(res.value.users.indexOf(keyUser) !== -1) {
 			callback(true, res.value.users);
@@ -193,6 +250,9 @@ Couch.prototype.addUserToRoom = function(localeName, userId , callback) {
 	var keyUser = "user_" + userId;
 
 	this.Locale.get(keyLocale, function(err, result) {
+
+		if(err)
+			throw err;
 
 		result.value.push(keyUser);
 
@@ -213,9 +273,12 @@ Couch.prototype.getUsersFromKeys = function(userKeys, callback) {
 
 Couch.prototype.getRoomsByUser = function(userId, callback) {
 
-	var query = this.Query.from("_design/dev_getlocales", "GetLocalesByUser").key("user_" + userId.toString());
+	var query = this.Query.from("dev_getlocales", "GetLocalesByUser").key("user_" + userId);
 
 	this.Locale.query(query, function(err, results) {
+
+		if(err)
+			throw err;
 
 		callback(results.map( function(res) {
 			return res.value;
