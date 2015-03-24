@@ -1,3 +1,9 @@
+
+/*
+	Issues
+
+	1. Locale user counts aren't being sent when a user first loads the site
+*/
 var makeBoundingBox = require('./util.js');
 var request = require("request");
 
@@ -17,7 +23,39 @@ function Couch(couchbase, inDev) {
 	if(inDev === true)
 		this.SpatialQuery = "http://getlocale.me:8092/locale/_design/dev_getlocales/_spatial/GetLocalesInRange?stale=false&bbox=";
 	else
-		this.SpatialQuery = "http://localhost:8092/locale/_design/dev_getlocales/_spatial/GetLocalesInRange?stale=false&bbox="
+		this.SpatialQuery = "http://localhost:8092/locale/_design/dev_getlocales/_spatial/GetLocalesInRange?stale=false&bbox=";
+
+	this.removeAllUsersFromLocales();
+};
+
+Couch.prototype.removeAllUsersFromLocales = function() {
+
+	// With no key provided, this query will give us every locale that has users
+	var query = this.Query.from("dev_getlocales", "GetLocalesByUser").stale(1);
+
+	var self = this;
+
+	this.Locale.query(query, function(err, results) {
+
+		if(err)
+			throw err;
+
+		var rooms = results.map( function(res) {
+			return res.value;
+		});
+
+		for(var i in rooms) {
+			self.getLocale(rooms[i], function(locale) {
+
+				// Set users to an empty array
+				locale.users = [];
+
+				self.replaceLocaleByKey(rooms[i], locale, function(data) {
+
+				});
+			});
+		}
+	});
 };
 
 Couch.prototype.persistChatMessage = function(localeName, userId, message, callback) {
