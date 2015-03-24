@@ -103,8 +103,6 @@ define([
 				});
 			}
 
-			console.log("creating locale named " + name);
-
 			this.$el.find("#roomName").val("");
 			this.$el.find("#roomDescription").val("");
 		}

@@ -99,7 +99,6 @@ define([
 		resetMessages: function() {
 			this.ChatMessages.reset();
 			this.ChatWindow.renderAllMessages(); // This basically just forces the view to remove all messages
-
 		},
 
 		addMessage: function(newMessage, callback) {
