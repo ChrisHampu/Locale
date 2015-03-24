@@ -347,6 +347,7 @@ io.sockets.on('connection', function (socket) {
 		Couch.getUserById(socket.user.id, function(user) {
 
 			user.profilePicture = userData.profilePicture;
+			socket.user.profilePicture = userData.profilePicture;
 
 			Couch.replaceUserById(socket.user.id, user);
 		});			
@@ -356,6 +357,8 @@ io.sockets.on('connection', function (socket) {
 	// TODO: Only emit updates to the users who are actually connected to the room who has
 	// a person leaving the room. Currently it emits updaterooms to ALL sockets which is
 	// a privacy, security, and performance concern
+	// TODO: Emit only to users within the bounding box of the room
+	// TODO: Emit only to users who are permitted by room privacy settings
 	socket.on('leaveroom', function(roomName){
 
 		if(socket.user === undefined)
@@ -386,6 +389,7 @@ io.sockets.on('connection', function (socket) {
 		});
 	});
 	
+	// TODO: Same as leave event list
 	socket.on('disconnect', function(){
 
 		// Invalid sessions
