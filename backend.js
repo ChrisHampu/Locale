@@ -97,6 +97,12 @@ io.sockets.on('connection', function (socket) {
 		if(socket.user === undefined)
 			return;
 
+		if(data.name === undefined)
+			return;
+
+		if(data.name.length === 0)
+			return;
+		
 		var newLocale = {
 			name: data.name,
 			description: data.description,
