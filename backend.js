@@ -354,6 +354,8 @@ io.sockets.on('connection', function (socket) {
 
 					var idx = locale.users.indexOf(userKey);
 
+					locale.users.splice(idx, 1);
+
 					Couch.replaceLocaleByKey(rooms[i], locale, function(data) {
 
 						updatedRooms.push( { room: data.name, users: data.users });
