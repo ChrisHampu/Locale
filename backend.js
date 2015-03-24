@@ -73,6 +73,13 @@ io.sockets.on('connection', function (socket) {
 
 						var join = !(localesInRange.indexOf(locale.name) === -1);
 
+						if(locale.privacy !== "public") {
+							if(locale.owner === userKey)
+								join = join && true;
+							else
+								join = false;
+						}						
+
 						// Put together the data that we want clients to receive
 						return {
 							name: locale.name,
@@ -102,7 +109,13 @@ io.sockets.on('connection', function (socket) {
 
 		if(data.name.length === 0)
 			return;
-		
+
+		// Sanity check the privacy mode just in case
+		if(data.privacy === undefined)
+			data.privacy = "public";
+		else if(data.privacy !== "public" && data.privacy !== "private" && data.privacy !== "unlisted")
+			data.privacy = "public";
+
 		var newLocale = {
 			name: data.name,
 			description: data.description,
@@ -113,7 +126,8 @@ io.sockets.on('connection', function (socket) {
 			users: [],
 			messages: [],
 			type: "locale",
-			creationDate: Math.floor(new Date())
+			creationDate: Math.floor(new Date()),
+			privacy: data.privacy
 		};
 
 		Couch.persistLocale(newLocale, function(exists) {
@@ -127,6 +141,8 @@ io.sockets.on('connection', function (socket) {
 					if(curSocket.user === undefined)
 						continue;
 
+					var userKey = "user_" + curSocket.user.id;
+
 					Couch.getAllLocales( function(locales) {
 
 						Couch.getAllLocalesInRange(curSocket.user, 1000, function(localesInRange) {
@@ -134,6 +150,13 @@ io.sockets.on('connection', function (socket) {
 							var updatedLocales = locales.map(function (locale) {
 
 								var join = !(localesInRange.indexOf(locale.name) === -1);
+
+								if(locale.privacy !== "public") {
+									if(locale.owner === userKey)
+										join = join && true;
+									else
+										join = false;
+								}
 
 								// Put together the data that we want clients to receive
 								return {
