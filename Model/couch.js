@@ -331,6 +331,35 @@ Couch.prototype.getUsersFromKeys = function(userKeys, callback) {
 	}
 };
 
+Couch.prototype.getUserById = function(userId, callback) {
+
+	var userKey = "user_" + userId;
+
+	this.Locale.get(userKey, function(err, results) {
+
+		if(err)
+			throw err;
+
+		var user = results.value;
+
+		callback(user);
+	});
+};
+
+Couch.prototype.replaceUserById = function(userId, userData, callback) {
+
+	var userKey = "user_" + userId;
+
+	this.Locale.replace(userKey, userData, function(err, results) {
+
+		if(err)
+			throw err;
+
+		if(callback !== undefined)
+			callback();
+	});
+};
+
 Couch.prototype.getRoomsByUser = function(userId, callback) {
 
 	var query = this.Query.from("dev_getlocales", "GetLocalesByUser").key("user_" + userId).stale(1);

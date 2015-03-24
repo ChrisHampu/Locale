@@ -141,7 +141,7 @@ define([
 			LocaleAuth.GetProfilePicture(function(model) {
 
 				ProfileView.setProfilePic(model.get("profilePicture"));
-				LocaleSocket.Emit('join', JSON.stringify(model));
+				LocaleSocket.Emit('updateuser', { profilePicture: model.get("profilePicture") });
 			});
 
 			// Failed to get position, do nothing
