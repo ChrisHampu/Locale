@@ -20,6 +20,14 @@ define([
 			$("#chatarea").html("");
 			this.listenTo(this.collection, "add", this.add);
 			this.Rooms = [];
+
+			this.$el.on('click', '.btn-locale-privacy', function() {
+
+				if(!$(this).hasClass('active')) {
+					$('.btn-locale-privacy').removeClass('active');
+					$(this).toggleClass('active');
+				}
+			});
 		},
 
 		render: function() {
@@ -77,6 +85,8 @@ define([
 
 		createLocale: function() {
 
+			var privacyMode = this.$el.find('button.btn-locale-privacy.active').data("privacy");
+
 			$("#add-room-dialog").stop().animate({height: "0"}, function(){
 				$("#add-room-dialog").css("display", "none");
 				$('#form-dialog-btn').removeClass('active');
@@ -86,24 +96,25 @@ define([
 			var description = this.$el.find("#roomDescription").val();
 			var tags = this.$el.find("#roomTags").val().replace(" ","").split("#");
 			tags.splice(0,1);
-			console.log(tags);
 
 			if(name === undefined || description === "")
 				return;
+
 			if(tags.length == 0){
 				LocaleSocket.Emit('addroom', {
 					"name": name,
-					"description" : description
+					"description" : description,
+					"privacy": privacyMode,
+					"tags": []
 				});
 			} else {
 				LocaleSocket.Emit('addroom', {
 					"name": name,
 					"description" : description,
-					"tags" : tags
+					"tags" : tags,
+					"privacy": privacyMode
 				});
 			}
-
-			console.log("creating locale named " + name);
 
 			this.$el.find("#roomName").val("");
 			this.$el.find("#roomDescription").val("");

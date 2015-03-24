@@ -19,7 +19,9 @@ define([
 			timestamp: undefined,
 			room: undefined,
 			message: undefined,
-			lastInitial: "D"
+			lastInitial: "D",
+			profileUrl: "",
+			profilePicture: ""
 		}
 	});
 

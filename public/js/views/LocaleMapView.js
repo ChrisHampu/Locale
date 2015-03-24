@@ -31,6 +31,8 @@ define([
 		  disableDefaultUI: true
 	};
 
+	var mapMarkers = [];
+
 	var LocaleMapView = Backbone.View.extend({
 		el: '#mappage',
 
@@ -57,6 +59,30 @@ define([
 						ChatroomListView.deleteRoom(chat);
 					}
 				});
+
+				// Remove room marker
+				var mapIndex = -1;
+
+				// Find the marker
+				for(var i = 0; i < mapMarkers.length; i++) {
+					if(mapMarkers[i].name === roomName) {
+						mapIndex = i;
+						break;
+					}
+				}
+
+				// Reset the markers by deleting their reference
+				if( mapIndex !== -1)
+				{
+					var localeMarker = mapMarkers[mapIndex];
+					mapMarkers.splice(mapIndex, 1);
+
+					localeMarker.map.circle.setMap(null);
+					localeMarker.map.marker.setMap(null);
+
+					delete localeMarker.map.circle;
+					delete localeMarker.map.marker;
+				}
 			});
 
 			LocaleSocket.Handle('loadroom', function(data) {
@@ -73,7 +99,7 @@ define([
 						// re-render all the messages we're being given by the server
 						chat.resetMessages();
 
-						_.each(data.messages.reverse(), function(message) {
+						_.each(data.messages, function(message) {
 							chat.addMessage(message);
 						});
 
@@ -232,10 +258,39 @@ define([
 						map: Map
 					});
 
+					this.removeMarker(value.name);
+
+					mapMarkers.push( { name: value.name, map : { circle: circle, marker: marker} });
+
 					ChatroomCollection.add( new LocaleChatModel( { location: value.location, name: value.name, radius: value.radius, canJoin: value.canJoin, userCount: value.userCount, tags: value.tags }));
 				}
 
 			}, this);
+		},
+
+		removeMarker: function(localeName) {
+			var mapIndex = -1;
+
+			// Find the marker
+			for(var i = 0; i < mapMarkers.length; i++) {
+				if(mapMarkers[i].name === localeName) {
+					mapIndex = i;
+					break;
+				}
+			}
+
+			// Reset the markers by deleting their reference
+			if( mapIndex !== -1)
+			{
+				var localeMarker = mapMarkers[mapIndex];
+				mapMarkers.splice(mapIndex, 1);
+
+				localeMarker.map.circle.setMap(null);
+				localeMarker.map.marker.setMap(null);
+
+				delete localeMarker.map.circle;
+				delete localeMarker.map.marker;
+			}
 		},
 
 		search: function() {

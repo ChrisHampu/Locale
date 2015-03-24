@@ -99,11 +99,12 @@ define([
 		resetMessages: function() {
 			this.ChatMessages.reset();
 			this.ChatWindow.renderAllMessages(); // This basically just forces the view to remove all messages
-
 		},
 
 		addMessage: function(newMessage, callback) {
-			this.ChatMessages.add( new LocaleChatMessageModel( { firstName: newMessage.firstName, lastInitial: newMessage.lastInitial, profilePicture: newMessage.profilePicture, message: newMessage.message, timestamp: newMessage.timestamp, room: newMessage.room } ) );
+			this.ChatMessages.add( new LocaleChatMessageModel( { firstName: newMessage.firstName, lastInitial: newMessage.lastInitial, 
+				profilePicture: newMessage.profilePicture, message: newMessage.message, timestamp: newMessage.timestamp, 
+				room: newMessage.room, profileUrl: newMessage.profileUrl } ) );
 
 			if(callback !== undefined)
 				callback(this.model.get("location"), this.model.get("radius"));

@@ -20,6 +20,7 @@ define([
 
 		initialize: function() {
 			$('#profile-thumbnail').sidr();
+
 			this.$el.on('click', "#form-dialog-btn", function() {
 				if($('#form-dialog-btn').hasClass("active")){
 					$('#form-dialog-btn').removeClass("active");
@@ -35,9 +36,8 @@ define([
 					})
 				}else{
 					$("#add-room-dialog").css("display", "block");
-					$("#add-room-dialog").stop().animate({height: "300px"});
+					$("#add-room-dialog").stop().animate({height: "360px"});
 				}
-
 			});
 		},
 

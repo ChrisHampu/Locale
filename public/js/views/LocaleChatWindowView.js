@@ -94,9 +94,9 @@ define([
 			}
 
 			var msgStr = UserSent === true ? "<div class=\"chat-message local-message\">" : "<div class=\"chat-message foreign-message\">";
-            msgStr += "<div class=\"profilepic chatpic img-circle\"" + style + "></div><div class='message-content-wrapper'><div class='message-content' ><p>" +
-                        $('<div/>').text(message.get("message")).html() + "</p><span class=\"message-subtext\">" + message.get("firstName") + " " + message.get("lastInitial") + " - " +
-                        FormatTimestamp(message.get("timestamp")) + "</span></div></div></div>";
+            msgStr += "<a href=\"" + message.get("profileUrl") + "\" target=\"_blank\"><div class=\"profilepic chatpic img-circle\"" + style + "></div></a><div class='message-content-wrapper'><div class='message-content' ><p>" +
+                        $('<div/>').text(message.get("message")).html() + "</p><a class=\"message-subtext\" href=\""+ message.get("profileUrl") + "\" target=\"_blank\">" + message.get("firstName") + " " + message.get("lastInitial") +
+                         "</a><span class=\"message-subtext\"> - " + FormatTimestamp(message.get("timestamp")) + "</span></div></div></div>";
 
             return msgStr;
 		},
