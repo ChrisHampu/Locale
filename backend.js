@@ -178,12 +178,13 @@ io.sockets.on('connection', function (socket) {
 	});
 	
 	// when the client emits 'sendchat', this listens and executes
-	socket.on('sendchat', function (data) {
+	socket.on('sendchat', function (data) {;
 		var message = {
 			"locale": "locale_" + data.room,
 			"firstName": socket.user.firstName,
 			"lastInitial": socket.user.lastName.charAt(0),
 			"profilePicture": socket.user.profilePicture,
+			"profileUrl": socket.user.profileUrl,
 			"message": data.message.slice(0,200),
 			"timestamp": Math.floor(new Date())
 		};

@@ -99,7 +99,7 @@ define([
 						// re-render all the messages we're being given by the server
 						chat.resetMessages();
 
-						_.each(data.messages.reverse(), function(message) {
+						_.each(data.messages, function(message) {
 							chat.addMessage(message);
 						});
 

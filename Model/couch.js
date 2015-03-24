@@ -2,8 +2,10 @@
 /*
 	Issues
 
-	1. Locale user counts aren't being sent when a user first loads the site
+	1. Ensure requests come from valid users
+	2. If a user tries to join a room, verify that their location permits the action. Reason: Users can modify their client to skip the join check
 */
+
 var makeBoundingBox = require('./util.js');
 var request = require("request");
 
@@ -69,7 +71,7 @@ Couch.prototype.persistChatMessage = function(localeName, userId, message, callb
 		self.Locale.insert(key, { locale: "locale_" + localeName, user: "user_" + userId, 
 									message: message.message, type: "message", timestamp: Math.floor(new Date()),
 									firstName: message.firstName, lastInitial: message.lastInitial,
-									profilePicture: message.profilePicture },
+									profilePicture: message.profilePicture, profileUrl: message.profileUrl },
 									function(err, result) {
 
 			self.Locale.get(locale, function(err, result) {
