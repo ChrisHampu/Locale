@@ -5,7 +5,7 @@ var express = require('express')
 , io = require('socket.io').listen(server)
 , couchbase = require('couchbase');
 
-server.listen(80, function(){
+server.listen(8080, function(){
 	var host = server.address().address;
 	var port = server.address().port;
 
@@ -93,6 +93,9 @@ io.sockets.on('connection', function (socket) {
 
 	// listener, add rooms to the database by user request
 	socket.on('addroom', function (data) {
+
+		if(socket.user === undefined)
+			return;
 
 		var newLocale = {
 			name: data.name,
@@ -205,13 +208,29 @@ io.sockets.on('connection', function (socket) {
 
 	socket.on('deletelocale', function(room){
 
-		Couch.deleteLocale(room);
+		if(socket.user === undefined)
+			return;
 
-		// Tell all our users that a locale has been deleted
-		io.sockets.emit('deletelocale', room);
+		Couch.getLocaleByName(room, function(locale) {
+
+			var userKey = "user_" + socket.user.id;
+
+			if(locale.owner === userKey) {
+				Couch.deleteLocale(room);
+
+				// Tell all our users that a locale has been deleted
+				io.sockets.emit('deletelocale', room);
+
+			} else {
+				// TODO: Notify user that deletion failed
+			}
+		});
 	});
 
 	socket.on('joinroom', function(roomName){
+
+		if(socket.user === undefined)
+			return;
 
 		Couch.hasUserInRoom(roomName, socket.user.id, function(hasUser, users) {
 
@@ -293,15 +312,15 @@ io.sockets.on('connection', function (socket) {
 
 	socket.on('updateuser', function(userData) {
 
-		if(socket.user !== undefined)
-		{
-			Couch.getUserById(socket.user.id, function(user) {
+		if(socket.user === undefined)
+			return;
+		
+		Couch.getUserById(socket.user.id, function(user) {
 
-				user.profilePicture = userData.profilePicture;
+			user.profilePicture = userData.profilePicture;
 
-				Couch.replaceUserById(socket.user.id, user);
-			});			
-		}
+			Couch.replaceUserById(socket.user.id, user);
+		});			
 	});
 
 	// listen to users leaving rooms
@@ -309,7 +328,10 @@ io.sockets.on('connection', function (socket) {
 	// a person leaving the room. Currently it emits updaterooms to ALL sockets which is
 	// a privacy, security, and performance concern
 	socket.on('leaveroom', function(roomName){
-		
+
+		if(socket.user === undefined)
+			return;
+
 		Couch.getLocaleByName(roomName, function(locale) {
 
 			var userKey = "user_" + socket.user.id.toString();
