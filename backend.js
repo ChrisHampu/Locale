@@ -5,7 +5,7 @@ var express = require('express')
 , io = require('socket.io').listen(server)
 , couchbase = require('couchbase');
 
-server.listen(8080, function(){
+server.listen(80, function(){
 	var host = server.address().address;
 	var port = server.address().port;
 
