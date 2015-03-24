@@ -80,6 +80,7 @@ io.sockets.on('connection', function (socket) {
 							location: locale.location,
 							radius: locale.radius,
 							tags: locale.tags,
+							userCount: locale.users.length,
 							canJoin: join
 						};
 					});
@@ -287,6 +288,19 @@ io.sockets.on('connection', function (socket) {
 			}
 
 		});
+	});
+
+	socket.on('updateuser', function(userData) {
+
+		if(socket.user !== undefined)
+		{
+			Couch.getUserById(socket.user.id, function(user) {
+
+				user.profilePicture = userData.profilePicture;
+
+				Couch.replaceUserById(socket.user.id, user);
+			});			
+		}
 	});
 
 	// listen to users leaving rooms
