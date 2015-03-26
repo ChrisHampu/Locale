@@ -5,6 +5,7 @@ node_modules/couchbase/*
 node_modules/couchbase/deps/*
 !node_modules/couchbase/deps/lcb
 node_modules/couchbase/deps/lcb/*
+!node_modules/couchbase/deps/lcb/libcouchbase.gyp
 !node_modules/couchbase/deps/lcb/include
 node_modules/couchbase/deps/lcb/include/*
 !node_modules/couchbase/deps/lcb/include/libcouchbase
