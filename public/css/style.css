@@ -326,6 +326,7 @@ footer
 }
 
 .chatbox-settings-window {
+    white-space:nowrap;
     display: none;
     position:absolute;
     background:#F5F5F5;
