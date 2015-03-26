@@ -51,13 +51,13 @@ define([
                             '<div class="panel-body">' +
                                 '<form>' +
                             	   '<div class="form-group">' +
-                                        '<input type="text" class="form-control" id="roomName" placeholder="Locale Name">' +
+                                        '<input type="text" class="form-control" id="roomName" placeholder="Locale Name" value="' + this.model.get("name") + '">' +
                                    '</div>' + 
                                    '<div class="form-group">' + 
-                                        '<textarea class="form-control" id="roomDescription" placeholder="Locale Description" rows="3"></textarea>' + 
+                                        '<textarea class="form-control" id="roomDescription" placeholder="Locale Description" rows="3">' + this.model.get("description") +'</textarea>' + 
                                    '</div>' + 
                                    '<div class="form-group">' + 
-                                        '<input type="text" class="form-control" id="roomTags" placeholder="Tags">' + 
+                                        '<input type="text" class="form-control" id="roomTags" placeholder="Tags" value="' + this.model.get("tags") +'">' + 
                                    '</div>' + 
                                    '<div class="form-group">' + 
 										'<div class="btn-group" role="group" aria-label="Privacy">' +

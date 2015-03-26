@@ -339,7 +339,7 @@ define([
 				//console.log(obj.get("location")["latitude"]);
 				Map.panTo(new google.maps.LatLng(obj.get("location")["latitude"], obj.get("location")["longitude"]))
 				var name = '<h4>' + obj.get("name") + '</h4>';
-			   	var description = "We are a group of runners in our 20's and 30's, with members ranging from beginner runners to those who have been running for years. Nothing like knowing others are waiting for you to make sure you go out and run!";
+			   	var description = obj.get("description");
 			   	var buttonHTML;
 			   	if(obj.get("canJoin")){
 			   		buttonHTML = '<button type="button" class="btn btn-success waypoint-join" data-name= "' +  obj.get("name") +'">Join</button>';
