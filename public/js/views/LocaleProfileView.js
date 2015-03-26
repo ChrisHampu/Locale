@@ -88,14 +88,13 @@ define([
 		},
 
 		expandUpdate: function(e){
-			if($(e.currentTarget).parent().parent().children(".edit-locale").css("height") == "70px"){
+			if($(e.currentTarget).parent().parent().children(".edit-locale").css("height") == "330px"){
 				$(e.currentTarget).parent().parent().children(".edit-locale").stop().animate({height: "0px"}, function(){
 					$(e.currentTarget).parent().parent().children(".edit-locale").css("display","none");
 				});
 			} else {
 				$(e.currentTarget).parent().parent().children(".edit-locale").css("display","block");
-				$(e.currentTarget).parent().parent().children(".edit-locale").stop().animate({height: "70px"}, function(){
-					console.log("NO")
+				$(e.currentTarget).parent().parent().children(".edit-locale").stop().animate({height: "330px"}, function(){
 				});
 			}
 			

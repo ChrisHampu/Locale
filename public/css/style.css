@@ -458,13 +458,19 @@ footer
 
 #my-room-container .btn-group > .btn{
     text-align: left;
-    height: 54px;
 }
 
 #my-room-container .delete-locale {
     float: right;
 }
 
+.delete-locale {
+    margin-right:10px;
+}
+
+.update-locale {
+    margin-left:10px;
+}
 #my-room-container .update-locale {
     float: right;
 }
@@ -734,3 +740,13 @@ footer
 	display: inline-block;
 	vertical-align: middle;
 }
+
+.toggle-pencil {
+    height:54px;
+}
+
+.edit-button-container{
+    position: relative;
+    right:13%;
+}
+
