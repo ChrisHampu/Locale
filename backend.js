@@ -88,7 +88,8 @@ io.sockets.on('connection', function (socket) {
 							radius: locale.radius,
 							tags: locale.tags,
 							userCount: locale.users.length,
-							canJoin: join
+							canJoin: join,
+							privay: locale.privacy
 						};
 					});
 
