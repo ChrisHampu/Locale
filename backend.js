@@ -3,7 +3,8 @@ var express = require('express')
 , http = require('http')
 , server = http.createServer(app)
 , io = require('socket.io').listen(server)
-, couchbase = require('couchbase');
+, couchbase = require('couchbase')
+, geolib = require('geolib');
 
 server.listen(80, function(){
 	var host = server.address().address;
@@ -69,29 +70,31 @@ io.sockets.on('connection', function (socket) {
 
 				Couch.getAllLocalesInRange(newUser, 1000.0, function(localesInRange) {
 
-					var updatedLocales = locales.map(function (locale) {
+					var updatedLocales = [];
+
+					for(var i = 0; i < locales.length; i++) {
+
+						var locale = locales[i];
+
+						if(locale.privacy !== "public" && locale.owner !== userKey) {
+							continue;
+						}
 
 						var join = !(localesInRange.indexOf(locale.name) === -1);
 
-						if(locale.privacy !== "public") {
-							if(locale.owner === userKey)
-								join = join && true;
-							else
-								join = false;
-						}						
+						var isClose = geolib.getDistance(newUser.location, locale.location) < locale.radius;
 
 						// Put together the data that we want clients to receive
-						return {
+						updatedLocales.push({
 							name: locale.name,
 							description: locale.description,
 							location: locale.location,
 							radius: locale.radius,
 							tags: locale.tags,
-							userCount: locale.users.length,
-							canJoin: join,
+							canJoin: join && isClose,
 							privacy: locale.privacy
-						};
-					});
+						});					
+					}
 
 					socket.emit('updaterooms', updatedLocales);
 				});
@@ -121,7 +124,7 @@ io.sockets.on('connection', function (socket) {
 			name: data.name,
 			description: data.description,
 			location: socket.user.location,
-			radius: 1000,
+			radius: data.range,
 			owner: "user_" + socket.user.id.toString(),
 			tags: data.tags,
 			users: [],
@@ -148,27 +151,31 @@ io.sockets.on('connection', function (socket) {
 
 						Couch.getAllLocalesInRange(curSocket.user, 1000, function(localesInRange) {
 
-							var updatedLocales = locales.map(function (locale) {
+							var updatedLocales = [];
+
+							for(var i = 0; i < locales.length; i++) {
+
+								var locale = locales[i];
+
+								if(locale.privacy !== "public" && locale.owner !== userKey) {
+									continue;
+								}
 
 								var join = !(localesInRange.indexOf(locale.name) === -1);
 
-								if(locale.privacy !== "public") {
-									if(locale.owner === userKey)
-										join = join && true;
-									else
-										join = false;
-								}
+								var isClose = geolib.getDistance(curSocket.user.location, locale.location) < locale.radius;
 
 								// Put together the data that we want clients to receive
-								return {
+								updatedLocales.push({
 									name: locale.name,
 									description: locale.description,
 									location: locale.location,
 									radius: locale.radius,
 									tags: locale.tags,
-									canJoin: join
-								};
-							});
+									canJoin: join && isClose,
+									privacy: locale.privacy
+								});					
+							}
 
 							socket.emit('updaterooms', updatedLocales);
 						});
