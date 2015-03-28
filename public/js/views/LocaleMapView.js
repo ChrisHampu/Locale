@@ -189,6 +189,10 @@ define([
 		renderRooms: function(rooms, current) {
 			_.each(rooms, function(value) {
 				
+				// If this is set, it means the backend is telling us to update an existing room.
+				// What we do here is remove the room to force it to un-render, update the model,
+				// and the rest of the code after this block will make a new waypoint, add the updated model,
+				// and re-render it
 				if(value.updateRoom !== undefined)
 				{
 					var updatingLocale = ChatroomCollection.findWhere( { name: value.updateRoom} );

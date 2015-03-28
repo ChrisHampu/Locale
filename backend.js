@@ -224,8 +224,7 @@ io.sockets.on('connection', function (socket) {
 						locale.privacy = data.privacy;
 						locale.tags = data.tags;
 
-						var oldLocaleKey = "locale_" + data.updateRoom;
-						Couch.moveMessagesToNewLocale(locale.messages, oldLocaleKey)
+						Couch.moveMessagesToNewLocale(locale.messages, "locale_" + data.name)
 
 						Couch.replaceLocaleAttributes(data.updateRoom, locale, function() {
 							locale.updateRoom = data.updateRoom;
