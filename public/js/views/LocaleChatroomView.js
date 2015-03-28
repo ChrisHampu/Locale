@@ -34,6 +34,9 @@ define([
 		},
 
 		renderButton: function() {
+
+			var tags = "#" + this.model.get("tags").join(' #');
+
 			this.$el.html(
                         '<div class="btn-group">' +
                            '<div class="btn btn-default room-button">' +
@@ -58,7 +61,7 @@ define([
                                         '<textarea class="form-control" id="roomDescription" placeholder="Locale Description" rows="3">' + this.model.get("description") +'</textarea>' + 
                                    '</div>' + 
                                    '<div class="form-group">' + 
-                                        '<input type="text" class="form-control" id="roomTags" placeholder="Tags" value="' + this.model.get("tags") +'">' + 
+                                        '<input type="text" class="form-control" id="roomTags" placeholder="Tags" value="' + tags +'">' + 
                                    '</div>' + 
                                    '<div class="form-group">' + 
 										'<div class="btn-group" role="group" aria-label="Privacy">' +
@@ -93,7 +96,10 @@ define([
 
 			var newName = this.$el.find("#roomName").val();
 			var newDesc = this.$el.find("#roomDescription").val();
-			var newTags = this.$el.find("#roomTags").val();
+			var newTags = this.$el.find("#roomTags").val().split(" ").join("");
+			newTags = newTags.split("#");
+			newTags.splice(0,1);
+
 			var newPriv = this.$el.find('button.btn-locale-privacy.active').data("privacy");
 
 			LocaleSocket.Emit('updateroom', { "updateRoom": this.model.get("name"), "name": newName, "description": newDesc, "tags": newTags, "privacy": newPriv} );
