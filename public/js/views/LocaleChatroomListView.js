@@ -90,6 +90,8 @@ define([
 				delete this.Rooms[idx].getRoomWindow();
 				this.Rooms[idx].remove();
 				delete this.Rooms[idx];
+
+				this.Rooms.splice(idx, 1);
 			}
 		},
 
