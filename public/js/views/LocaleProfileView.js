@@ -14,7 +14,7 @@ define([
 
 		events: {
 			'click #profile-thumbnail' : 'profile',
-			'click .toggle-delete' : 'toggle',
+			'click .toggle-delete' : 'toggle', // TODO: Is this used anywhere?
 			'click .toggle-pencil' : 'expandUpdate'
 		},
 
@@ -36,7 +36,7 @@ define([
 					})
 				}else{
 					$("#add-room-dialog").css("display", "block");
-					$("#add-room-dialog").stop().animate({height: "360px"});
+					$("#add-room-dialog").stop().animate({height: "415px"});
 				}
 			});
 		},

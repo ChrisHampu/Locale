@@ -16,7 +16,8 @@ define([
 		events: {
 			'click .room-button' : 'join',
 			'keypress .exit-room' : 'remove',
-			'click .delete-locale' : 'deleteLocale'
+			'click .delete-locale' : 'deleteLocale',
+			'click .update-locale' : 'updateLocale'
 		},
 
 		initialize: function(options) {
@@ -33,6 +34,9 @@ define([
 		},
 
 		renderButton: function() {
+
+			var tags = "#" + this.model.get("tags").join(' #');
+
 			this.$el.html(
                         '<div class="btn-group">' +
                            '<div class="btn btn-default room-button">' +
@@ -57,7 +61,7 @@ define([
                                         '<textarea class="form-control" id="roomDescription" placeholder="Locale Description" rows="3">' + this.model.get("description") +'</textarea>' + 
                                    '</div>' + 
                                    '<div class="form-group">' + 
-                                        '<input type="text" class="form-control" id="roomTags" placeholder="Tags" value="' + this.model.get("tags") +'">' + 
+                                        '<input type="text" class="form-control" id="roomTags" placeholder="Tags" value="' + tags +'">' + 
                                    '</div>' + 
                                    '<div class="form-group">' + 
 										'<div class="btn-group" role="group" aria-label="Privacy">' +
@@ -80,9 +84,31 @@ define([
 		},
 
 		deleteLocale: function() {
+
+			// TODO: Confirmation window. Very easy to accidently delete a locale
+
 			this.parent.deleteRoom(this);
 			LocaleSocket.Emit('deletelocale', this.model.get("name"));
 			LocaleSocket.Emit('updaterooms');
+		},
+
+		updateLocale: function() {
+
+			var newName = this.$el.find("#roomName").val();
+			var newDesc = this.$el.find("#roomDescription").val();
+			var newTags = this.$el.find("#roomTags").val().split(" ").join("");
+			newTags = newTags.split("#");
+			newTags.splice(0,1);
+
+			var newPriv = this.$el.find('button.btn-locale-privacy.active').data("privacy");
+
+			LocaleSocket.Emit('updateroom', { "updateRoom": this.model.get("name"), "name": newName, "description": newDesc, "tags": newTags, "privacy": newPriv} );
+
+			var editLocale = this.$el.find(".edit-locale");
+
+			editLocale.animate({height: "0px"}, function(){
+				editLocale.css("display","none");
+			});
 		},
 
 		getRoomWindow: function() {
@@ -93,26 +119,6 @@ define([
 		// Deprecated
 		removeChatWindow: function() {
 			this.ChatWindow.$el.css("display: none");
-		},
-
-		// Deprecated
-		remove: function() {
-			
-			//this.stop().animate({left:"-200px"}, 2000);
-            this.$el.stop().animate({left:"-300px"}, 750, function(){
-                    //move under element up
-                   // this.remove(this);
-                    var numRooms = $('#my-room-container').children().size();
-                    if(numRooms == 0){
-                            $('#my-room-container').html('<div id="no-rooms">You do not have any rooms!</div>');
-                            $('.toggle-delete').css("display", "none");
-                    }
-                    var maxHeight = (5-numRooms) * 7 + 40 + "%";
-
-                    $('#all-room-container').css("max-height", maxHeight);
-            });
-		
-			this.parent.remove(this);
 		},
 
 		resetMessages: function() {
