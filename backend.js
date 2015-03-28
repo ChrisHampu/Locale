@@ -213,23 +213,28 @@ io.sockets.on('connection', function (socket) {
 			if(locale.owner === userKey) {
 
 				Couch.getLocaleByName(data.name, function(existingLocale) {
+					locale.name = data.name;
+					locale.description = data.description;
+					locale.privacy = data.privacy;
+					locale.tags = data.tags;
+
 					if(existingLocale !== undefined)
 					{
-						// TODO: Notify user that update failed as it already exists
+						Couch.replaceLocaleByName(data.updateRoom, locale, function() {
+
+							locale.updateRoom = data.updateRoom;
+
+							socket.emit('updaterooms', [locale]);
+						});
 					}	
 					else
 					{
-						locale.name = data.name;
-						locale.description = data.description;
-						locale.privacy = data.privacy;
-						locale.tags = data.tags;
-
-						Couch.moveMessagesToNewLocale(locale.messages, "locale_" + data.name)
+						Couch.moveMessagesToNewLocaleHard(locale.messages, "locale_" + data.name)
 
 						Couch.replaceLocaleAttributes(data.updateRoom, locale, function() {
+
 							locale.updateRoom = data.updateRoom;
 
-							// Tell all our users that a locale has been deleted
 							socket.emit('updaterooms', [locale]);
 						});
 					}
