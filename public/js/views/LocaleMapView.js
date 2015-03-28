@@ -281,7 +281,9 @@ define([
 
 					mapMarkers.push( { name: value.name, map : { circle: circle, marker: marker} });
 
-					ChatroomCollection.add( new LocaleChatModel( { location: value.location, name: value.name, radius: value.radius, canJoin: value.canJoin, userCount: value.userCount, tags: value.tags }));
+					ChatroomCollection.add( new LocaleChatModel( { location: value.location, name: value.name, radius: value.radius, 
+						canJoin: value.canJoin, userCount: value.userCount, tags: value.tags, description: value.description,
+						privacy: value.privacy }));
 				}
 
 			}, this);
