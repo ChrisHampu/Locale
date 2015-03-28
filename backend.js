@@ -192,35 +192,62 @@ io.sockets.on('connection', function (socket) {
 		});
 	})
 
-	// listener, client asks for updaterooms, server sends back the list of rooms
-	socket.on('updaterooms', function (data) {
-		// Pull all the available rooms on every connection to compare against rooms that a given user is permitted access to
-		/*
-		world.getRooms(function(rooms) {
-			allRooms = rooms;
+	// A user can update the settings of a room
+	socket.on('updateroom', function (data) {
 
-			// Calculate the active rooms for this user and push them
-			world.getAllowedRoomNames(socket.user.location.latitude, socket.user.location.longitude, function(allowedRooms) {
-			
-				var usersRooms = allRooms.map(function(obj){ 
-			
-					if (allowedRooms.indexOf(obj.name) > -1) {
-						obj.canJoin = true;
-					} else {
-						obj.canJoin = false;
+		if(socket.user === undefined)
+			return;
+
+		if(data.updateRoom === undefined)
+			return;
+
+		Couch.getLocaleByName(data.updateRoom, function(locale) {
+
+			if(locale === undefined) {
+				console.log("updateroom: Invalid locale being referenced");
+				return;
+			}
+
+			var userKey = "user_" + socket.user.id;
+
+			if(locale.owner === userKey) {
+
+				Couch.getLocaleByName(data.name, function(existingLocale) {
+					if(existingLocale !== undefined)
+					{
+						// TODO: Notify user that update failed as it already exists
+					}	
+					else
+					{
+						locale.name = data.name;
+						locale.description = data.description;
+						locale.privacy = data.privacy;
+						locale.tags = data.tags;
+
+						var oldLocaleKey = "locale_" + data.updateRoom;
+						Couch.moveMessagesToNewLocale(locale.messages, oldLocaleKey)
+
+						Couch.replaceLocaleAttributes(data.updateRoom, locale, function() {
+							locale.updateRoom = data.updateRoom;
+
+							// Tell all our users that a locale has been deleted
+							socket.emit('updaterooms', [locale]);
+						});
 					}
-			
-					return obj;
 				});
-			
-				socket.emit('updaterooms', usersRooms);
-			});
-		})
-*/
+
+			} else {
+				// TODO: Notify user that update failed
+			}
+		});
+
 	});
 	
 	// when the client emits 'sendchat', this listens and executes
 	socket.on('sendchat', function (data) {;
+
+		if(socket.user === undefined)
+			return;
 
 		var message = {
 			"locale": "locale_" + data.room,

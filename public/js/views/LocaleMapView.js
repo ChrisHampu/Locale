@@ -188,11 +188,30 @@ define([
 
 		renderRooms: function(rooms, current) {
 			_.each(rooms, function(value) {
+				
+				if(value.updateRoom !== undefined)
+				{
+					var updatingLocale = ChatroomCollection.findWhere( { name: value.updateRoom} );
+
+					if(updatingLocale !== undefined)
+					{
+						ChatroomCollection.remove(updatingLocale);
+						//ChatroomListView.remove()
+						this.removeMarker(value.updateRoom);
+
+						updatingLocale.set("name", value.name);
+						updatingLocale.set("description", value.description);
+						updatingLocale.set("tags", value.tags);
+						updatingLocale.set("privacy", value.privacy);
+
+						value = _.clone(updatingLocale.attributes);
+					}
+				}
 
 				// Disallow duplicates
 				var exists = ChatroomCollection.where( { name: value.name} );
-
-				if(exists.length == 0)
+		
+				if(exists.length === 0)
 				{
 					var pos = new google.maps.LatLng(value.location.latitude, value.location.longitude);
 

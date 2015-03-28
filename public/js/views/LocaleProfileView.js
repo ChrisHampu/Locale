@@ -14,7 +14,7 @@ define([
 
 		events: {
 			'click #profile-thumbnail' : 'profile',
-			'click .toggle-delete' : 'toggle',
+			'click .toggle-delete' : 'toggle', // TODO: Is this used anywhere?
 			'click .toggle-pencil' : 'expandUpdate'
 		},
 

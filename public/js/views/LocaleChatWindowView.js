@@ -121,10 +121,6 @@ define([
 			this.$el.children(".chatbox").find(".messages-wrapper").scrollTop(1000000);
 		},
 
-		remove: function(message) {
-
-		},
-
 		minimize: function(){
 			var checkState = this.$el.children(".chatbox").css("bottom");
 			var chatWindow = this.$el.children(".chatbox");

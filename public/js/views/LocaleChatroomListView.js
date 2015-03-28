@@ -19,6 +19,7 @@ define([
 			this.$el.find("#my-room-container").html(""); // Remove dummy data
 			$("#chatarea").html("");
 			this.listenTo(this.collection, "add", this.add);
+			this.listenTo(this.collection, "remove", this.remove);
 			this.Rooms = [];
 
 			this.$el.on('click', '.btn-locale-privacy', function() {
@@ -69,9 +70,27 @@ define([
 		},
 
 		remove: function(room) {
-			room.set("joined", false);
+			var idx = -1;
 
-			this.render();
+			if(room.attributes === undefined)
+				return;
+
+			for(var i = 0; i < this.Rooms.length; i++) {
+
+				var oldName = this.Rooms[i].model.get("name");
+				var newName = room.attributes.name;
+
+				if(newName === oldName) {
+					idx = i;
+				}
+			};
+
+			if(idx >= 0) {
+				this.Rooms[idx].getRoomWindow().remove();
+				delete this.Rooms[idx].getRoomWindow();
+				this.Rooms[idx].remove();
+				delete this.Rooms[idx];
+			}
 		},
 
 		deleteRoom: function(room) {
