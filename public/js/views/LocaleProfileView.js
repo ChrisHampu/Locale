@@ -36,7 +36,7 @@ define([
 					})
 				}else{
 					$("#add-room-dialog").css("display", "block");
-					$("#add-room-dialog").stop().animate({height: "360px"});
+					$("#add-room-dialog").stop().animate({height: "415px"});
 				}
 			});
 		},
