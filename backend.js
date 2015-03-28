@@ -3,7 +3,8 @@ var express = require('express')
 , http = require('http')
 , server = http.createServer(app)
 , io = require('socket.io').listen(server)
-, couchbase = require('couchbase');
+, couchbase = require('couchbase')
+, geolib = require('geolib');
 
 server.listen(80, function(){
 	var host = server.address().address;
@@ -58,6 +59,8 @@ io.sockets.on('connection', function (socket) {
 	socket.on('join', function(user){
 		var newUser = JSON.parse(user);
 
+		// TODO: Verify auth token being given before even treating user as valid
+
 		// Store the username in the socket session for this client
 		socket.username = newUser.firstName;
 		socket.user = newUser;
@@ -69,28 +72,31 @@ io.sockets.on('connection', function (socket) {
 
 				Couch.getAllLocalesInRange(newUser, 1000.0, function(localesInRange) {
 
-					var updatedLocales = locales.map(function (locale) {
+					var updatedLocales = [];
+
+					for(var i = 0; i < locales.length; i++) {
+
+						var locale = locales[i];
+
+						if(locale.privacy !== "public" && locale.owner !== userKey) {
+							continue;
+						}
 
 						var join = !(localesInRange.indexOf(locale.name) === -1);
 
-						if(locale.privacy !== "public") {
-							if(locale.owner === userKey)
-								join = join && true;
-							else
-								join = false;
-						}						
+						var isClose = geolib.getDistance(newUser.location, locale.location) < locale.radius;
 
 						// Put together the data that we want clients to receive
-						return {
+						updatedLocales.push({
 							name: locale.name,
 							description: locale.description,
 							location: locale.location,
 							radius: locale.radius,
 							tags: locale.tags,
-							userCount: locale.users.length,
-							canJoin: join
-						};
-					});
+							canJoin: join && isClose,
+							privacy: locale.privacy
+						});					
+					}
 
 					socket.emit('updaterooms', updatedLocales);
 				});
@@ -120,7 +126,7 @@ io.sockets.on('connection', function (socket) {
 			name: data.name,
 			description: data.description,
 			location: socket.user.location,
-			radius: 1000,
+			radius: data.range, // TODO: Cap value
 			owner: "user_" + socket.user.id.toString(),
 			tags: data.tags,
 			users: [],
@@ -147,27 +153,31 @@ io.sockets.on('connection', function (socket) {
 
 						Couch.getAllLocalesInRange(curSocket.user, 1000, function(localesInRange) {
 
-							var updatedLocales = locales.map(function (locale) {
+							var updatedLocales = [];
+
+							for(var i = 0; i < locales.length; i++) {
+
+								var locale = locales[i];
+
+								if(locale.privacy !== "public" && locale.owner !== userKey) {
+									continue;
+								}
 
 								var join = !(localesInRange.indexOf(locale.name) === -1);
 
-								if(locale.privacy !== "public") {
-									if(locale.owner === userKey)
-										join = join && true;
-									else
-										join = false;
-								}
+								var isClose = geolib.getDistance(curSocket.user.location, locale.location) < locale.radius;
 
 								// Put together the data that we want clients to receive
-								return {
+								updatedLocales.push({
 									name: locale.name,
 									description: locale.description,
 									location: locale.location,
 									radius: locale.radius,
 									tags: locale.tags,
-									canJoin: join
-								};
-							});
+									canJoin: join && isClose,
+									privacy: locale.privacy
+								});					
+							}
 
 							socket.emit('updaterooms', updatedLocales);
 						});
@@ -211,6 +221,7 @@ io.sockets.on('connection', function (socket) {
 	
 	// when the client emits 'sendchat', this listens and executes
 	socket.on('sendchat', function (data) {;
+
 		var message = {
 			"locale": "locale_" + data.room,
 			"firstName": socket.user.firstName,
@@ -220,6 +231,8 @@ io.sockets.on('connection', function (socket) {
 			"message": data.message.slice(0,200),
 			"timestamp": Math.floor(new Date())
 		};
+
+		// TODO: Is the user even allowed to send a chat to this room? Check for spoofed messages
 
 		Couch.persistChatMessage(data.room, socket.user.id, message, function() {
 			
@@ -262,6 +275,8 @@ io.sockets.on('connection', function (socket) {
 			return;
 
 		Couch.hasUserInRoom(roomName, socket.user.id, function(hasUser, users) {
+
+			// TODO: Get room and check radius/privacy to ensure user is allowed to join this room
 
 			if(hasUser === false)
 			{

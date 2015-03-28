@@ -50,7 +50,26 @@ define([
                         '<div class="panel panel-default edit-locale">' +
                             '<div class="panel-body">' +
                                 '<form>' +
-                                    '<button type="button" class="btn btn-danger delete-locale"><i class="fa fa-trash-o"></i> Delete</button>' +
+                            	   '<div class="form-group">' +
+                                        '<input type="text" class="form-control" id="roomName" placeholder="Locale Name" value="' + this.model.get("name") + '">' +
+                                   '</div>' + 
+                                   '<div class="form-group">' + 
+                                        '<textarea class="form-control" id="roomDescription" placeholder="Locale Description" rows="3">' + this.model.get("description") +'</textarea>' + 
+                                   '</div>' + 
+                                   '<div class="form-group">' + 
+                                        '<input type="text" class="form-control" id="roomTags" placeholder="Tags" value="' + this.model.get("tags") +'">' + 
+                                   '</div>' + 
+                                   '<div class="form-group">' + 
+										'<div class="btn-group" role="group" aria-label="Privacy">' +
+											'<button type="button" class="btn btn-default btn-locale-privacy active" data-privacy="public">Public</button>' + 
+											'<button type="button" class="btn btn-default btn-locale-privacy" data-privacy="unlisted">Unlisted</button>' + 
+											'<button type="button" class="btn btn-default btn-locale-privacy" data-privacy="private">Private</button>' + 
+										'</div>' + 
+									'</div>' + 
+									'<div class="form-group edit-button-container">' + 
+										'<button type="button" class="btn btn-success update-locale"><i class="fa fa-check"></i> Update</button>' + 
+										'<button type="button" class="btn btn-danger delete-locale"><i class="fa fa-trash-o"></i> Delete</button>' +
+									'</div>' + 
                                 '</form>' +
                             '</div>' +
                             '</div>' +

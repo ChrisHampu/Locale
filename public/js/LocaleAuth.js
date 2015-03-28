@@ -94,6 +94,7 @@ define([
 
 
 	var Logout = function() {
+		// Pfft you think you can logout?
 	}
 
 	var EnsureAuthed = function() {

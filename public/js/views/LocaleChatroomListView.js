@@ -97,6 +97,8 @@ define([
 			var tags = this.$el.find("#roomTags").val().replace(" ","").split("#");
 			tags.splice(0,1);
 
+			var range = this.$el.find("#roomRange").val();
+
 			if(name === undefined || description === "")
 				return;
 
@@ -105,14 +107,16 @@ define([
 					"name": name,
 					"description" : description,
 					"privacy": privacyMode,
-					"tags": []
+					"tags": [],
+					"range": range
 				});
 			} else {
 				LocaleSocket.Emit('addroom', {
 					"name": name,
 					"description" : description,
 					"tags" : tags,
-					"privacy": privacyMode
+					"privacy": privacyMode,
+					"range": range
 				});
 			}
 
