@@ -59,6 +59,8 @@ io.sockets.on('connection', function (socket) {
 	socket.on('join', function(user){
 		var newUser = JSON.parse(user);
 
+		// TODO: Verify auth token being given before even treating user as valid
+
 		// Store the username in the socket session for this client
 		socket.username = newUser.firstName;
 		socket.user = newUser;
@@ -124,7 +126,7 @@ io.sockets.on('connection', function (socket) {
 			name: data.name,
 			description: data.description,
 			location: socket.user.location,
-			radius: data.range,
+			radius: data.range, // TODO: Cap value
 			owner: "user_" + socket.user.id.toString(),
 			tags: data.tags,
 			users: [],
@@ -219,6 +221,7 @@ io.sockets.on('connection', function (socket) {
 	
 	// when the client emits 'sendchat', this listens and executes
 	socket.on('sendchat', function (data) {;
+
 		var message = {
 			"locale": "locale_" + data.room,
 			"firstName": socket.user.firstName,
@@ -228,6 +231,8 @@ io.sockets.on('connection', function (socket) {
 			"message": data.message.slice(0,200),
 			"timestamp": Math.floor(new Date())
 		};
+
+		// TODO: Is the user even allowed to send a chat to this room? Check for spoofed messages
 
 		Couch.persistChatMessage(data.room, socket.user.id, message, function() {
 			
@@ -270,6 +275,8 @@ io.sockets.on('connection', function (socket) {
 			return;
 
 		Couch.hasUserInRoom(roomName, socket.user.id, function(hasUser, users) {
+
+			// TODO: Get room and check radius/privacy to ensure user is allowed to join this room
 
 			if(hasUser === false)
 			{
