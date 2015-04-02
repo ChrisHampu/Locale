@@ -7,6 +7,8 @@ var express = require('express')
 , geolib = require('geolib')
 , path = require('path')
 
+module.exports = server;
+
 // 
 // DEVELOPMENT SWITCH
 //
