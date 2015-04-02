@@ -4,8 +4,32 @@ var express = require('express')
 , server = http.createServer(app)
 , io = require('socket.io').listen(server)
 , couchbase = require('couchbase')
-, geolib = require('geolib');
+, geolib = require('geolib')
+, path = require('path')
 
+// 
+// DEVELOPMENT SWITCH
+//
+var InDev = true;
+var FrontendPath = __dirname + "/../frontend";
+var StaticPath = __dirname + "/../static";
+
+// Live server will be passed this by command line to signal we're in production
+process.argv.forEach(function(val, index, array) {
+	if(val === "production") {
+		InDev = false;
+	}
+});
+
+if(InDev === true) {
+	console.log("Running in development mode");
+} else {
+	console.log("Running in production mode");
+	FrontendPath = __dirname + "../deploy";
+}
+// 
+// SERVER CONFIG
+//
 server.listen(80, function(){
 	var host = server.address().address;
 	var port = server.address().port;
@@ -13,42 +37,27 @@ server.listen(80, function(){
 	console.log('Locale webserver launched at http://%s:%s', host, port);
 });
 
-app.use(express.static(__dirname + '/public'));
+// For static files
+app.use(express.static(path.resolve(StaticPath)));
 
-app.get('', function (req, res) {
-	//Loads index file.
-	res.sendFile(__dirname + '/locale.html');
-});
+// For dynamic js/css
+app.use(express.static(path.resolve(FrontendPath)));
 
 // 
 // ROUTING
 //
-app.get('/privacy', function (req, res) {
-	//Loads index file.
-	res.sendFile(__dirname + '/privacy.html');
+app.get('', function (req, res) {
+	// Index
+	res.sendFile(path.resolve(FrontendPath + '/locale.html'));
 });
 
 app.get('/ourstack', function (req, res) {
-	//Loads index file.
-	res.sendFile(__dirname + '/ourstack.html');
+	res.sendFile(path.resolve(__dirname + '/../static/ourStack.html'));
 });
 
 //
 // "SUPERGLOBALS"
 //
-
-var InDev = true;
-
-// Live server will be passed this by command line to signal we're in production
-process.argv.forEach(function(val, index, array) {
-	if(val === "production") {
-		InDev = false;
-		console.log("Running in production mode");
-	}
-});
-
-if(InDev === true)
-	console.log("Running in development mode");
 
 var CouchDB = require("./Model/couch.js");
 var Couch = new CouchDB(couchbase, InDev);
