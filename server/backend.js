@@ -6,8 +6,7 @@ var express = require('express')
 , couchbase = require('couchbase')
 , geolib = require('geolib')
 , path = require('path')
-
-module.exports = server;
+, sassMiddleware = require('node-sass-middleware');
 
 // 
 // DEVELOPMENT SWITCH
@@ -38,6 +37,13 @@ server.listen(80, function(){
 
 	console.log('Locale webserver launched at http://%s:%s', host, port);
 });
+
+// For sass files during development
+if(InDev === true)
+	app.use(sassMiddleware({src: path.resolve(__dirname + '/../frontend'),
+							dest: path.resolve(__dirname + '/../frontend'),
+							debug: true,
+							outputStyle: 'expanded'}));
 
 // For static files
 app.use(express.static(path.resolve(StaticPath)));
