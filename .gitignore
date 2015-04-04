@@ -20,3 +20,9 @@ node_modules/couchbase/deps/lcb/include/libcouchbase/plugins/io/libuv/*
 bower_components/*
 deploy/*
 frontend/js/libs/*
+!frontend/js/libs/require
+frontend/js/libs/require/*
+!frontend/js/libs/require/async.js
+!frontend/js/libs/sidr
+frontend/js/libs/sidr/*
+!frontend/js/libs/sidr/jquery.sidr.min.js
