@@ -28,13 +28,14 @@ module.exports = function(grunt) {
 					{ flatten: true, src: ['bower_components/backbone/backbone.js'], dest: 'deploy/js/libs/backbone/backbone.js', filter: 'isFile'  },
 					{ flatten: true, src: ['bower_components/requirejs/require.js'], dest: 'deploy/js/libs/require/require.js', filter: 'isFile'  },
 					{ flatten: true, src: ['bower_components/requirejs-hbs/hbs.js'], dest: 'deploy/js/libs/requirejs-hbs/hbs.js', filter: 'isFile'  },
-					{ flatten: true, src: ['bower_components/jquery/jquery.js'], dest: 'deploy/js/libs/jquery/dist/jquery.js', filter: 'isFile'  },
-					{ flatten: true, src: ['bower_components/underscore/underscore.js'], dest: 'deploy/js/libs/underscore/underscore-min.js', filter: 'isFile'  },
-					{ flatten: true, src: ['bower_components/thorax/thorax.js'], dest: 'deploy/js/libs/thorax/thorax.min.js', filter: 'isFile'  },
+					{ flatten: true, src: ['bower_components/jquery/dist/jquery.min.js'], dest: 'deploy/js/libs/jquery/jquery.js', filter: 'isFile'  },
+					{ flatten: true, src: ['bower_components/underscore/underscore-min.js'], dest: 'deploy/js/libs/underscore/underscore.js', filter: 'isFile'  },
+					{ flatten: true, src: ['bower_components/thorax/thorax.min.js'], dest: 'deploy/js/libs/thorax/thorax.js', filter: 'isFile'  },
 					{ flatten: true, src: ['bower_components/handlebars/handlebars.js'], dest: 'deploy/js/libs/handlebars/handlebars.js', filter: 'isFile'  },
 					{ flatten: true, src: ['bower_components/text/text.js'], dest: 'deploy/js/libs/text/text.js', filter: 'isFile' },
-					{ flatten: true, src: ['bower_components/bootstrap/dist/bootstrap.js'], dest: 'deploy/js/libs/bootstrap/bootstrap.min.js', filter: 'isFile'  },
-					{ flatten: true, src: ['frontend/js/libs/sidr/jquery.sidr.min.js'], dest: 'deploy/js/libs/sidr/jquery.sidr.min.js', filter: 'isFile' }
+					{ flatten: true, src: ['bower_components/bootstrap/dist/js/bootstrap.min.js'], dest: 'deploy/js/libs/bootstrap/bootstrap.js', filter: 'isFile'  },
+					{ flatten: true, src: ['frontend/js/libs/sidr/jquery.sidr.min.js'], dest: 'deploy/js/libs/sidr/jquery.sidr.min.js', filter: 'isFile' },
+					{ flatten: true, src: ['frontend/js/libs/require/async.js'], dest: 'deploy/js/libs/require/async.js', filter: 'isFile' }
 				]
 			},
 			dev: {
@@ -42,12 +43,12 @@ module.exports = function(grunt) {
 					{ flatten: true, src: ['bower_components/backbone/backbone.js'], dest: 'frontend/js/libs/backbone/backbone.js', filter: 'isFile'  },
 					{ flatten: true, src: ['bower_components/requirejs/require.js'], dest: 'frontend/js/libs/require/require.js', filter: 'isFile'  },
 					{ flatten: true, src: ['bower_components/requirejs-hbs/hbs.js'], dest: 'frontend/js/libs/requirejs-hbs/hbs.js', filter: 'isFile'  },
-					{ flatten: true, src: ['bower_components/jquery/jquery.js'], dest: 'frontend/js/libs/jquery/dist/jquery.min.js', filter: 'isFile'  },
+					{ flatten: true, src: ['bower_components/jquery/dist/jquery.js'], dest: 'frontend/js/libs/jquery/jquery.js', filter: 'isFile'  },
 					{ flatten: true, src: ['bower_components/underscore/underscore.js'], dest: 'frontend/js/libs/underscore/underscore.js', filter: 'isFile'  },
 					{ flatten: true, src: ['bower_components/thorax/thorax.js'], dest: 'frontend/js/libs/thorax/thorax.js', filter: 'isFile'  },
 					{ flatten: true, src: ['bower_components/handlebars/handlebars.js'], dest: 'frontend/js/libs/handlebars/handlebars.js', filter: 'isFile'  },
 					{ flatten: true, src: ['bower_components/text/text.js'], dest: 'frontend/js/libs/text/text.js', filter: 'isFile' },
-					{ flatten: true, src: ['bower_components/bootstrap/dist/bootstrap.js'], dest: 'frontend/js/libs/bootstrap/bootstrap.js', filter: 'isFile'  }
+					{ flatten: true, src: ['bower_components/bootstrap/dist/js/bootstrap.js'], dest: 'frontend/js/libs/bootstrap/bootstrap.js', filter: 'isFile'  }
 				]
 			}
 		}
