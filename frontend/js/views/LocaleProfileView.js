@@ -1,15 +1,14 @@
 define([
 	'jquery',
-	'underscore',
-	'backbone',
+	'thorax',
 	'bootstrapjs',
 	'sidr',
 	'LocaleAuth',
 	'LocaleSocket'
-], function($, _, Backbone, Bootstrap, sidr, LocaleAuth, LocaleSocket){
+], function($, Thorax, Bootstrap, sidr, LocaleAuth, LocaleSocket){
 
 	var sidrOpened = true;
-	var LocaleProfileView = Backbone.View.extend({
+	var LocaleProfileView = Thorax.View.extend({
 		el: '#menubar',
 
 		events: {

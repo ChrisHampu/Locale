@@ -1,11 +1,8 @@
 define([
 	'jquery',
-	'underscore',
-	'backbone',
-	'bootstrapjs',
 	'LocaleUtilities',
 	'google'
-], function($, _, Backbone, Bootstrap, LocaleUtilities){
+], function($, LocaleUtilities){
 
 	var AppToken = undefined
 		RedirectURL = "http://getlocale.me",

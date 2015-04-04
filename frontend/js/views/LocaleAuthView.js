@@ -1,14 +1,13 @@
 define([
 	'jquery',
-	'underscore',
-	'backbone',
+	'thorax',
 	'bootstrapjs',
 	'LocaleAuth'
-], function($, _, Backbone, Bootstrap, LocaleAuth){
+], function($, Thorax, Bootstrap, LocaleAuth){
 
 	var Router;
 
-	var LocaleAuthView = Backbone.View.extend({
+	var LocaleAuthView = Thorax.View.extend({
 		el: '#loginpage',
 
 		events: {

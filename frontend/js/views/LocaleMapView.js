@@ -1,7 +1,6 @@
 define([
 	'jquery',
-	'underscore',
-	'backbone',
+	'thorax',
 	'bootstrapjs',
 	'LocaleUtilities',
 	'LocaleProfileView',
@@ -12,7 +11,7 @@ define([
 	'LocaleSocket',
 	'LocaleAuth',
 	'async!http://maps.google.com/maps/api/js?sensor=false!callback'
-], function($, _, Backbone, Bootstrap, LocaleUtilities, LocaleProfileView, LocaleChatroomListView, LocaleChatModel, LocaleChatroomCollection, LocaleSearchModel, LocaleSocket, LocaleAuth, GMaps){
+], function($, Thorax, Bootstrap, LocaleUtilities, LocaleProfileView, LocaleChatroomListView, LocaleChatModel, LocaleChatroomCollection, LocaleSearchModel, LocaleSocket, LocaleAuth, GMaps){
 
 	var ProfileView,
 		ChatroomListView,
@@ -33,7 +32,7 @@ define([
 
 	var mapMarkers = [];
 
-	var LocaleMapView = Backbone.View.extend({
+	var LocaleMapView = Thorax.View.extend({
 		el: '#mappage',
 
 		events: {

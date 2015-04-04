@@ -1,10 +1,9 @@
 define([
 	'jquery',
-	'underscore',
 	'backbone',
 	'bootstrapjs',
 	'LocaleRouter'
-], function($, _, Backbone, Bootstrap, LocaleRouter){
+], function($, Backbone, Bootstrap, LocaleRouter){
 
 	var Router;
 

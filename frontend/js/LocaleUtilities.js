@@ -1,9 +1,7 @@
 define([
 	'jquery',
-	'underscore',
-	'backbone',
 	'bootstrapjs'
-], function($, _, Backbone, Bootstrap){
+], function($, Bootstrap){
 
 	var CurrentLocation = undefined;
 	

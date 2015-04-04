@@ -1,16 +1,15 @@
 define([
 	'jquery',
-	'underscore',
-	'backbone',
+	'thorax',
 	'bootstrapjs',
 	'LocaleSocket',
 	'LocaleAuth',
 	'LocaleMapView'
-], function($, _, Backbone, Bootstrap, LocaleSocket, LocaleAuth, LocaleMapView){
+], function($, Thorax, Bootstrap, LocaleSocket, LocaleAuth, LocaleMapView){
 
 	var MapView;
 
-	var LocaleView = Backbone.View.extend({
+	var LocaleView = Thorax.View.extend({
 		el: '#wrapper',
 
 		initialize: function() {

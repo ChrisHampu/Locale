@@ -1,14 +1,12 @@
 define([
 	'jquery',
-	'underscore',
 	'backbone',
-	'bootstrapjs',
 	'Locale',
 	'LocaleSocket',
 	'LocaleAuthView',
 	'LocaleView',
 	'LocaleMapView'
-], function($, _, Backbone, Bootstrap, Locale, LocaleSocket, LocaleAuthView, LocaleView){
+], function($, Backbone, Locale, LocaleSocket, LocaleAuthView, LocaleView){
 
 	var AuthView,
 		LocaleView;

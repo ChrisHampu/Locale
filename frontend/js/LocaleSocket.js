@@ -1,10 +1,7 @@
 define([
 	'jquery',
-	'underscore',
-	'backbone',
-	'bootstrapjs',
 	'socketio'
-], function($, _, Backbone, Bootstrap, io){
+], function($, io){
 
 	var Socket = undefined,
 		Connected; 

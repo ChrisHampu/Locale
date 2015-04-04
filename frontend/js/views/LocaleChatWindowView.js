@@ -1,13 +1,12 @@
 define([
 	'jquery',
-	'underscore',
-	'backbone',
+	'thorax',
 	'bootstrapjs',
 	'LocaleChatMessageModel',
 	'LocaleChatUserModel',
 	'LocaleAuth',
 	'LocaleSocket'
-], function($, _, Backbone, Bootstrap, LocaleChatMessageModel, LocaleChatUserModel, LocaleAuth, LocaleSocket){
+], function($, Thorax, Bootstrap, LocaleChatMessageModel, LocaleChatUserModel, LocaleAuth, LocaleSocket){
 
 	var Weekdays = new Array("Sun","Mon","Tue","Wed","Thu","Fri","Sat");
 
@@ -24,7 +23,7 @@ define([
 		return format;
 	};
 
-	var LocaleChatWindowView = Backbone.View.extend({
+	var LocaleChatWindowView = Thorax.View.extend({
 		tagName: 'div',
 
 		className: 'chatbox-container', //Change this to chatbox-container and defuckulate it all.

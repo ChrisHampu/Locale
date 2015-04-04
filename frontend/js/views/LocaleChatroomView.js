@@ -1,16 +1,15 @@
 define([
 	'jquery',
-	'underscore',
-	'backbone',
+	'thorax',
 	'bootstrapjs',
 	'LocaleChatUserModel',
 	'LocaleChatWindowView',
 	'LocaleChatroomMessageCollection',
 	'LocaleChatMessageModel',
 	'LocaleSocket'
-], function($, _, Backbone, Bootstrap, LocaleChatUserModel, LocaleChatWindowView, LocaleChatroomMessageCollection, LocaleChatMessageModel, LocaleSocket){
+], function($, Thorax, Bootstrap, LocaleChatUserModel, LocaleChatWindowView, LocaleChatroomMessageCollection, LocaleChatMessageModel, LocaleSocket){
 
-	var LocaleChatroomView = Backbone.View.extend({
+	var LocaleChatroomView = Thorax.View.extend({
 		tagName: 'li',
 
 		events: {

@@ -1,12 +1,11 @@
 define([
 	'jquery',
-	'underscore',
 	'thorax',
 	'bootstrapjs',
 	'LocaleChatroomView',
 	'LocaleSocket',
 	'LocaleAuth'
-], function($, _, Thorax, Bootstrap, LocaleChatroomView, LocaleSocket, LocaleAuth){
+], function($, Thorax, Bootstrap, LocaleChatroomView, LocaleSocket, LocaleAuth){
 
 	var LocaleChatroomListView = Thorax.View.extend({
 		el: '#my-rooms',
