@@ -26,7 +26,7 @@ if(InDev === true) {
 	console.log("Running in development mode");
 } else {
 	console.log("Running in production mode");
-	FrontendPath = __dirname + "../deploy";
+	FrontendPath = __dirname + "/../deploy";
 }
 // 
 // SERVER CONFIG
