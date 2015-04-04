@@ -15,53 +15,69 @@ var InDev = true;
 var FrontendPath = __dirname + "/../frontend";
 var StaticPath = __dirname + "/../static";
 
-// Live server will be passed this by command line to signal we're in production
-process.argv.forEach(function(val, index, array) {
-	if(val === "production") {
-		InDev = false;
+// developmentMode is true for dev, and false for production
+var Initialize = function(developmentMode) {
+
+	if(developmentMode === true) {
+		console.log("Running in development mode");
+	} else {
+		console.log("Running in production mode");
+		FrontendPath = __dirname + "/../deploy";
 	}
-});
+	
+	// 
+	// SERVER CONFIG
+	//
+	server.listen(80, function(){
+		var host = server.address().address;
+		var port = server.address().port;
 
-if(InDev === true) {
-	console.log("Running in development mode");
-} else {
-	console.log("Running in production mode");
-	FrontendPath = __dirname + "/../deploy";
+		console.log('Locale webserver launched at http://%s:%s', host, port);
+	});
+
+	// For sass files during development for realtime compiling
+	if(developmentMode === true)
+		app.use(sassMiddleware({src: path.resolve(__dirname + '/../frontend'),
+								dest: path.resolve(__dirname + '/../frontend'),
+								debug: true,
+								outputStyle: 'expanded'}));
+
+	// For static files
+	app.use(express.static(path.resolve(StaticPath)));
+
+	// For dynamic js/css
+	app.use(express.static(path.resolve(FrontendPath)));
+
+	// 
+	// ROUTING
+	//
+	app.get('', function (req, res) {
+		// Index
+		res.sendFile(path.resolve(FrontendPath + '/locale.html'));
+	});
+
+	app.get('/ourstack', function (req, res) {
+		res.sendFile(path.resolve(__dirname + '/../static/ourStack.html'));
+	});
 }
-// 
-// SERVER CONFIG
-//
-server.listen(80, function(){
-	var host = server.address().address;
-	var port = server.address().port;
 
-	console.log('Locale webserver launched at http://%s:%s', host, port);
-});
+// Export to external scripts (ie: grunt)
+module.exports = Initialize;
 
-// For sass files during development
-if(InDev === true)
-	app.use(sassMiddleware({src: path.resolve(__dirname + '/../frontend'),
-							dest: path.resolve(__dirname + '/../frontend'),
-							debug: true,
-							outputStyle: 'expanded'}));
-
-// For static files
-app.use(express.static(path.resolve(StaticPath)));
-
-// For dynamic js/css
-app.use(express.static(path.resolve(FrontendPath)));
-
-// 
-// ROUTING
-//
-app.get('', function (req, res) {
-	// Index
-	res.sendFile(path.resolve(FrontendPath + '/locale.html'));
-});
-
-app.get('/ourstack', function (req, res) {
-	res.sendFile(path.resolve(__dirname + '/../static/ourStack.html'));
-});
+if(module.parent) {
+	// Wait to be initialized by external script
+}
+else
+{
+	// Live server will be passed this by command line to signal we're in production
+	process.argv.forEach(function(val, index, array) {
+		if(val === "production") {
+			InDev = false;
+		}
+	});
+	
+	Initialize(InDev);
+}
 
 //
 // "SUPERGLOBALS"
@@ -69,6 +85,10 @@ app.get('/ourstack', function (req, res) {
 
 var CouchDB = require("./Model/couch.js");
 var Couch = new CouchDB(couchbase, InDev);
+
+//
+// SOCKET IO
+//
 
 io.sockets.on('connection', function (socket) {
 

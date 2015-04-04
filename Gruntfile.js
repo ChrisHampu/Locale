@@ -89,7 +89,7 @@ module.exports = function(grunt) {
 		async.waterfall([
 			function() {
 				var serverPath = path.resolve(__dirname + '/server/backend'),
-				server = require(serverPath);
+				server = require(serverPath)(true);
 			}
 		]);
 	});
@@ -100,7 +100,7 @@ module.exports = function(grunt) {
 		async.waterfall([
 			function() {
 				var serverPath = path.resolve(__dirname + '/server/backend'),
-				server = require(serverPath);
+				server = require(serverPath)(false);
 			}
 		]);
 	});
