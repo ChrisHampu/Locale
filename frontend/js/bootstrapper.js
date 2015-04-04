@@ -1,9 +1,29 @@
 require.config({
 	baseUrl: "js/", // Base directory for this application
 	shim: {
-		bootstrapjs: { "deps" : ['jquery'] },
-		facebook: { exports: 'FB' },
-		google: { exports: 'gapi' }
+		bootstrapjs: { 
+			"deps" : ['jquery']
+		},
+		facebook: { 
+			exports: 'FB' 
+		},
+		google: { 
+			exports: 'gapi' 
+		},
+		handlebars: {
+		  exports: 'Handlebars'
+		},
+		backbone: {
+		  exports: 'Backbone',
+		  deps: ['jquery', 'underscore']
+		},
+		underscore: {
+		  exports: '_'
+		},
+		thorax: {
+		  exports: 'Thorax',
+		  deps: ['handlebars', 'backbone']
+		},
 	},
 	paths: {
 		// Load all of the common modules
@@ -13,6 +33,10 @@ require.config({
 		async: 'libs/require/async',
 		facebook : '//connect.facebook.net/en_US/sdk',
 		bootstrapjs: 'libs/bootstrap/bootstrap',
+		handlebars: 'libs/handlebars/handlebars',
+		thorax: 'libs/thorax/thorax',
+		text: 'libs/text/text',
+		hbs: 'libs/requirejs-hbs/hbs',
 		Locale: 'Locale',
 		LocaleRouter: 'LocaleRouter',
 		LocaleView: 'views/LocaleView',
