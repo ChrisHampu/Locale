@@ -27,3 +27,6 @@ frontend/js/libs/require/*
 frontend/js/libs/sidr/*
 !frontend/js/libs/sidr/jquery.sidr.min.js
 frontend/css/style.css
+!frontend/js/libs/thorax
+frontend/js/libs/thorax/*
+!frontend/js/libs/thorax/thorax.js

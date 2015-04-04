@@ -30,12 +30,12 @@ module.exports = function(grunt) {
 					{ flatten: true, src: ['bower_components/requirejs-hbs/hbs.js'], dest: 'deploy/js/libs/requirejs-hbs/hbs.js', filter: 'isFile'  },
 					{ flatten: true, src: ['bower_components/jquery/dist/jquery.min.js'], dest: 'deploy/js/libs/jquery/jquery.js', filter: 'isFile'  },
 					{ flatten: true, src: ['bower_components/underscore/underscore-min.js'], dest: 'deploy/js/libs/underscore/underscore.js', filter: 'isFile'  },
-					{ flatten: true, src: ['bower_components/thorax/thorax.min.js'], dest: 'deploy/js/libs/thorax/thorax.js', filter: 'isFile'  },
 					{ flatten: true, src: ['bower_components/handlebars/handlebars.js'], dest: 'deploy/js/libs/handlebars/handlebars.js', filter: 'isFile'  },
 					{ flatten: true, src: ['bower_components/text/text.js'], dest: 'deploy/js/libs/text/text.js', filter: 'isFile' },
 					{ flatten: true, src: ['bower_components/bootstrap/dist/js/bootstrap.min.js'], dest: 'deploy/js/libs/bootstrap/bootstrap.js', filter: 'isFile'  },
 					{ flatten: true, src: ['frontend/js/libs/sidr/jquery.sidr.min.js'], dest: 'deploy/js/libs/sidr/jquery.sidr.min.js', filter: 'isFile' },
 					{ flatten: true, src: ['frontend/js/libs/require/async.js'], dest: 'deploy/js/libs/require/async.js', filter: 'isFile' }
+					{ flatten: true, src: ['frontend/js/libs/thorax/thorax.js'], dest: 'deploy/js/libs/thorax/thorax.js', filter: 'isFile' }
 				]
 			},
 			dev: {
@@ -45,7 +45,6 @@ module.exports = function(grunt) {
 					{ flatten: true, src: ['bower_components/requirejs-hbs/hbs.js'], dest: 'frontend/js/libs/requirejs-hbs/hbs.js', filter: 'isFile'  },
 					{ flatten: true, src: ['bower_components/jquery/dist/jquery.js'], dest: 'frontend/js/libs/jquery/jquery.js', filter: 'isFile'  },
 					{ flatten: true, src: ['bower_components/underscore/underscore.js'], dest: 'frontend/js/libs/underscore/underscore.js', filter: 'isFile'  },
-					{ flatten: true, src: ['bower_components/thorax/thorax.js'], dest: 'frontend/js/libs/thorax/thorax.js', filter: 'isFile'  },
 					{ flatten: true, src: ['bower_components/handlebars/handlebars.js'], dest: 'frontend/js/libs/handlebars/handlebars.js', filter: 'isFile'  },
 					{ flatten: true, src: ['bower_components/text/text.js'], dest: 'frontend/js/libs/text/text.js', filter: 'isFile' },
 					{ flatten: true, src: ['bower_components/bootstrap/dist/js/bootstrap.js'], dest: 'frontend/js/libs/bootstrap/bootstrap.js', filter: 'isFile'  }

@@ -1,14 +1,12 @@
 define([
-	'jquery',
-	'underscore',
-	'backbone',
+	'thorax',
 	'LocaleChatMessageModel'
-], function($, _, Backbone, LocaleChatMessageModel){
+], function($, LocaleChatMessageModel){
 
 	/**
-	  * @extends Backbone.Collection
+	  * @extends Thorax.Collection
 	  */
-	var LocaleChatroomMessageCollection = Backbone.Collection.extend({
+	var LocaleChatroomMessageCollection = Thorax.Collection.extend({
 
 		// Reference to this collection's model.
 		model: LocaleChatMessageModel

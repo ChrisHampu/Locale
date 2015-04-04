@@ -1,13 +1,11 @@
 define([
-	'jquery',
-	'underscore',
-	'backbone'
-], function($, _, Backbone){
+	'thorax'
+], function(){
 	
 	/**
-	  * @extends BackBone.Model
+	  * @extends Thorax.Model
 	  */
-	var LocaleChatModel = Backbone.Model.extend({
+	var LocaleChatModel = Thorax.Model.extend({
 
 		initialize: function() {
 
