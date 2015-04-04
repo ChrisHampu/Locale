@@ -20,8 +20,10 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 */
 
-;;
-(function() {
+define([
+	'jquery',
+	'backbone',
+], function($, Backbone){
 
 /*global cloneInheritVars, createInheritVars, resetInheritVars, createRegistryWrapper, getValue, inheritVars, createErrorMessage */
 
@@ -3100,9 +3102,6 @@ if (isIE) {
   };
 }
 
-;;
+return Thorax;
 
-
-})();
-
-//@ sourceMappingURL=thorax.js.map
+});
