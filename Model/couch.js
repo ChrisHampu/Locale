@@ -71,7 +71,7 @@ Couch.prototype.persistChatMessage = function(localeName, userId, message, callb
 		self.Locale.insert(key, { locale: "locale_" + localeName, user: "user_" + userId, 
 									message: message.message, type: "message", timestamp: Math.floor(new Date()),
 									firstName: message.firstName, lastInitial: message.lastInitial,
-									profilePicture: message.profilePicture, profileUrl: message.profileUrl },
+									profilePicture: message.profilePicture, profileUrl: message.profileUrl, messageId: res.value.toString() },
 									function(err, result) {
 
 			self.Locale.get(locale, function(err, result) {
@@ -104,6 +104,46 @@ Couch.prototype.persistLocale = function(locale, callback) {
 		else {
 			if(callback !== undefined)
 				callback(false);			
+		}
+	});
+};
+
+Couch.prototype.replaceLocaleAttributes = function(oldName, locale, callback) {
+
+	var oldKey = "locale_" + oldName;
+	var key = "locale_" + locale.name;
+
+	var self = this;
+
+	this.Locale.remove(oldKey, function(err, result) {
+
+		self.Locale.insert(key, locale, function(err, result) {
+			callback();
+		});
+	});
+};
+
+Couch.prototype.moveMessagesToNewLocale = function(messageKeys, newLocaleKey) {
+
+	if(messageKeys === undefined || messageKeys.length == 0)
+		return;
+
+	var self = this;
+
+	this.Locale.getMulti(messageKeys, function(err, results) {
+
+		if(err)
+			throw err;
+
+		for(var i in results) {
+			var message = results[i].value;
+			var key = "message_" + message.messageId;
+
+			message.locale = newLocaleKey;
+
+			self.Locale.replace(key, message, function(err, res) {
+
+			});
 		}
 	});
 };
@@ -185,9 +225,9 @@ Couch.prototype.getLocaleByName = function(localeName, callback) {
 	this.Locale.get(localeKey, function(err, res) {
 
 		if(err)
-			throw err;
-
-		callback(res.value);
+			callback(undefined);
+		else
+			callback(res.value);
 	});
 };
 

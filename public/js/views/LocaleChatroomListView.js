@@ -19,6 +19,7 @@ define([
 			this.$el.find("#my-room-container").html(""); // Remove dummy data
 			$("#chatarea").html("");
 			this.listenTo(this.collection, "add", this.add);
+			this.listenTo(this.collection, "remove", this.remove);
 			this.Rooms = [];
 
 			this.$el.on('click', '.btn-locale-privacy', function() {
@@ -69,9 +70,29 @@ define([
 		},
 
 		remove: function(room) {
-			room.set("joined", false);
+			var idx = -1;
 
-			this.render();
+			if(room.attributes === undefined)
+				return;
+
+			for(var i = 0; i < this.Rooms.length; i++) {
+
+				var oldName = this.Rooms[i].model.get("name");
+				var newName = room.attributes.name;
+
+				if(newName === oldName) {
+					idx = i;
+				}
+			};
+
+			if(idx >= 0) {
+				this.Rooms[idx].getRoomWindow().remove();
+				delete this.Rooms[idx].getRoomWindow();
+				this.Rooms[idx].remove();
+				delete this.Rooms[idx];
+
+				this.Rooms.splice(idx, 1);
+			}
 		},
 
 		deleteRoom: function(room) {
@@ -94,8 +115,11 @@ define([
 			
 			var name = this.$el.find("#roomName").val();
 			var description = this.$el.find("#roomDescription").val();
-			var tags = this.$el.find("#roomTags").val().replace(" ","").split("#");
+			var tags = this.$el.find("#roomTags").val().split(" ").join("");
+			tags = tags.split("#");
 			tags.splice(0,1);
+
+			var range = this.$el.find("#roomRange").val();
 
 			if(name === undefined || description === "")
 				return;
@@ -105,14 +129,16 @@ define([
 					"name": name,
 					"description" : description,
 					"privacy": privacyMode,
-					"tags": []
+					"tags": [],
+					"range": range
 				});
 			} else {
 				LocaleSocket.Emit('addroom', {
 					"name": name,
 					"description" : description,
 					"tags" : tags,
-					"privacy": privacyMode
+					"privacy": privacyMode,
+					"range": range
 				});
 			}
 

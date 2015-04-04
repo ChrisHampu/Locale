@@ -188,11 +188,34 @@ define([
 
 		renderRooms: function(rooms, current) {
 			_.each(rooms, function(value) {
+				
+				// If this is set, it means the backend is telling us to update an existing room.
+				// What we do here is remove the room to force it to un-render, update the model,
+				// and the rest of the code after this block will make a new waypoint, add the updated model,
+				// and re-render it
+				if(value.updateRoom !== undefined)
+				{
+					var updatingLocale = ChatroomCollection.findWhere( { name: value.updateRoom} );
+
+					if(updatingLocale !== undefined)
+					{
+						ChatroomCollection.remove(updatingLocale);
+						//ChatroomListView.remove()
+						this.removeMarker(value.updateRoom);
+
+						updatingLocale.set("name", value.name);
+						updatingLocale.set("description", value.description);
+						updatingLocale.set("tags", value.tags);
+						updatingLocale.set("privacy", value.privacy);
+
+						value = _.clone(updatingLocale.attributes);
+					}
+				}
 
 				// Disallow duplicates
 				var exists = ChatroomCollection.where( { name: value.name} );
-
-				if(exists.length == 0)
+		
+				if(exists.length === 0)
 				{
 					var pos = new google.maps.LatLng(value.location.latitude, value.location.longitude);
 
@@ -262,7 +285,9 @@ define([
 
 					mapMarkers.push( { name: value.name, map : { circle: circle, marker: marker} });
 
-					ChatroomCollection.add( new LocaleChatModel( { location: value.location, name: value.name, radius: value.radius, canJoin: value.canJoin, userCount: value.userCount, tags: value.tags }));
+					ChatroomCollection.add( new LocaleChatModel( { location: value.location, name: value.name, radius: value.radius, 
+						canJoin: value.canJoin, userCount: value.userCount, tags: value.tags, description: value.description,
+						privacy: value.privacy }));
 				}
 
 			}, this);

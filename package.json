@@ -12,6 +12,7 @@
     "socket.io": "",
 	"couchbase": "^2.0.6",
 	"node-gyp": "",
-    "request": ""
+    "request": "",
+	"geolib": ""
   }
 }
