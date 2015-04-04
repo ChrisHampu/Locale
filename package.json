@@ -21,6 +21,7 @@
 	"node-sass": "",
 	"grunt-sass": "",
 	"node-sass-middleware": "",
-	"grunt-contrib-copy": ""
+	"grunt-contrib-copy": "",
+	"grunt-contrib-requirejs": ""
   }
 }

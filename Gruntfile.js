@@ -25,17 +25,11 @@ module.exports = function(grunt) {
 		copy: {
 			deploy: {
 				files: [
-					{ flatten: true, src: ['bower_components/backbone/backbone.js'], dest: 'deploy/js/libs/backbone/backbone.js', filter: 'isFile'  },
 					{ flatten: true, src: ['bower_components/requirejs/require.js'], dest: 'deploy/js/libs/require/require.js', filter: 'isFile'  },
-					{ flatten: true, src: ['bower_components/requirejs-hbs/hbs.js'], dest: 'deploy/js/libs/requirejs-hbs/hbs.js', filter: 'isFile'  },
-					{ flatten: true, src: ['bower_components/jquery/dist/jquery.min.js'], dest: 'deploy/js/libs/jquery/jquery.js', filter: 'isFile'  },
-					{ flatten: true, src: ['bower_components/underscore/underscore-min.js'], dest: 'deploy/js/libs/underscore/underscore.js', filter: 'isFile'  },
-					{ flatten: true, src: ['bower_components/handlebars/handlebars.js'], dest: 'deploy/js/libs/handlebars/handlebars.js', filter: 'isFile'  },
-					{ flatten: true, src: ['bower_components/text/text.js'], dest: 'deploy/js/libs/text/text.js', filter: 'isFile' },
-					{ flatten: true, src: ['bower_components/bootstrap/dist/js/bootstrap.min.js'], dest: 'deploy/js/libs/bootstrap/bootstrap.js', filter: 'isFile'  },
-					{ flatten: true, src: ['frontend/js/libs/sidr/jquery.sidr.min.js'], dest: 'deploy/js/libs/sidr/jquery.sidr.min.js', filter: 'isFile' },
-					{ flatten: true, src: ['frontend/js/libs/require/async.js'], dest: 'deploy/js/libs/require/async.js', filter: 'isFile' }
-					{ flatten: true, src: ['frontend/js/libs/thorax/thorax.js'], dest: 'deploy/js/libs/thorax/thorax.js', filter: 'isFile' }
+					{ flatten: true, src: ['build/bootstrapper.js'], dest: 'deploy/js/bootstrapper.js', filter: 'isFile'  },
+					{ flatten: true, src: ['frontend/locale.html'], dest: 'deploy/locale.html', filter: 'isFile'  },
+					{ flatten: true, src: ['frontend/css/bootstrap.min.css'], dest: 'deploy/css/bootstrap.min.css', filter: 'isFile'  },
+					{ flatten: true, src: ['frontend/css/jquery.sidr.dark.css'], dest: 'deploy/css/jquery.sidr.dark.css', filter: 'isFile'  }
 				]
 			},
 			dev: {
@@ -50,11 +44,25 @@ module.exports = function(grunt) {
 					{ flatten: true, src: ['bower_components/bootstrap/dist/js/bootstrap.js'], dest: 'frontend/js/libs/bootstrap/bootstrap.js', filter: 'isFile'  }
 				]
 			}
+		},
+		requirejs: {
+			deploy: {
+				options: {
+					baseUrl: "frontend/js",
+					mainConfigFile: "frontend/js/bootstrapper.js",
+					out: "build/bootstrapper.js",
+					name: "bootstrapper",
+					removeCombined: true,
+					findNestedDependencies: true,
+					optimize: 'uglify2',
+				}
+			}
 		}
 	});
 	
 	grunt.loadNpmTasks('grunt-sass');
 	grunt.loadNpmTasks('grunt-contrib-copy');
+	grunt.loadNpmTasks('grunt-contrib-requirejs');
 	
 	grunt.registerTask('ensure-installed', function() {
 		var complete = this.async();
@@ -75,7 +83,18 @@ module.exports = function(grunt) {
 		}
 	});	
 	
-	grunt.registerTask('server', 'Run backend server', function() {
+	grunt.registerTask('server', 'Run backend server in developmenet mode', function() {
+		var done = this.async();
+		
+		async.waterfall([
+			function() {
+				var serverPath = path.resolve(__dirname + '/server/backend'),
+				server = require(serverPath);
+			}
+		]);
+	});
+	
+	grunt.registerTask('server:production', 'Run backend server in production mode', function() {
 		var done = this.async();
 		
 		async.waterfall([
@@ -87,7 +106,10 @@ module.exports = function(grunt) {
 	});
 	
 	grunt.registerTask('deploy', 'Create production build', function() {
+		grunt.task.run('ensure-installed');
+		grunt.task.run('copy:dev');
 		grunt.task.run('sass:deploy');
+		grunt.task.run('requirejs:deploy');
 		grunt.task.run('copy:deploy');
 	});
 	
