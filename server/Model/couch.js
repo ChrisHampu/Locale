@@ -14,18 +14,18 @@ function Couch(couchbase, inDev) {
 	this.Couchbase = couchbase;
 	this.Query = this.Couchbase.ViewQuery;
 
-	if(inDev === true)
+	//if(inDev === true)
 		this.Cluster = new this.Couchbase.Cluster('couchbase://getlocale.me');
-	else
-		this.Cluster = new this.Couchbase.Cluster('couchbase://localhost');
+	//else
+	//	this.Cluster = new this.Couchbase.Cluster('couchbase://localhost');
 
 	this.Locale = this.Cluster.openBucket("locale");
 	this.Locale.operationTimeout = 60 * 1000;
 
-	if(inDev === true)
+	//if(inDev === true)
 		this.SpatialQuery = "http://getlocale.me:8092/locale/_design/dev_getlocales/_spatial/GetLocalesInRange?stale=false&bbox=";
-	else
-		this.SpatialQuery = "http://localhost:8092/locale/_design/dev_getlocales/_spatial/GetLocalesInRange?stale=false&bbox=";
+	//else
+	//	this.SpatialQuery = "http://localhost:8092/locale/_design/dev_getlocales/_spatial/GetLocalesInRange?stale=false&bbox=";
 
 	this.removeAllUsersFromLocales();
 };
