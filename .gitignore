@@ -18,3 +18,4 @@ node_modules/couchbase/deps/lcb/include/libcouchbase/plugins/io/*
 node_modules/couchbase/deps/lcb/include/libcouchbase/plugins/io/libuv/*
 !node_modules/couchbase/deps/lcb/include/libcouchbase/plugins/io/libuv/libuv_compat.h
 bower_components/*
+deploy/*
