@@ -31,3 +31,6 @@ frontend/css/style.css
 !frontend/js/libs/thorax
 frontend/js/libs/thorax/*
 !frontend/js/libs/thorax/thorax.js
+!frontend/js/libs/socketio
+frontend/js/libs/socketio/*
+!frontend/js/libs/socketio/socket.io.js
