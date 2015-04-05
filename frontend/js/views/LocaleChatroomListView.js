@@ -60,10 +60,14 @@ define([
 			var RoomView = new LocaleChatroomView ( { model: room, parent: this });
 
 			this.$el.find("#my-room-container").append(RoomView.renderButton().$el);
-			
+
+			RoomView.delegateEvents();
+
 			if(room.get("joined") === true) {
 				$("#chatarea").append(RoomView.getRoomWindow().render().$el);
 			}
+
+			RoomView.getRoomWindow().delegateEvents();
 
 			this.Rooms.push(RoomView);
 		},
@@ -118,7 +122,7 @@ define([
 			tags = tags.split("#");
 			tags.splice(0,1);
 
-			var range = this.$el.find("#roomRange").val();
+			var range = Math.min(Math.max(this.$el.find("#roomRange").val(), 100), 2000);
 
 			if(name === undefined || description === "")
 				return;
