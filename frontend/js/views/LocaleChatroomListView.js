@@ -118,7 +118,7 @@ define([
 			tags = tags.split("#");
 			tags.splice(0,1);
 
-			var range = this.$el.find("#roomRange").val();
+			var range = Math.min(Math.max(this.$el.find("#roomRange").val(), 100), 2000);
 
 			if(name === undefined || description === "")
 				return;

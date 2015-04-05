@@ -128,7 +128,7 @@ io.sockets.on('connection', function (socket) {
 							name: locale.name,
 							description: locale.description,
 							location: locale.location,
-							radius: locale.radius,
+							radius: Math.min(Math.max(locale.radius, 100), 2000),
 							tags: locale.tags,
 							canJoin: join && isClose,
 							privacy: locale.privacy
@@ -163,7 +163,7 @@ io.sockets.on('connection', function (socket) {
 			name: data.name,
 			description: data.description,
 			location: socket.user.location,
-			radius: data.range, // TODO: Cap value
+			radius: Math.min(Math.max(data.range, 100), 2000),
 			owner: "user_" + socket.user.id.toString(),
 			tags: data.tags,
 			users: [],
@@ -209,7 +209,7 @@ io.sockets.on('connection', function (socket) {
 									name: locale.name,
 									description: locale.description,
 									location: locale.location,
-									radius: locale.radius,
+									radius: Math.min(Math.max(locale.radius, 100), 2000),
 									tags: locale.tags,
 									canJoin: join && isClose,
 									privacy: locale.privacy
