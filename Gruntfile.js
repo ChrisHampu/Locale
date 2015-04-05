@@ -37,7 +37,7 @@ module.exports = function(grunt) {
 					{ flatten: true, src: ['bower_components/backbone/backbone.js'], dest: 'frontend/js/libs/backbone/backbone.js', filter: 'isFile'  },
 					{ flatten: true, src: ['bower_components/requirejs/require.js'], dest: 'frontend/js/libs/require/require.js', filter: 'isFile'  },
 					{ flatten: true, src: ['bower_components/requirejs-hbs/hbs.js'], dest: 'frontend/js/libs/requirejs-hbs/hbs.js', filter: 'isFile'  },
-					{ flatten: true, src: ['bower_components/jquery/jquery.js'], dest: 'frontend/js/libs/jquery/jquery.js', filter: 'isFile'  },
+					{ flatten: true, src: ['bower_components/jquery/dist/jquery.js'], dest: 'frontend/js/libs/jquery/jquery.js', filter: 'isFile'  },
 					{ flatten: true, src: ['bower_components/underscore/underscore.js'], dest: 'frontend/js/libs/underscore/underscore.js', filter: 'isFile'  },
 					{ flatten: true, src: ['bower_components/handlebars/handlebars.js'], dest: 'frontend/js/libs/handlebars/handlebars.js', filter: 'isFile'  },
 					{ flatten: true, src: ['bower_components/text/text.js'], dest: 'frontend/js/libs/text/text.js', filter: 'isFile' },
