@@ -14,6 +14,7 @@
 		'pushd ..',
 		'git pull',
 		'git status',
+		'grunt deploy',
 		'popd'
 		//'git submodule sync',
 		//'git submodule update',

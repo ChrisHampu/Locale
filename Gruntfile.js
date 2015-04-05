@@ -57,12 +57,37 @@ module.exports = function(grunt) {
 					optimize: 'uglify2',
 				}
 			}
+		},
+		nodemon: {
+			deploy: {
+				script: 'server/backend.js',
+				options: {
+					args: ['production'],
+					nodeArgs: [],
+					env: {
+						PORT: '80'
+					},
+					delay: 1000
+				}
+			},
+			dev: {
+				script: 'server/backend.js',
+				options: {
+					args: [],
+					nodeArgs: [],
+					env: {
+						PORT: '80'
+					},
+					delay: 1000
+				}
+			}
 		}
 	});
 	
 	grunt.loadNpmTasks('grunt-sass');
 	grunt.loadNpmTasks('grunt-contrib-copy');
 	grunt.loadNpmTasks('grunt-contrib-requirejs');
+	grunt.loadNpmTasks('grunt-nodemon');
 	
 	grunt.registerTask('ensure-installed', function() {
 		var complete = this.async();
@@ -82,25 +107,11 @@ module.exports = function(grunt) {
 	});	
 	
 	grunt.registerTask('server', 'Run backend server in developmenet mode', function() {
-		var done = this.async();
-		
-		async.waterfall([
-			function() {
-				var serverPath = path.resolve(__dirname + '/server/backend'),
-				server = require(serverPath)(true);
-			}
-		]);
+		grunt.task.run('nodemon:dev');
 	});
 	
 	grunt.registerTask('server:production', 'Run backend server in production mode', function() {
-		var done = this.async();
-		
-		async.waterfall([
-			function() {
-				var serverPath = path.resolve(__dirname + '/server/backend'),
-				server = require(serverPath)(false);
-			}
-		]);
+		grunt.task.run('nodemon:deploy');
 	});
 	
 	grunt.registerTask('deploy', 'Create production build', function() {
