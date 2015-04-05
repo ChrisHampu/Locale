@@ -113,6 +113,11 @@ module.exports = function(grunt) {
 		grunt.task.run('copy:deploy');
 	});
 	
+	grunt.registerTask('deploy:server', 'Deploy production build and run server', function() {
+		grunt.task.run('deploy');
+		grunt.task.run('server:production');
+	});
+	
 	grunt.registerTask('default', function() {
 		grunt.task.run('ensure-installed');
 		grunt.task.run('copy:dev');
