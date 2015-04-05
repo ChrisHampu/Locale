@@ -73,10 +73,8 @@ module.exports = function(grunt) {
 			}).on('error', function(data) {
 					process.stderr.write(data);
 			}).on('end', function (data) {
-				if (data) {
-					process.stdout.write(data);
-				}
 				complete();
+				console.log("Bower install script executed");
 			});
 		} else {
 			complete();
