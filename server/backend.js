@@ -57,7 +57,7 @@ var Initialize = function(developmentMode) {
 	});
 
 	app.get('/ourstack', function (req, res) {
-		res.sendFile(path.resolve(__dirname + '/../static/ourstack.html'));
+		res.sendFile(path.resolve(__dirname + '/../static/stack.html'));
 	});
 }
 
