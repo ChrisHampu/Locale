@@ -13,6 +13,16 @@
 	"couchbase": "^2.0.6",
 	"node-gyp": "",
     "request": "",
-	"geolib": ""
+	"geolib": "",
+	"grunt": "",
+	"grunt-cli": "",
+	"bower": "",
+	"async": "^0.9.0",
+	"node-sass": "",
+	"grunt-sass": "",
+	"node-sass-middleware": "",
+	"grunt-contrib-copy": "",
+	"grunt-contrib-requirejs": "",
+	"grunt-nodemon": ""
   }
 }
