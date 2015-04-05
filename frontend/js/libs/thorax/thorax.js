@@ -718,6 +718,7 @@ Thorax.View.prototype.mixin = function(name) {
 /*global createInheritVars, inheritVars, listenTo, objectEvents, walkInheritTree */
 // Save a copy of the _on method to call as a $super method
 var _on = Thorax.View.prototype.on;
+var delegateEventSplitter = /^(\S+)\s*(.*)$/;
 
 inheritVars.event = {
   name: '_events',
@@ -777,7 +778,7 @@ _.extend(Thorax.View.prototype, {
       //accept on("click a", callback, context)
       _.each((_.isArray(callback) ? callback : [callback]), function(callback) {
         var params = eventParamsFromEventItem.call(this, eventName, callback, context || this);
-        if (params.type === 'DOM' && !this._eventsDelegated) {
+        if (params.type === 'DOM') {
           //will call _addEvent during delegateEvents()
           if (!this._eventsToDelegate) {
             this._eventsToDelegate = [];
@@ -790,18 +791,40 @@ _.extend(Thorax.View.prototype, {
     }
     return this;
   },
+    delegateEvents: function(events) {
+      if (!(events || (events = _.result(this, 'events')))) return this;
+      this.undelegateEvents();
+      for (var key in events) {
+        var method = events[key];
+        if (!_.isFunction(method)) method = this[events[key]];
+        if (!method) continue;
+
+        var match = key.match(delegateEventSplitter);
+        var eventName = match[1], selector = match[2];
+        method = _.bind(method, this);
+        eventName += '.delegateEvents' + this.cid;
+        if (selector === '') {
+          this.$el.on(eventName, method);
+        } else {
+          this.$el.on(eventName, selector, method);
+        }
+      }
+      return this;
+    },
+  /*
   delegateEvents: function(events) {
     this.undelegateEvents();
-    if (events) {
+    if (!(events || (events = _.result(this, 'events')))) return this;
       if (_.isFunction(events)) {
         events = events.call(this);
       }
       this._eventsToDelegate = [];
       this.on(events);
-    }
     this._eventsToDelegate && _.each(this._eventsToDelegate, this._addEvent, this);
     this._eventsDelegated = true;
+    return this;
   },
+  */
   //params may contain:
   //- name
   //- originalName
@@ -912,6 +935,8 @@ function eventParamsFromEventItem(name, handler, context) {
     originalName: name,
     handler: _.isString(handler) ? this[handler] : handler
   };
+  if(name === undefined)
+    return undefined;
   if (name.match(domEventRegexp)) {
     var match = eventSplitter.exec(name);
     params.nested = !!match[1];
