@@ -266,7 +266,7 @@ io.sockets.on('connection', function (socket) {
 					}	
 					else
 					{
-						Couch.moveMessagesToNewLocaleHard(locale.messages, "locale_" + data.name)
+						Couch.moveMessagesToNewLocale(locale.messages, "locale_" + data.name)
 
 						Couch.replaceLocaleAttributes(data.updateRoom, locale, function() {
 
