@@ -43,8 +43,10 @@ define([
 		},
 
 		renderSingle: function(RoomView) {
-			this.$el.find("#my-room-container").append(RoomView.renderButton().$el);
+			RoomView.render();
 			RoomView.delegateEvents();
+			this.$el.find("#my-room-container").append(RoomView.$el);
+			
 
 			if(RoomView.model.get("joined") === true) {
 				$("#chatarea").append(RoomView.getRoomWindow().render().$el);
@@ -58,8 +60,9 @@ define([
 				return; //Too far away, don't add;
 			}
 			var RoomView = new LocaleChatroomView ( { model: room, parent: this });
-
-			this.$el.find("#my-room-container").append(RoomView.renderButton().$el);
+			RoomView.render();
+			RoomView.delegateEvents();
+			this.$el.find("#my-room-container").append(RoomView.$el);
 
 			RoomView.delegateEvents();
 

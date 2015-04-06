@@ -6,8 +6,9 @@ define([
 	'LocaleChatWindowView',
 	'LocaleChatroomMessageCollection',
 	'LocaleChatMessageModel',
-	'LocaleSocket'
-], function($, Thorax, Bootstrap, LocaleChatUserModel, LocaleChatWindowView, LocaleChatroomMessageCollection, LocaleChatMessageModel, LocaleSocket){
+	'LocaleSocket',
+	'hbs!templates/LocaleButton'
+], function($, Thorax, Bootstrap, LocaleChatUserModel, LocaleChatWindowView, LocaleChatroomMessageCollection, LocaleChatMessageModel, LocaleSocket, ButtonTemplate){
 
 	var LocaleChatroomView = Thorax.View.extend({
 		tagName: 'li',
@@ -27,57 +28,19 @@ define([
 			this.ChatWindow = new LocaleChatWindowView( { collection: this.ChatMessages, parent: this, UserModel: this.model });
 		},
 
-		render: function() {
-			this.renderButton();
-			this.getRoomWindow().render();
+		template: ButtonTemplate,
+
+		// Allows to transform attributes before being sent to the template for rendering
+		context: function() {
+			var atts = this.model.attributes;
+			if(atts.tags instanceof Array)
+				atts.tags = "#" + this.model.attributes.tags.join(" #");
+			return atts;
 		},
 
 		renderButton: function() {
 
-			var tags = "#" + this.model.get("tags").join(' #');
-
-			this.$el.html(
-                        '<div class="btn-group">' +
-                           '<div class="btn btn-default room-button">' +
-                                '<div class="chatbox-icon"></div>' +
-                                '<div class="chatbox-title">' +
-                                    '<div class="h1">' + this.model.get("name") + '</div>' +
-                                    '<div class="h2">Vancouver, BC</div>' +
-                                '</div>' +
-                                '<div class="badge">' + this.model.get("userCount") + '</div>' +
-                            '</div>' +
-                              '<div class="btn btn-default toggle-pencil">' +
-                                '<i class="fa fa-pencil fa-lg"></i>' +
-                              '</div>' +
-                        '</div>' +
-                        '<div class="panel panel-default edit-locale">' +
-                            '<div class="panel-body">' +
-                                '<form>' +
-                            	   '<div class="form-group">' +
-                                        '<input type="text" class="form-control" id="roomName" placeholder="Locale Name" value="' + this.model.get("name") + '">' +
-                                   '</div>' + 
-                                   '<div class="form-group">' + 
-                                        '<textarea class="form-control" id="roomDescription" placeholder="Locale Description" rows="3">' + this.model.get("description") +'</textarea>' + 
-                                   '</div>' + 
-                                   '<div class="form-group">' + 
-                                        '<input type="text" class="form-control" id="roomTags" placeholder="Tags" value="' + tags +'">' + 
-                                   '</div>' + 
-                                   '<div class="form-group">' + 
-										'<div class="btn-group" role="group" aria-label="Privacy">' +
-											'<button type="button" class="btn btn-default btn-locale-privacy active" data-privacy="public">Public</button>' + 
-											'<button type="button" class="btn btn-default btn-locale-privacy" data-privacy="unlisted">Unlisted</button>' + 
-											'<button type="button" class="btn btn-default btn-locale-privacy" data-privacy="private">Private</button>' + 
-										'</div>' + 
-									'</div>' + 
-									'<div class="form-group edit-button-container">' + 
-										'<button type="button" class="btn btn-success update-locale"><i class="fa fa-check"></i> Update</button>' + 
-										'<button type="button" class="btn btn-danger delete-locale"><i class="fa fa-trash-o"></i> Delete</button>' +
-									'</div>' + 
-                                '</form>' +
-                            '</div>' +
-                            '</div>' +
-                        '</div>' 
-            );
+			this.render();
 
 			return this;
 		},
