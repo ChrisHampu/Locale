@@ -101,7 +101,7 @@ define([
 			this.$el.find(".badge").html(users.length);
 			this.model.set("userCount", users.length);
 			this.model.set("users", users);
-			this.ChatWindow.renderUsers(users);
+			this.ChatWindow.render();
 		},
 
 		join: function() {

@@ -51,7 +51,9 @@ define([
 		itemTemplate: MessageTemplate,
 
 		context: function() {
-			return this.ChatUserModel.attributes;
+			var atts = this.ChatUserModel.attributes;
+			atts.users = this.parent.model.attributes.users;
+			return atts;
 		},
 
 		itemContext: function(model, index) {
@@ -67,21 +69,6 @@ define([
 			atts.timestamp = FormatTimestamp(model.get("timestamp"));
 
 			return atts;
-		},
-
-		renderUsers: function(users) {
-			var container = this.$el.find(".chatbox-settings-user-container");
-
-			container.html("");
-
-			for(var i = 0; i < users.length; i++)
-			{
-				var userStr = "<div class=\"chatbox-settings-user\">" +
-				"<div class=\"chatbox-settings-user-profile\" style=\"background: url(" + users[i].profilePicture + ");\">" +
-				"</div><div class=\"chatbox-settings-user-name\">" + users[i].firstName + " " + users[i].lastInitial + "</div></div>";
-
-				container.append(userStr);
-			}
 		},
 
 		add: function(message) {
