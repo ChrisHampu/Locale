@@ -49,7 +49,8 @@ define([
 			
 
 			if(RoomView.model.get("joined") === true) {
-				$("#chatarea").append(RoomView.getRoomWindow().render().$el);
+				RoomView.getRoomWindow().render();
+				$("#chatarea").append(RoomView.getRoomWindow().$el);
 			}
 
 			RoomView.getRoomWindow().delegateEvents();
@@ -67,7 +68,8 @@ define([
 			RoomView.delegateEvents();
 
 			if(room.get("joined") === true) {
-				$("#chatarea").append(RoomView.getRoomWindow().render().$el);
+				RoomView.getRoomWindow().render();
+				$("#chatarea").append(RoomView.getRoomWindow().$el);
 			}
 
 			RoomView.getRoomWindow().delegateEvents();

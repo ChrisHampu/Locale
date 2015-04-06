@@ -5,8 +5,10 @@ define([
 	'LocaleChatMessageModel',
 	'LocaleChatUserModel',
 	'LocaleAuth',
-	'LocaleSocket'
-], function($, Thorax, Bootstrap, LocaleChatMessageModel, LocaleChatUserModel, LocaleAuth, LocaleSocket){
+	'LocaleSocket',
+	'hbs!templates/LocaleWindow',
+	'hbs!templates/LocaleWindowMessage'
+], function($, Thorax, Bootstrap, LocaleChatMessageModel, LocaleChatUserModel, LocaleAuth, LocaleSocket, WindowTemplate, MessageTemplate){
 
 	var Weekdays = new Array("Sun","Mon","Tue","Wed","Thu","Fri","Sat");
 
@@ -23,7 +25,7 @@ define([
 		return format;
 	};
 
-	var LocaleChatWindowView = Thorax.View.extend({
+	var LocaleChatWindowView = Thorax.CollectionView.extend({
 		tagName: 'div',
 
 		className: 'chatbox-container', //Change this to chatbox-container and defuckulate it all.
@@ -42,62 +44,29 @@ define([
 			this.parent = options.parent;
 			this.ChatUserModel = options.UserModel;
 			this.$el.children(".chatbox").html(""); // Remove dummy data
-			this.listenTo(this.collection, "add", this.add);
-			this.listenTo(this.collection, "change", this.render);
 		},
 
-		render: function() {
+		template: WindowTemplate,
 
-			var chatStr = "<div class='chatbox'><div class='chatbox-header'><div class='chatbox-icon'></div><div class='chatbox-title'><div class='h1 room-title'>" + this.ChatUserModel.get("name") + "</div>" +
-"<div class='h2'>University of British Columbia</div> </div><div class=\"chatbox-controls\"><div class=\"chatbox-exit btn\" href='#'><i class=\"fa fa-close\"></i></div>" +
-"<div class=\"chatbox-minimize btn\" href='#'><i class=\"fa fa-minus\"></i></div></div></div><div class='chatbox-content'>" +
-"<div class='chatbox-messages'><div class=\"messages-wrapper\"></div> </div><div class='chatbox-input input-group'><input type=\"text\" class=\"form-control message-box\" placeholder=\"Enter Message\" maxlength=\"200\">" +
-"<span class=\"input-group-btn send-message\"><button class=\"btn btn-default\" type=\"button\"><i class='fa fa-paper-plane'></i></button>";
-"</span></div></div></div>";
+		itemTemplate: MessageTemplate,
 
-			var settingStr = '<div class="chatbox-settings-window"><div class="chatbox-settings-user-container"></div><div class="chatbox-settings-bottom"></div></div>';
-			
-			var chatboxIcon = "<i class='fa fa-cog fa-lg chatbox-settings'></i>"
-
-			this.$el.html(chatStr);
-			this.$el.append(settingStr);
-			this.$el.append(chatboxIcon);
-
-			this.renderUsers(this.ChatUserModel.get("users"));
-			this.renderAllMessages();
-
-			return this;
+		context: function() {
+			return this.ChatUserModel.attributes;
 		},
 
-		renderAllMessages: function() {
-			this.$el.children(".chatbox").find(".messages-wrapper").html("");
+		itemContext: function(model, index) {
+			var atts = model.attributes;
 
-			_.each(this.collection.models, function(model) {
-				this.$el.children(".chatbox").find(".messages-wrapper").append( this.renderMessage( model ));
-			}, this);
-		},
+			var msgUrl = model.get("profilePicture");
 
-		renderMessage: function(message) {
-			var UserSent = false;
+			atts.userStyle = LocaleAuth.GetUserModel().get("profilePicture") === msgUrl ?
+								"<div class=\"chat-message local-message\">" : "<div class=\"chat-message foreign-message\">";
+			atts.msgStyle = msgUrl !== undefined ?
+							"style=\"background: url(" + msgUrl + ");\"" : "";
 
-			var msgUrl = message.get("profilePicture");
-			var localUrl = LocaleAuth.GetUserModel().get("profilePicture");
+			atts.timestamp = FormatTimestamp(model.get("timestamp"));
 
-			if(msgUrl === localUrl)
-				UserSent = true;
-
-			if (msgUrl !== undefined) {
-				var style = "style=\"background: url(" + msgUrl + ");\""
-			} else {
-				var style = "";
-			}
-
-			var msgStr = UserSent === true ? "<div class=\"chat-message local-message\">" : "<div class=\"chat-message foreign-message\">";
-            msgStr += "<a href=\"" + message.get("profileUrl") + "\" target=\"_blank\"><div class=\"profilepic chatpic img-circle\"" + style + "></div></a><div class='message-content-wrapper'><div class='message-content' ><p>" +
-                        $('<div/>').text(message.get("message")).html() + "</p><a class=\"message-subtext\" href=\""+ message.get("profileUrl") + "\" target=\"_blank\">" + message.get("firstName") + " " + message.get("lastInitial") +
-                         "</a><span class=\"message-subtext\"> - " + FormatTimestamp(message.get("timestamp")) + "</span></div></div></div>";
-
-            return msgStr;
+			return atts;
 		},
 
 		renderUsers: function(users) {
@@ -116,7 +85,6 @@ define([
 		},
 
 		add: function(message) {
-			this.$el.children(".chatbox").find(".messages-wrapper").append( this.renderMessage(message) );
 			this.$el.children(".chatbox").find(".messages-wrapper").scrollTop(1000000);
 		},
 
