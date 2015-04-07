@@ -12,7 +12,8 @@ define([
 		UserModel,
 		AuthPolicy = undefined,
 		FBPolicy,
-		GPlusPolicy;
+		GPlusPolicy,
+		LoggedInState = false;
 
 	var Initialize = function (AuthView) {
 		View = AuthView;
@@ -41,11 +42,29 @@ define([
 	var HandleLogin = function(response) {
 		if(response.UserLoggedIn === true)
 		{
+			if(UserModel.get("id") !== undefined) {
+				console.log("User already loaded");
+				return;
+			}
+
 			// User logged in. Aquire more minerals
 			AuthPolicy.GetUserData(UserModel, function(data) {
+				
+				if(UserModel.get("id") === undefined) {
+					console.log("Error loading user data");
+					return;
+				}
+
+				if(LoggedInState === true) {
+					console.log("User already logged in");
+					return;
+				}
+
 				// Pass data to view
 				LocaleSocket.Emit('join', JSON.stringify(UserModel));
 				View.loggedin();
+
+				LoggedInState = true;
 			})
 		}
 		else if(response.UserAuthed === true)
@@ -57,6 +76,7 @@ define([
 		{
 			// user did not authorize
 			AuthPolicy.Authorize();
+			console.log("User did not authorize Locale");
 		}
 		else
 		{ 
@@ -67,14 +87,23 @@ define([
 
 	var Login = function() {
 		// Set up defaults
-		UserModel = new LocaleUserAuthModel({
-			id: 1, location: { lat: LocaleUtilities.GetCurrentLocation().coords.latitude, 
-			lon: LocaleUtilities.GetCurrentLocation().coords.longitude }, 
-			firstName: "John", lastName: "Doe", token: AuthToken, email: "email@email.com",
-			profileUrl: "assets/profilepic/placeholder.png"
-		});
 
-		AuthPolicy.Login(HandleLogin);
+		LocaleUtilities.GetCurrentLocation(function(coords) {
+
+			if(coords === undefined) {
+				console.log("Failed to get users coordinates for login");
+				return;
+			}
+
+			UserModel = new LocaleUserAuthModel({
+				location: { lat: coords.latitude, lon: coords.longitude }, 
+				firstName: "John", lastName: "Doe", token: AuthToken, email: "email@email.com",
+				profileUrl: "assets/profilepic/placeholder.png"
+			});
+
+			AuthPolicy.Login(HandleLogin);
+
+		});
 	}
 
 	var LoginFacebook = function() {
