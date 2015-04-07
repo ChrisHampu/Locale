@@ -38,13 +38,6 @@ define([
 			return atts;
 		},
 
-		renderButton: function() {
-
-			this.render();
-
-			return this;
-		},
-
 		deleteLocale: function() {
 
 			// TODO: Confirmation window. Very easy to accidently delete a locale

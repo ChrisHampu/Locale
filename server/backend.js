@@ -131,7 +131,8 @@ io.sockets.on('connection', function (socket) {
 							radius: Math.min(Math.max(locale.radius, 100), 2000),
 							tags: locale.tags,
 							canJoin: join && isClose,
-							privacy: locale.privacy
+							privacy: locale.privacy,
+							userCount: locale.users.length
 						});					
 					}
 
