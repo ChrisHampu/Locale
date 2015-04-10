@@ -22,7 +22,7 @@ define([
 		},
 
 		initialize: function() {
-			console.log(this.parent);
+
 		},
 
 		template: ButtonTemplate,
@@ -81,23 +81,11 @@ define([
 			this.$el.find(".badge").html(users.length);
 			this.model.set("userCount", users.length);
 			this.model.set("users", users);
-			//this.ChatWindow.render();
 		},
 
 		join: function() {
-			if(this.ChatWindow.$el.children(".chatbox").css("bottom") != "384px" && this.ChatWindow.$el.children(".chatbox").css("bottom") != "42px"){
-				this.model.set("joined", true);
-				//this.parent.render();
-				LocaleSocket.Emit('joinroom', this.model.get("name"));
-				this.ChatWindow.$el.css({display: "inline-block"});
-				this.ChatWindow.$el.stop().animate({"bottom" :"384px"}, 400);
-				
-			}
-			if(this.ChatWindow.$el.children(".chatbox").css("bottom") == "42px"){
-				this.ChatWindow.$el.children(".chatbox").stop().animate({"bottom" :"384px"}, 400);
-			}
-			/*var checkState = this.ChatWindow.$el.children(".chatbox").css("bottom");
-			console.log(this.ChatWindow.$el.children(".chatbox").css("bottom"));*/
+			this.model.set("joined", true);
+			LocaleSocket.Emit('joinroom', this.model.get("name"));
 		}
 	});
 

@@ -31,6 +31,8 @@ define([
 
 		className: 'chatbox-container', //Change this to chatbox-container and defuckulate it all.
 
+		name: "ChatWindowwView",
+
 		events: {
 			'click .chatbox-minimize' : 'minimize',
 			'click .chatbox-exit' : 'exit',
@@ -38,13 +40,11 @@ define([
 			'click .send-message' : 'send',
 			'keypress .chatbox-input' : 'sendMessage',
 			'click .chatbox-settings' : 'toggleSettings',
-			'click .close-settings' : 'toggleSettings'
+			'click .close-settings' : 'toggleSettings',
+			'rendered': 'rendered'
 		},
 
 		initialize: function(options) {
-			this.parent = options.parent;
-			this.ChatUserModel = options.UserModel;
-			//this.$el.children(".chatbox").html(""); // Remove dummy data
 		},
 
 		template: WindowTemplate,
@@ -52,8 +52,7 @@ define([
 		itemTemplate: MessageTemplate,
 
 		context: function() {
-			var atts = this.ChatUserModel.attributes;
-			atts.users = this.parent.model.attributes.users;
+			var atts = this.model.attributes;
 			return atts;
 		},
 
@@ -70,6 +69,20 @@ define([
 			atts.timestamp = FormatTimestamp(model.get("timestamp"));
 
 			return atts;
+		},
+
+		rendered: function() {
+			if(this.model.get("joined") === true) {
+				if(this.$el.children(".chatbox").css("bottom") != "384px" && this.$el.children(".chatbox").css("bottom") != "42px"){
+
+					this.$el.css({display: "inline-block"});
+					this.$el.stop().animate({"bottom" :"384px"}, 400);
+				
+				}
+				if(this.$el.children(".chatbox").css("bottom") == "42px"){
+					this.$el.children(".chatbox").stop().animate({"bottom" :"384px"}, 400);
+				}
+			}
 		},
 
 		add: function(message) {
@@ -108,15 +121,16 @@ define([
 		},
 
 		exit: function(e){
-			var room = this.$el.children(".chatbox").find(".room-title").text();
+			var model = this.model;
 			var chatWindow = this.$el;
+
 			chatWindow.stop().animate({"bottom" :"0px"}, 400, function(){
 				chatWindow.css({display: "none"});
-				chatWindow.remove();
+				model.set("joined", false);
 			});
-			this.parent.model.set("joined", false);
+			
 			e.stopPropagation();
-			LocaleSocket.Emit('leaveroom', room);
+			LocaleSocket.Emit('leaveroom', this.model.get("name"));
 		},
 
 		sendMessage:function(e){

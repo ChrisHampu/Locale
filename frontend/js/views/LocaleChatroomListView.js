@@ -24,12 +24,6 @@ define([
 		chatWindowCollection: new LocaleChatroomCollection(),
 
 		initialize: function() {
-			//this.$el.find("#my-room-container").html(""); // Remove dummy data
-			//$("#chatarea").html("");
-			//this.listenTo(this.collection, "add", this.add);
-			//this.listenTo(this.collection, "remove", this.remove);
-		//	this. // For the button views
-			//this. // For the chat window views
 
 			this.Rooms = [];
 
@@ -44,10 +38,7 @@ define([
 
 		template: ListTemplate,
 
-		//itemTemplate: Handlebars.compile(''),
-
 		itemView: function(item) {
-	
 			return new LocaleChatroomView( {model: item.model});
 		},
 
@@ -55,25 +46,17 @@ define([
 			return model.attributes;
 		},
 
+		ChatWindowViewFactory: function(item) {
+			return new LocaleChatWindowView({ model: item.model });
+		},
+
+		ChatWindowFilter: function(model, index) {
+			return model.get("joined") === true;
+		},
+
 		add: function(room) {
-			if(!room.get("canJoin")){
-				return; //Too far away, don't add;
-			}
-			var RoomView = new LocaleChatroomView ( { model: room, parent: this });
-			RoomView.render();
-			RoomView.delegateEvents();
-			this.$el.find("#my-room-container").append(RoomView.$el);
-
-			RoomView.delegateEvents();
-
-			if(room.get("joined") === true) {
-				RoomView.getRoomWindow().render();
-				$("#chatarea").append(RoomView.getRoomWindow().$el);
-			}
-
-			RoomView.getRoomWindow().delegateEvents();
-
-			this.Rooms.push(RoomView);
+			this.collection.add(room);
+			this.chatWindowCollection.add(room);
 		},
 
 		remove: function(room) {
