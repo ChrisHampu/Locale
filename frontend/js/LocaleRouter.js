@@ -17,7 +17,7 @@ define([
 
 			LocaleSocket.Initialize();
 
-			AuthView = new LocaleAuthView(this);
+			AuthView = new LocaleAuthView({ parent: this });
 			LocaleView = new LocaleView();
 
 			Locale.Initialize(this);
