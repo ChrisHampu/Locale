@@ -6,16 +6,14 @@ define([
 	'LocaleProfileView',
 	'LocaleChatroomListView',
 	'LocaleChatModel',
-	'LocaleChatroomCollection',
 	'LocaleSearchModel',
 	'LocaleSocket',
 	'LocaleAuth',
 	'async!http://maps.google.com/maps/api/js?sensor=false!callback'
-], function($, Thorax, Bootstrap, LocaleUtilities, LocaleProfileView, LocaleChatroomListView, LocaleChatModel, LocaleChatroomCollection, LocaleSearchModel, LocaleSocket, LocaleAuth, GMaps){
+], function($, Thorax, Bootstrap, LocaleUtilities, LocaleProfileView, LocaleChatroomListView, LocaleChatModel, LocaleSearchModel, LocaleSocket, LocaleAuth, GMaps){
 
 	var ProfileView,
-		ChatroomListView,
-		ChatroomCollection;
+		ChatroomListView;
 
 	var Map,
 		CurrentPosition = undefined;
@@ -35,6 +33,8 @@ define([
 	var LocaleMapView = Thorax.View.extend({
 		el: '#mappage',
 
+		name: "MapView",
+
 		events: {
 			'click .waypoint-join' : 'join',
 			'click .waypoint-info-dismiss' : 'dismiss',
@@ -45,8 +45,7 @@ define([
 		initialize: function() {
 			ProfileView = new LocaleProfileView();
 
-			ChatroomCollection = new LocaleChatroomCollection();
-			ChatroomListView = new LocaleChatroomListView( { collection: ChatroomCollection } );
+			ChatroomListView = new LocaleChatroomListView();
 			
 			Map = new google.maps.Map(this.$el.find("#map-wrapper")[0], mapOptions);
 
@@ -162,6 +161,7 @@ define([
 
 		render: function() {
 			ProfileView.render();
+			ChatroomListView.render();
 
 			LocaleAuth.GetProfilePicture(function(model) {
 
@@ -194,11 +194,11 @@ define([
 				// and re-render it
 				if(value.updateRoom !== undefined)
 				{
-					var updatingLocale = ChatroomCollection.findWhere( { name: value.updateRoom} );
+					var updatingLocale = ChatroomListView.chatroomView.collection.findWhere( { name: value.updateRoom} );
 
 					if(updatingLocale !== undefined)
 					{
-						ChatroomCollection.remove(updatingLocale);
+						ChatroomListView.chatroomView.collection.remove(updatingLocale);
 						//ChatroomListView.remove()
 						this.removeMarker(value.updateRoom);
 
@@ -212,7 +212,7 @@ define([
 				}
 
 				// Disallow duplicates
-				var exists = ChatroomCollection.where( { name: value.name} );
+				var exists = ChatroomListView.chatroomView.collection.where( { name: value.name} );
 		
 				if(exists.length === 0)
 				{
@@ -284,7 +284,7 @@ define([
 
 					mapMarkers.push( { name: value.name, map : { circle: circle, marker: marker} });
 
-					ChatroomCollection.add( new LocaleChatModel( { location: value.location, name: value.name, radius: value.radius, 
+					ChatroomListView.chatroomView.collection.add( new LocaleChatModel( { location: value.location, name: value.name, radius: value.radius, 
 						canJoin: value.canJoin, userCount: value.userCount, tags: value.tags, description: value.description,
 						privacy: value.privacy }));
 				}

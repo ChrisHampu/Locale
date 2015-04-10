@@ -26,6 +26,7 @@ define([
 	};
 
 	var LocaleChatWindowView = Thorax.CollectionView.extend({
+		el: "#my-room-container",
 		tagName: 'div',
 
 		className: 'chatbox-container', //Change this to chatbox-container and defuckulate it all.

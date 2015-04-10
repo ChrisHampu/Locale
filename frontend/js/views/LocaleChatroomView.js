@@ -3,15 +3,17 @@ define([
 	'thorax',
 	'bootstrapjs',
 	'LocaleChatUserModel',
+	'LocaleChatroomCollection',
 	'LocaleChatWindowView',
 	'LocaleChatroomMessageCollection',
 	'LocaleChatMessageModel',
 	'LocaleSocket',
+	'hbs!templates/LocaleChatroomView',
 	'hbs!templates/LocaleButton'
-], function($, Thorax, Bootstrap, LocaleChatUserModel, LocaleChatWindowView, LocaleChatroomMessageCollection, LocaleChatMessageModel, LocaleSocket, ButtonTemplate){
+], function($, Thorax, Bootstrap, LocaleChatUserModel, LocaleChatroomCollection, LocaleChatWindowView, LocaleChatroomMessageCollection, LocaleChatMessageModel, LocaleSocket, ChatroomTemplate, ButtonTemplate){
 
-	var LocaleChatroomView = Thorax.View.extend({
-		tagName: 'li',
+	var LocaleChatroomView = Thorax.CollectionView.extend({
+		name: "ChatroomView",
 
 		events: {
 			'click .room-button' : 'join',
@@ -20,21 +22,25 @@ define([
 			'click .update-locale' : 'updateLocale'
 		},
 
+		collection: new LocaleChatroomCollection(),
+
 		initialize: function(options) {
-			this.parent = options.parent;
+			//this.parent = options.parent;
 			//this.listenTo(this.model, "change", this.render);
 
 			this.ChatMessages = new LocaleChatroomMessageCollection();
 			this.ChatWindow = new LocaleChatWindowView( { collection: this.ChatMessages, parent: this, UserModel: this.model });
 		},
 
-		template: ButtonTemplate,
+		template: ChatroomTemplate,
+
+		itemTemplate: ButtonTemplate,
 
 		// Allows to transform attributes before being sent to the template for rendering
-		context: function() {
-			var atts = this.model.attributes;
+		itemContext: function(model, i) {
+			var atts = model.attributes;
 			if(atts.tags instanceof Array)
-				atts.tags = "#" + this.model.attributes.tags.join(" #");
+				atts.tags = "#" + model.attributes.tags.join(" #");
 			return atts;
 		},
 
@@ -42,7 +48,7 @@ define([
 
 			// TODO: Confirmation window. Very easy to accidently delete a locale
 
-			this.parent.deleteRoom(this);
+			//this.parent.deleteRoom(this);
 			LocaleSocket.Emit('deletelocale', this.model.get("name"));
 			LocaleSocket.Emit('updaterooms');
 		},
@@ -100,7 +106,7 @@ define([
 		join: function() {
 			if(this.ChatWindow.$el.children(".chatbox").css("bottom") != "384px" && this.ChatWindow.$el.children(".chatbox").css("bottom") != "42px"){
 				this.model.set("joined", true);
-				this.parent.render();
+				//this.parent.render();
 				LocaleSocket.Emit('joinroom', this.model.get("name"));
 				this.ChatWindow.$el.css({display: "inline-block"});
 				this.ChatWindow.$el.stop().animate({"bottom" :"384px"}, 400);

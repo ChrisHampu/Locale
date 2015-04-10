@@ -3,9 +3,11 @@ define([
 	'thorax',
 	'bootstrapjs',
 	'LocaleChatroomView',
+	'LocaleChatWindowView',
 	'LocaleSocket',
-	'LocaleAuth'
-], function($, Thorax, Bootstrap, LocaleChatroomView, LocaleSocket, LocaleAuth){
+	'LocaleAuth',
+	'hbs!templates/LocaleListView'
+], function($, Thorax, Bootstrap, LocaleChatroomView, LocaleChatWindowView, LocaleSocket, LocaleAuth, ListTemplate){
 
 	var LocaleChatroomListView = Thorax.View.extend({
 		el: '#my-rooms',
@@ -14,11 +16,22 @@ define([
 			'click #add-locale' : 'createLocale'
 		},
 
+		name: "ListView",
+
+		//collection: new LocaleChatroomCollection(),
+
+		//chatWindowCollection: new LocaleChatroomCollection(),
+
+		chatroomView: new LocaleChatroomView(),
+
 		initialize: function() {
-			this.$el.find("#my-room-container").html(""); // Remove dummy data
-			$("#chatarea").html("");
-			this.listenTo(this.collection, "add", this.add);
-			this.listenTo(this.collection, "remove", this.remove);
+			//this.$el.find("#my-room-container").html(""); // Remove dummy data
+			//$("#chatarea").html("");
+			//this.listenTo(this.collection, "add", this.add);
+			//this.listenTo(this.collection, "remove", this.remove);
+		//	this. // For the button views
+			//this. // For the chat window views
+
 			this.Rooms = [];
 
 			this.$el.on('click', '.btn-locale-privacy', function() {
@@ -30,31 +43,7 @@ define([
 			});
 		},
 
-		render: function() {
-			
-			this.$el.find("#my-room-container").html("");
-			$("#chatarea").html("");
-
-			var parent = this;
-
-			_.each(this.Rooms, function(View) {
-				this.renderSingle(View);
-			}, this);
-		},
-
-		renderSingle: function(RoomView) {
-			RoomView.render();
-			RoomView.delegateEvents();
-			this.$el.find("#my-room-container").append(RoomView.$el);
-			
-
-			if(RoomView.model.get("joined") === true) {
-				RoomView.getRoomWindow().render();
-				$("#chatarea").append(RoomView.getRoomWindow().$el);
-			}
-
-			RoomView.getRoomWindow().delegateEvents();
-		},
+		template: ListTemplate,
 
 		add: function(room) {
 			if(!room.get("canJoin")){
