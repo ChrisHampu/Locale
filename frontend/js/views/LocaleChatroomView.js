@@ -8,11 +8,10 @@ define([
 	'LocaleChatroomMessageCollection',
 	'LocaleChatMessageModel',
 	'LocaleSocket',
-	'hbs!templates/LocaleChatroomView',
 	'hbs!templates/LocaleButton'
-], function($, Thorax, Bootstrap, LocaleChatUserModel, LocaleChatroomCollection, LocaleChatWindowView, LocaleChatroomMessageCollection, LocaleChatMessageModel, LocaleSocket, ChatroomTemplate, ButtonTemplate){
+], function($, Thorax, Bootstrap, LocaleChatUserModel, LocaleChatroomCollection, LocaleChatWindowView, LocaleChatroomMessageCollection, LocaleChatMessageModel, LocaleSocket, ButtonTemplate){
 
-	var LocaleChatroomView = Thorax.CollectionView.extend({
+	var LocaleChatroomView = Thorax.View.extend({
 		name: "ChatroomView",
 
 		events: {
@@ -22,25 +21,17 @@ define([
 			'click .update-locale' : 'updateLocale'
 		},
 
-		collection: new LocaleChatroomCollection(),
-
-		initialize: function(options) {
-			//this.parent = options.parent;
-			//this.listenTo(this.model, "change", this.render);
-
-			this.ChatMessages = new LocaleChatroomMessageCollection();
-			this.ChatWindow = new LocaleChatWindowView( { collection: this.ChatMessages, parent: this, UserModel: this.model });
+		initialize: function() {
+			console.log(this.parent);
 		},
 
-		template: ChatroomTemplate,
-
-		itemTemplate: ButtonTemplate,
+		template: ButtonTemplate,
 
 		// Allows to transform attributes before being sent to the template for rendering
-		itemContext: function(model, i) {
-			var atts = model.attributes;
+		context: function() {
+			var atts = this.model.attributes;
 			if(atts.tags instanceof Array)
-				atts.tags = "#" + model.attributes.tags.join(" #");
+				atts.tags = "#" + this.model.attributes.tags.join(" #");
 			return atts;
 		},
 
@@ -72,18 +63,8 @@ define([
 			});
 		},
 
-		getRoomWindow: function() {
-			
-			return this.ChatWindow;
-		},
-
-		// Deprecated
-		removeChatWindow: function() {
-			this.ChatWindow.$el.css("display: none");
-		},
-
 		resetMessages: function() {
-			this.ChatMessages.reset();
+			//this.ChatMessages.reset();
 			//this.ChatWindow.renderAllMessages(); // This basically just forces the view to remove all messages
 		},
 
@@ -100,7 +81,7 @@ define([
 			this.$el.find(".badge").html(users.length);
 			this.model.set("userCount", users.length);
 			this.model.set("users", users);
-			this.ChatWindow.render();
+			//this.ChatWindow.render();
 		},
 
 		join: function() {

@@ -26,7 +26,7 @@ define([
 	};
 
 	var LocaleChatWindowView = Thorax.CollectionView.extend({
-		el: "#my-room-container",
+
 		tagName: 'div',
 
 		className: 'chatbox-container', //Change this to chatbox-container and defuckulate it all.
@@ -44,7 +44,7 @@ define([
 		initialize: function(options) {
 			this.parent = options.parent;
 			this.ChatUserModel = options.UserModel;
-			this.$el.children(".chatbox").html(""); // Remove dummy data
+			//this.$el.children(".chatbox").html(""); // Remove dummy data
 		},
 
 		template: WindowTemplate,

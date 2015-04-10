@@ -4,12 +4,13 @@ define([
 	'bootstrapjs',
 	'LocaleChatroomView',
 	'LocaleChatWindowView',
+	'LocaleChatroomCollection',
 	'LocaleSocket',
 	'LocaleAuth',
 	'hbs!templates/LocaleListView'
-], function($, Thorax, Bootstrap, LocaleChatroomView, LocaleChatWindowView, LocaleSocket, LocaleAuth, ListTemplate){
+], function($, Thorax, Bootstrap, LocaleChatroomView, LocaleChatWindowView, LocaleChatroomCollection, LocaleSocket, LocaleAuth, ListTemplate){
 
-	var LocaleChatroomListView = Thorax.View.extend({
+	var LocaleChatroomListView = Thorax.CollectionView.extend({
 		el: '#my-rooms',
 
 		events: {
@@ -18,11 +19,9 @@ define([
 
 		name: "ListView",
 
-		//collection: new LocaleChatroomCollection(),
+		collection: new LocaleChatroomCollection(),
 
-		//chatWindowCollection: new LocaleChatroomCollection(),
-
-		chatroomView: new LocaleChatroomView(),
+		chatWindowCollection: new LocaleChatroomCollection(),
 
 		initialize: function() {
 			//this.$el.find("#my-room-container").html(""); // Remove dummy data
@@ -44,6 +43,17 @@ define([
 		},
 
 		template: ListTemplate,
+
+		//itemTemplate: Handlebars.compile(''),
+
+		itemView: function(item) {
+	
+			return new LocaleChatroomView( {model: item.model});
+		},
+
+		itemContext: function(model, i) {
+			return model.attributes;
+		},
 
 		add: function(room) {
 			if(!room.get("canJoin")){

@@ -194,11 +194,11 @@ define([
 				// and re-render it
 				if(value.updateRoom !== undefined)
 				{
-					var updatingLocale = ChatroomListView.chatroomView.collection.findWhere( { name: value.updateRoom} );
+					var updatingLocale = ChatroomListView.collection.findWhere( { name: value.updateRoom} );
 
 					if(updatingLocale !== undefined)
 					{
-						ChatroomListView.chatroomView.collection.remove(updatingLocale);
+						ChatroomListView.collection.remove(updatingLocale);
 						//ChatroomListView.remove()
 						this.removeMarker(value.updateRoom);
 
@@ -212,7 +212,7 @@ define([
 				}
 
 				// Disallow duplicates
-				var exists = ChatroomListView.chatroomView.collection.where( { name: value.name} );
+				var exists = ChatroomListView.collection.where( { name: value.name} );
 		
 				if(exists.length === 0)
 				{
@@ -284,7 +284,7 @@ define([
 
 					mapMarkers.push( { name: value.name, map : { circle: circle, marker: marker} });
 
-					ChatroomListView.chatroomView.collection.add( new LocaleChatModel( { location: value.location, name: value.name, radius: value.radius, 
+					ChatroomListView.collection.add( new LocaleChatModel( { location: value.location, name: value.name, radius: value.radius, 
 						canJoin: value.canJoin, userCount: value.userCount, tags: value.tags, description: value.description,
 						privacy: value.privacy }));
 				}
