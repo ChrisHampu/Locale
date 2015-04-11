@@ -93,8 +93,8 @@ define([
 		},
 
 		deleteRoom: function(room) {
-			this.Rooms = _.without(this.Rooms, room);
-			this.render();
+			this.collection.remove(room);
+			this.chatWindowCollection.remove(room);
 		},
 
 		getRooms: function() {

@@ -38,10 +38,9 @@ define([
 		deleteLocale: function() {
 
 			// TODO: Confirmation window. Very easy to accidently delete a locale
-
-			//this.parent.deleteRoom(this);
 			LocaleSocket.Emit('deletelocale', this.model.get("name"));
 			LocaleSocket.Emit('updaterooms');
+			this.parent.deleteRoom(this.model);
 		},
 
 		updateLocale: function() {
