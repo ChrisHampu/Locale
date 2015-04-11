@@ -48,6 +48,7 @@ define([
 		initialize: function() {
 
 			this._addChild(this.searchView);
+			this.searchView.setModel(new LocaleSearchModel());
 
 			LocaleSocket.Handle('deletelocale', function(roomName) {
 				_.each(ChatroomListView.getRooms(), function(chat) {
@@ -232,20 +233,12 @@ define([
 					      map: Map
 					  });
 
-					google.maps.event.addListener(marker, 'mouseover', function() {
-					    //display info about the room if it is a room, or if it is you, display your info.
-					});
-
-					google.maps.event.addListener(marker, 'mouseout', function() {
-					    //remove whatever info was displayed
-					});
-
 					google.maps.event.addListener(marker, 'click', function() {
 					   	//Pan to and do hovered
 
 					    Map.panTo(marker.getPosition());
 
-					    self.updateMarkerInfo(value.name);
+					    self.searchView.updateMarkerInfo(ChatroomListView.collection.findWhere( { name: value.name} ));
 					});
 
 					var circle = new google.maps.Circle({
@@ -293,45 +286,6 @@ define([
 				delete localeMarker.map.circle;
 				delete localeMarker.map.marker;
 			}
-		},
-
-		updateMarkerInfo: function(localeName) {
-
-			var Locale = ChatroomListView.collection.findWhere( { name: localeName} ).attributes;
-
-		   	var name = '<h4>' + Locale.name + '</h4>';
-		   	var description = Locale.description;
-		   	var buttonHTML;
-		   	if(Locale.canJoin){
-		   		buttonHTML = '<button type="button" class="btn btn-success waypoint-join" data-name= "' +  Locale.name +'">Join</button>';
-		   	} else {
-		   		buttonHTML = '<button type="button" class="btn btn-success waypoint-join" disabled="disabled" data-name= "' +  Locale.name +'">Out of Range</button>'
-		   	}
-
-		    $('.waypoint-info').css({display: "block"});
-		    $('.waypoint-info').stop().animate({height: "250px"}, 500);
-
-		    $('.waypoint-info').html(
-	            '<div class="panel panel-default">' +
-	                '<div class="panel-heading">' +
-	                    '<div class="chatbox-icon"></div>' +
-	                    '<div class="waypoint-name">' +
-	                         name +
-	                    '</div>' +
-	                '</div>' +
-	                '<div class="panel-body">' +
-	                    '<div class="waypoint-description">' +
-	                        description +
-	                    '</div>' +
-	                   '<div class="btn-group">' +
-	                        '<button type="button" class="btn btn-default waypoint-info-dismiss">' +
-	                            '<i class="fa fa-angle-up fa-lg"></i>' +
-	                        '</button>' +
-	                        buttonHTML +
-	                    '</div>' +
-	                '</div>' +
-	        '</div>');
-
 		},
 
 		adjustMap: function(tags, callback) {

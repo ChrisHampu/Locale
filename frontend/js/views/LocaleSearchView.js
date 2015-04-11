@@ -6,6 +6,8 @@ define([
 	'hbs!templates/LocaleSearchView'
 ], function($, Thorax, Bootstrap, LocaleSearchModel, SearchTemplate){
 
+	var self = undefined;
+
 	var LocaleSearchView = Thorax.View.extend({
 
 		name: "SearchView",
@@ -20,7 +22,13 @@ define([
 		template: SearchTemplate,
 
 		initialize: function() {
+			self = this;
+		},
 
+		context: function() {
+			if(this.model === undefined)
+				return {};
+			return this.model.attributes;
 		},
 
 		join: function(e) {
@@ -85,8 +93,8 @@ define([
 			$('.waypoint-info').css({display: "block"});
 
 			//htmlContainer = '<ul>';
-			view.adjustMap(tags, function(obj){
-				console.log(JSON.stringify(obj));
+
+
 				//console.log(obj.get("location")["latitude"]);
 				Map.panTo(new google.maps.LatLng(obj.get("location")["latitude"], obj.get("location")["longitude"]))
 				var name = '<h4>' + obj.get("name") + '</h4>';
@@ -101,27 +109,7 @@ define([
 			    $('.waypoint-info').css({display: "block"});
 			    $('.waypoint-info').stop().animate({height: "250px"}, 500);
 
-			    $('.waypoint-info').html(
-                    '<div class="panel panel-default">' +
-                        '<div class="panel-heading">' +
-                            '<div class="chatbox-icon"></div>' +
-                            '<div class="waypoint-name">' +
-                                 name +
-                            '</div>' +
-                        '</div>' +
-                        '<div class="panel-body">' +
-                            '<div class="waypoint-description">' +
-                                description +
-                            '</div>' +
-                           '<div class="btn-group">' +
-                                '<button type="button" class="btn btn-default waypoint-info-dismiss">' +
-                                    '<i class="fa fa-angle-up fa-lg"></i>' +
-                                '</button>' +
-                                buttonHTML +
-                            '</div>' +
-                        '</div>' +
-                '</div>');
-			});
+
 			
 			//console.log("Found match: " + tag.tag + " to object " + tag.model.get("name"));
 		},
@@ -136,6 +124,15 @@ define([
 				callback(searchQuery, collection, searchCallback);
 				$("#searchbar").val("");
 			},500);
+		},
+
+		updateMarkerInfo: function(locale) {
+			var Locale = locale.attributes;
+
+			self.model.set({name: Locale.name, description: Locale.description, canJoin: Locale.canJoin});
+
+		    $('.waypoint-info').css({display: "block"});
+		    $('.waypoint-info').stop().animate({height: "250px"}, 500);
 		}
 		
 	});
