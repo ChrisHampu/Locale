@@ -17,7 +17,8 @@ define([
 			'click .room-button' : 'join',
 			'keypress .exit-room' : 'remove',
 			'click .delete-locale' : 'deleteLocale',
-			'click .update-locale' : 'updateLocale'
+			'click .update-locale' : 'updateLocale',
+			'click .toggle-pencil' : 'expandUpdate'
 		},
 
 		initialize: function() {
@@ -76,7 +77,21 @@ define([
 		join: function() {
 			this.model.set("joined", true);
 			LocaleSocket.Emit('joinroom', this.model.get("name"));
+		},
+
+		expandUpdate: function(e){
+			if($(e.currentTarget).parent().parent().children(".edit-locale").css("height") == "330px"){
+				$(e.currentTarget).parent().parent().children(".edit-locale").stop().animate({height: "0px"}, function(){
+					$(e.currentTarget).parent().parent().children(".edit-locale").css("display","none");
+				});
+			} else {
+				$(e.currentTarget).parent().parent().children(".edit-locale").css("display","block");
+				$(e.currentTarget).parent().parent().children(".edit-locale").stop().animate({height: "330px"}, function(){
+				});
+			}
+			
 		}
+			
 	});
 
 	return LocaleChatroomView;
