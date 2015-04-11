@@ -14,7 +14,8 @@ define([
 		el: '#my-rooms',
 
 		events: {
-			'click #add-locale' : 'createLocale'
+			'click #add-locale' : 'createLocale',
+			'helper:collection': 'ChatWindowHelperCreated'
 		},
 
 		name: "ListView",
@@ -24,8 +25,6 @@ define([
 		chatWindowCollection: new LocaleChatroomCollection(),
 
 		initialize: function() {
-
-			this.Rooms = [];
 
 			this.$el.on('click', '.btn-locale-privacy', function() {
 
@@ -52,6 +51,10 @@ define([
 
 		ChatWindowFilter: function(model, index) {
 			return model.get("joined") === true;
+		},
+
+		ChatWindowHelperCreated: function(collection, view) {
+			this.helper = view;
 		},
 
 		add: function(room) {
@@ -91,7 +94,13 @@ define([
 		},
 
 		getRooms: function() {
-			return this.Rooms;
+			// this.children also containers the helper view for the window views
+			// we omit that and other children which don't have a model, meaning its not a valid ChatroomView
+			return _.omit(this.children, function(value) { return value.model === undefined; });
+		},
+
+		getWindows: function() {
+			return this.helper.children;
 		},
 
 		createLocale: function() {

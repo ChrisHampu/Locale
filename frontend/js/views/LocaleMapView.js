@@ -85,7 +85,7 @@ define([
 
 			LocaleSocket.Handle('loadroom', function(data) {
 
-				_.each(ChatroomListView.getRooms(), function(chat) {
+				_.each(ChatroomListView.getWindows(), function(chat) {
 
 					var roomName = chat.model.get("name");
 					var dataName = data.room;
@@ -95,13 +95,13 @@ define([
 						// there could be many reasons for inconsistencies.
 						// What we do is reset our list of messages, reset the view, and simply
 						// re-render all the messages we're being given by the server
-						chat.resetMessages();
+						//chat.resetMessages();
 
 						_.each(data.messages, function(message) {
 							chat.addMessage(message);
 						});
 
-						chat.updateUsers(data.users);
+						//chat.updateUsers(data.users);
 						//console.log("Room " + data.room + " has users " + data.users);
 					}
 				});

@@ -4,11 +4,12 @@ define([
 	'bootstrapjs',
 	'LocaleChatMessageModel',
 	'LocaleChatUserModel',
+	'LocaleChatroomMessageCollection',
 	'LocaleAuth',
 	'LocaleSocket',
 	'hbs!templates/LocaleWindow',
 	'hbs!templates/LocaleWindowMessage'
-], function($, Thorax, Bootstrap, LocaleChatMessageModel, LocaleChatUserModel, LocaleAuth, LocaleSocket, WindowTemplate, MessageTemplate){
+], function($, Thorax, Bootstrap, LocaleChatMessageModel, LocaleChatUserModel, LocaleChatroomMessageCollection, LocaleAuth, LocaleSocket, WindowTemplate, MessageTemplate){
 
 	var Weekdays = new Array("Sun","Mon","Tue","Wed","Thu","Fri","Sat");
 
@@ -45,6 +46,7 @@ define([
 		},
 
 		initialize: function(options) {
+			this.collection=new LocaleChatroomMessageCollection();
 		},
 
 		template: WindowTemplate,
@@ -85,25 +87,33 @@ define([
 			}
 		},
 
-		add: function(message) {
+		addMessage: function(newMessage, callback) {
+			this.collection.add( new LocaleChatMessageModel( { firstName: newMessage.firstName, lastInitial: newMessage.lastInitial, 
+				profilePicture: newMessage.profilePicture, message: newMessage.message, timestamp: newMessage.timestamp, 
+				room: newMessage.room, profileUrl: newMessage.profileUrl } ) );
+
 			this.$el.children(".chatbox").find(".messages-wrapper").scrollTop(1000000);
+
+			if(callback !== undefined)
+				callback(this.model.get("location"), this.model.get("radius"));
 		},
 
-		minimize: function(){
-			var checkState = this.$el.children(".chatbox").css("bottom");
-			var chatWindow = this.$el.children(".chatbox");
-			if (checkState == "42px"){
-				this.$el.children(".chatbox-content").css({display: "block"});
+		minimize: function(e){
+			var checkState = this.$el.css("bottom");
+			//var chatWindow = this.$el.children(".chatbox");
+			if (checkState === "42px"){
+				//this.$el.children(".chatbox-content").css({display: "block"});
 				this.$el.stop().animate({"bottom" :"384px"}, 400);
 			} else {
 				this.$el.stop().animate({"bottom" :"42px"}, 400);
 			}
+			e.stopPropagation();
 		},
 
 		maximize: function(){
 			var checkState = this.$el.css("bottom");
-			if (checkState == "42px"){
-				this.$el.css({display: "block"});
+			if (checkState === "42px"){
+				this.$el.css({display: "inline-block"});
 				this.$el.stop().animate({"bottom" :"384px"}, 400);
 			}
 		},
@@ -125,12 +135,14 @@ define([
 			var chatWindow = this.$el;
 
 			chatWindow.stop().animate({"bottom" :"0px"}, 400, function(){
-				chatWindow.css({display: "none"});
+
 				model.set("joined", false);
+				LocaleSocket.Emit('leaveroom', model.get("name"));
+
 			});
+
+			//e.stopPropagation();
 			
-			e.stopPropagation();
-			LocaleSocket.Emit('leaveroom', this.model.get("name"));
 		},
 
 		sendMessage:function(e){

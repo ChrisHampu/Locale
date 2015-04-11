@@ -5,11 +5,10 @@ define([
 	'LocaleChatUserModel',
 	'LocaleChatroomCollection',
 	'LocaleChatWindowView',
-	'LocaleChatroomMessageCollection',
 	'LocaleChatMessageModel',
 	'LocaleSocket',
 	'hbs!templates/LocaleButton'
-], function($, Thorax, Bootstrap, LocaleChatUserModel, LocaleChatroomCollection, LocaleChatWindowView, LocaleChatroomMessageCollection, LocaleChatMessageModel, LocaleSocket, ButtonTemplate){
+], function($, Thorax, Bootstrap, LocaleChatUserModel, LocaleChatroomCollection, LocaleChatWindowView, LocaleChatMessageModel, LocaleSocket, ButtonTemplate){
 
 	var LocaleChatroomView = Thorax.View.extend({
 		name: "ChatroomView",
@@ -66,15 +65,6 @@ define([
 		resetMessages: function() {
 			//this.ChatMessages.reset();
 			//this.ChatWindow.renderAllMessages(); // This basically just forces the view to remove all messages
-		},
-
-		addMessage: function(newMessage, callback) {
-			this.ChatMessages.add( new LocaleChatMessageModel( { firstName: newMessage.firstName, lastInitial: newMessage.lastInitial, 
-				profilePicture: newMessage.profilePicture, message: newMessage.message, timestamp: newMessage.timestamp, 
-				room: newMessage.room, profileUrl: newMessage.profileUrl } ) );
-
-			if(callback !== undefined)
-				callback(this.model.get("location"), this.model.get("radius"));
 		},
 
 		updateUsers: function(users) {
