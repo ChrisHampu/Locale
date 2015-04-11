@@ -95,7 +95,7 @@ define([
 						// there could be many reasons for inconsistencies.
 						// What we do is reset our list of messages, reset the view, and simply
 						// re-render all the messages we're being given by the server
-						//chat.resetMessages();
+						chat.collection.reset();
 
 						_.each(data.messages, function(message) {
 							chat.addMessage(message);

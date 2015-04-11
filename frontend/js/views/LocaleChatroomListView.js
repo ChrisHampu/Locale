@@ -45,6 +45,10 @@ define([
 			return model.attributes;
 		},
 
+		itemFilter: function(model, index) {
+			return model.get("canJoin") === true;
+		},
+
 		ChatWindowViewFactory: function(item) {
 			return new LocaleChatWindowView({ model: item.model });
 		},
