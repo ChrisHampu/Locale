@@ -9,8 +9,9 @@ define([
 	'LocaleSearchModel',
 	'LocaleSocket',
 	'LocaleAuth',
-	'async!http://maps.google.com/maps/api/js?sensor=false!callback'
-], function($, Thorax, Bootstrap, LocaleUtilities, LocaleProfileView, LocaleChatroomListView, LocaleChatModel, LocaleSearchModel, LocaleSocket, LocaleAuth, GMaps){
+	'async!http://maps.google.com/maps/api/js?sensor=false!callback',
+	'hbs!templates/LocaleMapView'
+], function($, Thorax, Bootstrap, LocaleUtilities, LocaleProfileView, LocaleChatroomListView, LocaleChatModel, LocaleSearchModel, LocaleSocket, LocaleAuth, GMaps, MapTemplate){
 
 	var ProfileView,
 		ChatroomListView;
@@ -39,15 +40,13 @@ define([
 			'click .waypoint-join' : 'join',
 			'click .waypoint-info-dismiss' : 'dismiss',
 			'keypress #searchbar' : 'search',
-			'click #searchbar' : 'search'
+			'click #searchbar' : 'search',
+			'rendered' : 'rendered'
 		},
 
-		initialize: function() {
-			ProfileView = new LocaleProfileView();
+		template: MapTemplate,
 
-			ChatroomListView = new LocaleChatroomListView();
-			
-			Map = new google.maps.Map(this.$el.find("#map-wrapper")[0], mapOptions);
+		initialize: function() {
 
 			LocaleSocket.Handle('deletelocale', function(roomName) {
 				_.each(ChatroomListView.getRooms(), function(chat) {
@@ -159,7 +158,13 @@ define([
 			});
 		},
 
-		render: function() {
+		rendered: function() {
+
+			ProfileView = new LocaleProfileView();
+			ChatroomListView = new LocaleChatroomListView();
+
+			Map = new google.maps.Map(this.$el.find("#map-wrapper")[0], mapOptions);
+
 			ProfileView.render();
 			ChatroomListView.render();
 
