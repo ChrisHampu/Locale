@@ -51,12 +51,13 @@ define([
 			sidrOpened ? sidrOpened = false : sidrOpened = true;
 			if(sidrOpened){
 				$('#search-bar-wrapper').stop().animate({ left: "-90px"});
+				//sidrOpened = false;
 			} else {
 				$('#search-bar-wrapper').stop().animate({ left: "0px"});
 			}
+
 			var numRooms = $('#my-room-container').children().size();
 			var maxHeight = (5-numRooms) * 7 + 40 + "%";
-
 
 			$('#all-room-container').css("max-height", maxHeight);
 		},
