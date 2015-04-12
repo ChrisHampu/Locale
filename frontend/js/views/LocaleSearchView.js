@@ -24,7 +24,8 @@ define([
 			return model.attributes;
 		},
 
-		collection: undefined, // Our collection will point to the main view's collection
+		appendItem: function() {
+		},
 
 		template: SearchResTemplate,
 		itemTemplate: Handlebars.compile('{{#button trigger="viewSearchResult" class="btn btn-default searchelement"}}{{name}}{{/button}}')
@@ -109,10 +110,11 @@ define([
 			//Map.panTo(new google.maps.LatLng(obj.get("location")["latitude"], obj.get("location")["longitude"]))
 		},
 
-		search: function() {
+		// Reset results
+		search: function(e) {
 
-			// Reset results
-			self.collection.reset();
+			if(e.which == 8) // Backspace
+				self.collection.reset();
 
 			this.getValue(function(value, collection, view) {
 
@@ -159,13 +161,10 @@ define([
 
 			_.each(tags, function(tag) {
 				if(self.collection.where({name: tag.name}).length === 0)
-					addTags.push(new Thorax.Model({name: tag.name}));
+					self.collection.add(new Thorax.Model({name: tag.name}));
 			});
 
-			if(addTags.length > 0) {
-				self.collection.add(addTags);
-				self.trigger("showResults");
-			}
+			self.trigger("showResults");
 		},
 
 		getValue: function(callback, collection, searchCallback){
@@ -191,7 +190,6 @@ define([
 		    $('.waypoint-info').css({display: "block"});
 		    $('.waypoint-info').stop().animate({height: "250px"}, 500);
 		}
-		
 	});
 
 	return LocaleSearchView;
