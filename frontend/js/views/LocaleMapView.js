@@ -18,6 +18,7 @@ define([
 		ChatroomListView;
 
 	var Map,
+		GeoDecoder,
 		CurrentPosition = undefined;
 
 	var mapOptions = {
@@ -44,6 +45,8 @@ define([
 		initialize: function() {
 
 			this._addChild(this.searchView);
+
+			GeoDecoder = new google.maps.Geocoder();
 
 			LocaleSocket.Handle('deletelocale', function(roomName) {
 				_.each(ChatroomListView.getRooms(), function(chat) {
@@ -184,6 +187,18 @@ define([
 				  });
 
 	      		Map.setCenter(pos);
+
+				GeoDecoder.geocode({'latLng': pos}, function(results, status) {
+					if (status == google.maps.GeocoderStatus.OK) {
+						if (results[0]) {
+							ProfileView.setLocationText(results[0].formatted_address);
+						} else {
+							ProfileView.setLocationText('Unknown Location');
+						}
+					} else {
+						console.log('Error decoding location. Code: ' + status);
+					}
+				});
 			});
 		},
 

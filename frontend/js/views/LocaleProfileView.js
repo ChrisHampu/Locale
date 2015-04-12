@@ -81,11 +81,13 @@ define([
 			var first = LocaleAuth.GetUserModel().get("firstName");
 			var last = LocaleAuth.GetUserModel().get("lastName");
 
-			$('#profile-content-sidr').children('h1'). html(first + " " + last);
-			$('#profile-content-sidr').children('p'). html('University of British Columbia');
+			$('#profile-content-sidr').children('h1').html(first + " " + last);
+			
 		},
 
-
+		setLocationText: function(text) {
+			$('#profile-content-sidr').children('p').html(text);
+		}
 	});
 
 	return LocaleProfileView;
