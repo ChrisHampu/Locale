@@ -5,24 +5,20 @@ define([
 	'LocaleUtilities',
 	'LocaleProfileView',
 	'LocaleChatroomListView',
+	'LocaleSearchView',
 	'LocaleChatModel',
-	'LocaleChatroomCollection',
 	'LocaleSearchModel',
 	'LocaleSocket',
 	'LocaleAuth',
-	'async!http://maps.google.com/maps/api/js?sensor=false!callback'
-], function($, Thorax, Bootstrap, LocaleUtilities, LocaleProfileView, LocaleChatroomListView, LocaleChatModel, LocaleChatroomCollection, LocaleSearchModel, LocaleSocket, LocaleAuth, GMaps){
+	'async!http://maps.google.com/maps/api/js?sensor=false!callback',
+	'hbs!templates/LocaleMapView'
+], function($, Thorax, Bootstrap, LocaleUtilities, LocaleProfileView, LocaleChatroomListView, LocaleSearchView, LocaleChatModel, LocaleSearchModel, LocaleSocket, LocaleAuth, GMaps, MapTemplate){
 
 	var ProfileView,
-		ChatroomListView,
-		ChatroomCollection;
+		ChatroomListView;
 
 	var Map,
 		CurrentPosition = undefined;
-
-	var timer = undefined;
-
-	var searchQuery;
 
 	var mapOptions = {
 		  zoom: 13,
@@ -35,20 +31,19 @@ define([
 	var LocaleMapView = Thorax.View.extend({
 		el: '#mappage',
 
+		name: "MapView",
+
 		events: {
-			'click .waypoint-join' : 'join',
-			'click .waypoint-info-dismiss' : 'dismiss',
-			'keypress #searchbar' : 'search',
-			'click #searchbar' : 'search'
+			'rendered' : 'rendered'
 		},
 
-		initialize: function() {
-			ProfileView = new LocaleProfileView();
+		template: MapTemplate,
 
-			ChatroomCollection = new LocaleChatroomCollection();
-			ChatroomListView = new LocaleChatroomListView( { collection: ChatroomCollection } );
-			
-			Map = new google.maps.Map(this.$el.find("#map-wrapper")[0], mapOptions);
+		searchView: new LocaleSearchView({model: new LocaleSearchModel()}),
+
+		initialize: function() {
+
+			this._addChild(this.searchView);
 
 			LocaleSocket.Handle('deletelocale', function(roomName) {
 				_.each(ChatroomListView.getRooms(), function(chat) {
@@ -86,7 +81,7 @@ define([
 
 			LocaleSocket.Handle('loadroom', function(data) {
 
-				_.each(ChatroomListView.getRooms(), function(chat) {
+				_.each(ChatroomListView.getWindows(), function(chat) {
 
 					var roomName = chat.model.get("name");
 					var dataName = data.room;
@@ -96,13 +91,13 @@ define([
 						// there could be many reasons for inconsistencies.
 						// What we do is reset our list of messages, reset the view, and simply
 						// re-render all the messages we're being given by the server
-						chat.resetMessages();
+						chat.collection.reset();
 
 						_.each(data.messages, function(message) {
 							chat.addMessage(message);
 						});
 
-						chat.updateUsers(data.users);
+						//chat.updateUsers(data.users);
 						//console.log("Room " + data.room + " has users " + data.users);
 					}
 				});
@@ -160,8 +155,15 @@ define([
 			});
 		},
 
-		render: function() {
+		rendered: function() {
+
+			ProfileView = new LocaleProfileView();
+			ChatroomListView = new LocaleChatroomListView();
+
+			Map = new google.maps.Map(this.$el.find("#map-wrapper")[0], mapOptions);
+
 			ProfileView.render();
+			ChatroomListView.render();
 
 			LocaleAuth.GetProfilePicture(function(model) {
 
@@ -186,6 +188,9 @@ define([
 		},
 
 		renderRooms: function(rooms, current) {
+
+			var self = this;
+
 			_.each(rooms, function(value) {
 				
 				// If this is set, it means the backend is telling us to update an existing room.
@@ -194,11 +199,11 @@ define([
 				// and re-render it
 				if(value.updateRoom !== undefined)
 				{
-					var updatingLocale = ChatroomCollection.findWhere( { name: value.updateRoom} );
+					var updatingLocale = ChatroomListView.collection.findWhere( { name: value.updateRoom} );
 
 					if(updatingLocale !== undefined)
 					{
-						ChatroomCollection.remove(updatingLocale);
+						ChatroomListView.collection.remove(updatingLocale);
 						//ChatroomListView.remove()
 						this.removeMarker(value.updateRoom);
 
@@ -212,7 +217,7 @@ define([
 				}
 
 				// Disallow duplicates
-				var exists = ChatroomCollection.where( { name: value.name} );
+				var exists = ChatroomListView.collection.where( { name: value.name} );
 		
 				if(exists.length === 0)
 				{
@@ -223,51 +228,12 @@ define([
 					      map: Map
 					  });
 
-					google.maps.event.addListener(marker, 'mouseover', function() {
-					    //display info about the room if it is a room, or if it is you, display your info.
-					});
-
-					google.maps.event.addListener(marker, 'mouseout', function() {
-					    //remove whatever info was displayed
-					});
-
 					google.maps.event.addListener(marker, 'click', function() {
 					   	//Pan to and do hovered
-					   	var name = '<h4>' + value.name + '</h4>';
-					   	var description = value.description;
-					   	var buttonHTML;
-					   	if(value.canJoin){
-					   		buttonHTML = '<button type="button" class="btn btn-success waypoint-join" data-name= "' +  value.name +'">Join</button>';
-					   	} else {
-					   		buttonHTML = '<button type="button" class="btn btn-success waypoint-join" disabled="disabled" data-name= "' +  value.name +'">Out of Range</button>'
-					   	}
-
 
 					    Map.panTo(marker.getPosition());
-					    $('.waypoint-info').css({display: "block"});
-					    $('.waypoint-info').stop().animate({height: "250px"}, 500);
 
-					    $('.waypoint-info').html(
-	                        '<div class="panel panel-default">' +
-	                            '<div class="panel-heading">' +
-	                                '<div class="chatbox-icon"></div>' +
-	                                '<div class="waypoint-name">' +
-	                                     name +
-	                                '</div>' +
-	                            '</div>' +
-	                            '<div class="panel-body">' +
-	                                '<div class="waypoint-description">' +
-	                                    description +
-	                                '</div>' +
-	                               '<div class="btn-group">' +
-	                                    '<button type="button" class="btn btn-default waypoint-info-dismiss">' +
-	                                        '<i class="fa fa-angle-up fa-lg"></i>' +
-	                                    '</button>' +
-	                                    buttonHTML +
-	                                '</div>' +
-	                            '</div>' +
-	                    '</div>');
-						
+					    self.searchView.updateMarkerInfo(ChatroomListView.collection.findWhere( { name: value.name} ));
 					});
 
 					var circle = new google.maps.Circle({
@@ -284,7 +250,7 @@ define([
 
 					mapMarkers.push( { name: value.name, map : { circle: circle, marker: marker} });
 
-					ChatroomCollection.add( new LocaleChatModel( { location: value.location, name: value.name, radius: value.radius, 
+					ChatroomListView.add( new LocaleChatModel( { location: value.location, name: value.name, radius: value.radius, 
 						canJoin: value.canJoin, userCount: value.userCount, tags: value.tags, description: value.description,
 						privacy: value.privacy }));
 				}
@@ -317,112 +283,6 @@ define([
 			}
 		},
 
-		search: function() {
-			this.getValue(function(value, collection, view){
-
-				var matches = [];
-
-				_.each(collection.models, function(chat) {
-					var tags = chat.get("tags");
-					if(tags.length > 0)
-					{
-						var cleanTags = _.map(tags, function(clean) {
-							return $.trim(clean);
-						});
-
-						var tagsArr = value.split(' ');
-						
-
-						_.each(tagsArr, function(tag) {
-
-							var ind = cleanTags.indexOf(tag);
-							if(ind > -1)
-							{
-								matches.push( { tag: cleanTags[ind], model: chat });
-							}
-						}, this);
-					}
-				});
-
-				if(matches.length > 0)
-					view.doSearchDropdown(matches, view);
-
-			}, ChatroomCollection, this);
-		},
-
-		doSearchDropdown: function(tags, view) {
-			/*console.log("Found matches: " + tags);*/
-			$('.waypoint-info').empty();
-			$('.waypoint-info').addClass("btn-group-vertical");
-			$('.waypoint-info').attr("role", "group");
-			$('.waypoint-info').css({display: "block"});
-
-			//htmlContainer = '<ul>';
-			view.adjustMap(tags, function(obj){
-				console.log(JSON.stringify(obj));
-				//console.log(obj.get("location")["latitude"]);
-				Map.panTo(new google.maps.LatLng(obj.get("location")["latitude"], obj.get("location")["longitude"]))
-				var name = '<h4>' + obj.get("name") + '</h4>';
-			   	var description = obj.get("description");
-			   	var buttonHTML;
-			   	if(obj.get("canJoin")){
-			   		buttonHTML = '<button type="button" class="btn btn-success waypoint-join" data-name= "' +  obj.get("name") +'">Join</button>';
-			   	} else {
-			   		buttonHTML = '<button type="button" class="btn btn-success waypoint-join" disabled="disabled" data-name= "' +  obj.get("name") +'">Out of Range</button>'
-			   	}
-
-			    $('.waypoint-info').css({display: "block"});
-			    $('.waypoint-info').stop().animate({height: "250px"}, 500);
-
-			    $('.waypoint-info').html(
-                    '<div class="panel panel-default">' +
-                        '<div class="panel-heading">' +
-                            '<div class="chatbox-icon"></div>' +
-                            '<div class="waypoint-name">' +
-                                 name +
-                            '</div>' +
-                        '</div>' +
-                        '<div class="panel-body">' +
-                            '<div class="waypoint-description">' +
-                                description +
-                            '</div>' +
-                           '<div class="btn-group">' +
-                                '<button type="button" class="btn btn-default waypoint-info-dismiss">' +
-                                    '<i class="fa fa-angle-up fa-lg"></i>' +
-                                '</button>' +
-                                buttonHTML +
-                            '</div>' +
-                        '</div>' +
-                '</div>');
-			});
-			
-			//console.log("Found match: " + tag.tag + " to object " + tag.model.get("name"));
-		},
-
-		adjustMap: function(tags, callback) {
-			_.each(tags, function(tag) {
-				$('<button/>', {
-					'class' : 'btn btn-default searchelement',
-					'text' : tag.model.get("name")
-				}).on('click', function(){
-					callback(tag.model);
-				}).appendTo('.waypoint-info');
-				//htmlContainer += '<li>' + tag.tag + '</li>';
-			});
-		},
-
-		getValue: function(callback, collection, searchCallback){
-			if(timer !== undefined){
-				clearTimeout(timer);
-				timer = undefined;
-			}
-			timer = setTimeout(function() {
-				searchQuery = $('#search-content').val();
-				callback(searchQuery, collection, searchCallback);
-				$("#searchbar").val("");
-			},500);
-		},
-
 		getLocation: function() {
 			return CurrentPosition;
 		},
@@ -431,26 +291,8 @@ define([
 			return ProfileView;
 		},
 
-		join: function(e) {
-			$('.waypoint-info').stop().animate({height: "0px"}, function(){
-				$('.waypoint-info').css("display", "none");
-			});
-			
-			var name = $(e.currentTarget).data()["name"];
-			_.each(ChatroomListView.getRooms(), function(chat) {
-				var roomName = chat.model.get("name");
-				if(roomName === name)
-				{	
-					console.log("joined chat" + roomName);
-					chat.join();
-				}
-			});
-		},
-
-		dismiss: function(){
-			$('.waypoint-info').stop().animate({height: "0px"}, function(){
-				$('.waypoint-info').css("display", "none");
-			});
+		getListView: function() {
+			return ChatroomListView;
 		}
 	});
 

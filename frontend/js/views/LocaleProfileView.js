@@ -13,8 +13,7 @@ define([
 
 		events: {
 			'click #profile-thumbnail' : 'profile',
-			'click .toggle-delete' : 'toggle', // TODO: Is this used anywhere?
-			'click .toggle-pencil' : 'expandUpdate'
+			'click .toggle-delete' : 'toggle'
 		},
 
 		initialize: function() {
@@ -86,18 +85,7 @@ define([
 			$('#profile-content-sidr').children('p'). html('University of British Columbia');
 		},
 
-		expandUpdate: function(e){
-			if($(e.currentTarget).parent().parent().children(".edit-locale").css("height") == "330px"){
-				$(e.currentTarget).parent().parent().children(".edit-locale").stop().animate({height: "0px"}, function(){
-					$(e.currentTarget).parent().parent().children(".edit-locale").css("display","none");
-				});
-			} else {
-				$(e.currentTarget).parent().parent().children(".edit-locale").css("display","block");
-				$(e.currentTarget).parent().parent().children(".edit-locale").stop().animate({height: "330px"}, function(){
-				});
-			}
-			
-		}
+
 	});
 
 	return LocaleProfileView;

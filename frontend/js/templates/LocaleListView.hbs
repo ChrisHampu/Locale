@@ -1,0 +1,35 @@
+<h2>Nearby Locales
+  <div class="btn-default btn btn-xs" href='#' id="form-dialog-btn"><i class="fa fa-plus"></i></div>
+</h2>
+<div id='add-room-dialog' class="panel panel-default">
+    <div class="panel-heading">Make a new Locale</div>
+    <div class="panel-body">
+        <form>
+          <div class="form-group">
+            <input type="text" class="form-control" id="roomName" placeholder="Locale Name">
+          </div>
+          <div class="form-group">
+              <textarea class="form-control" id="roomDescription" placeholder="Locale Description" rows="3"></textarea>
+          </div>
+            <div class="form-group">
+              <input type="text" class="form-control" id="roomTags" placeholder="Tags">
+            </div>
+           <div class="form-group">
+        	 Range (in metres)
+        	 <input type="number" class="form-control" id="roomRange" min="100" max="2000" step="25" value="1000" placeholder="Range in metres">
+            </div>
+           <div class="form-group">
+        		<div class="btn-group" role="group" aria-label="Privacy">
+        			<button type="button" class="btn btn-default btn-locale-privacy active" data-privacy="public">Public</button>
+        			<button type="button" class="btn btn-default btn-locale-privacy" data-privacy="unlisted">Unlisted</button>
+        			<button type="button" class="btn btn-default btn-locale-privacy" data-privacy="private">Private</button>
+        		</div>
+        	</div>
+        	<div class="form-group">
+        		<button id="add-locale" type="button" class="btn btn-success"><i class="fa fa-check"></i> Create</button>
+        	</div>
+        </form>
+    </div>
+</div>
+{{collection-element tag="ul" id="my-room-container"}}
+{{collection chatWindowCollection tag="div" id="chatarea" item-view=ChatWindowViewFactory item-filter=ChatWindowFilter}}

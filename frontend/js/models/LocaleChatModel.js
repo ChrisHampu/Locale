@@ -1,6 +1,6 @@
 define([
 	'thorax'
-], function(){
+], function(Thorax){
 	
 	/**
 	  * @extends Thorax.Model

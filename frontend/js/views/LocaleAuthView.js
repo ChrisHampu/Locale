@@ -15,8 +15,8 @@ define([
 			'click #google-plus' : 'loginGoogle'
 		},
 
-		initialize: function(router) {
-			Router = router;
+		initialize: function(options) {
+			Router = options.parent;
 
 			LocaleAuth.Initialize(this);
 		},
