@@ -20,10 +20,6 @@ define([
 	var Map,
 		CurrentPosition = undefined;
 
-	var timer = undefined;
-
-	var searchQuery;
-
 	var mapOptions = {
 		  zoom: 13,
 		  mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -43,12 +39,11 @@ define([
 
 		template: MapTemplate,
 
-		searchView: new LocaleSearchView(),
+		searchView: new LocaleSearchView({model: new LocaleSearchModel()}),
 
 		initialize: function() {
 
 			this._addChild(this.searchView);
-			this.searchView.setModel(new LocaleSearchModel());
 
 			LocaleSocket.Handle('deletelocale', function(roomName) {
 				_.each(ChatroomListView.getRooms(), function(chat) {
@@ -286,18 +281,6 @@ define([
 				delete localeMarker.map.circle;
 				delete localeMarker.map.marker;
 			}
-		},
-
-		adjustMap: function(tags, callback) {
-			_.each(tags, function(tag) {
-				$('<button/>', {
-					'class' : 'btn btn-default searchelement',
-					'text' : tag.model.get("name")
-				}).on('click', function(){
-					callback(tag.model);
-				}).appendTo('.waypoint-info');
-				//htmlContainer += '<li>' + tag.tag + '</li>';
-			});
 		},
 
 		getLocation: function() {

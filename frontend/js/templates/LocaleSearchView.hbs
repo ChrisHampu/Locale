@@ -1,35 +1,9 @@
-<div id="search-bar-wrapper">
+<div id="search-bar-wrapper" style="left:-90px">
     <div id='searchbar' class="input-group">
         <input id="search-content" type="text" class="form-control" placeholder="Search for...">
         <span class="input-group-btn">
             <button id="do-search" class="btn btn-default" type="button"><i class='fa fa-search'></i></button>
         </span>
     </div>
-    <div class="waypoint-info">
-    	{{#if name}}
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <div class="chatbox-icon"></div>
-                <div class="waypoint-name">
-                     <h4>{{name}}</h4>
-                </div>
-            </div>
-            <div class="panel-body">
-                <div class="waypoint-description">
-                    {{description}}
-                </div>
-               <div class="btn-group">
-                    <button type="button" class="btn btn-default waypoint-info-dismiss">
-                        <i class="fa fa-angle-up fa-lg"></i>
-                    </button>
-                    {{#if canJoin}}
-                    <button type="button" class="btn btn-success waypoint-join" data-name="{{name}}">Join</button>
-                    {{else}}
-					<button type="button" class="btn btn-success waypoint-join" disabled="disabled" data-name="{{name}}">Out of Range</button>
-                    {{/if}}
-                </div>
-            </div>
-    	</div>
-    	{{/if}}
-    </div>
+    {{view searchResults}}
 </div>

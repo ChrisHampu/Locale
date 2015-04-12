@@ -3,26 +3,73 @@ define([
 	'thorax',
 	'bootstrapjs',
 	'LocaleSearchModel',
-	'hbs!templates/LocaleSearchView'
-], function($, Thorax, Bootstrap, LocaleSearchModel, SearchTemplate){
+	'hbs!templates/LocaleSearchView',
+	'hbs!templates/LocaleSearchResults'
+], function($, Thorax, Bootstrap, LocaleSearchModel, SearchTemplate, SearchResTemplate){
 
 	var self = undefined;
+
+	var timer = undefined;
+
+	var searchQuery;
+
+	var searchHelperView = Thorax.CollectionView.extend({
+		name: "SearchHelperView",
+
+		context: function(model) {
+			return this.parent.model.attributes;
+		},
+
+		itemContext: function(model, i) {
+			return model.attributes;
+		},
+
+		collection: undefined, // Our collection will point to the main view's collection
+
+		template: SearchResTemplate,
+		itemTemplate: Handlebars.compile('<button class="btn btn-default searchelement">{{name}}</button>')
+	});
 
 	var LocaleSearchView = Thorax.View.extend({
 
 		name: "SearchView",
 
 		events: {
-			'click .waypoint-join' : 'join',
-			'click .waypoint-info-dismiss' : 'dismiss',
-			'keypress #searchbar' : 'search',
+			'keydown #searchbar' : 'search',
 			'click #searchbar' : 'search'
 		},
 
 		template: SearchTemplate,
 
+		collection: new Thorax.Collection(),
+
 		initialize: function() {
+			// For use in events and callbacks
 			self = this;
+
+			// Register as a child
+			this.searchResults = this._addChild(new searchHelperView());
+
+			// Helper function for triggering a render
+			this.searchResults.listenTo(this, "showResults", function() {
+				self.searchResults.render();
+			})
+
+			// Listen to events on the helper view but call our own function
+			this.listenTo(this.searchResults, 'click .waypoint-join', this.join);
+			this.listenTo(this.searchResults, 'click .waypoint-info-dismiss', this.dismiss);
+
+			// Let this view's collection manage the helper view
+			this.searchResults.setCollection(self.collection);
+
+			this.model.on("change", function() {
+				// Reset collection so the waypoint info section renders,
+				// which happens when the collection is empty
+				self.searchResults.collection.reset();
+
+				// Now re-render to display waypoint info
+				self.searchResults.render();
+			});
 		},
 
 		context: function() {
@@ -53,74 +100,76 @@ define([
 		},
 
 		search: function() {
-			this.getValue(function(value, collection, view){
+
+			// Reset results
+			self.collection.reset();
+
+			this.getValue(function(value, collection, view) {
 
 				var matches = [];
 
 				_.each(collection.models, function(chat) {
 					var tags = chat.get("tags");
+
 					if(tags.length > 0)
 					{
-						var cleanTags = _.map(tags, function(clean) {
+						// tags from rooms
+						var roomTags = tags.split("#");
+						roomTags.splice(0,1);
+
+						var cleanTags = _.map(roomTags, function(clean) {
 							return $.trim(clean);
 						});
 
-						var tagsArr = value.split(' ');
-						
+						// tags from input
+						var tagsArr = _.compact(_.uniq(value.split(' ')));
 
-						_.each(tagsArr, function(tag) {
+						for(var i = 0; i < tagsArr.length; i++) {
 
-							var ind = cleanTags.indexOf(tag);
-							if(ind > -1)
-							{
-								matches.push( { tag: cleanTags[ind], model: chat });
+							var ind = cleanTags.indexOf(tagsArr[i]);
+							if(ind > -1) {
+								matches.push( { tag: cleanTags[ind], name: chat.get("name") });
+								break;
 							}
-						}, this);
+						}
 					}
 				});
 
 				if(matches.length > 0)
 					view.doSearchDropdown(matches, view);
 
-			}, ChatroomCollection, this);
+			}, self.parent.getListView().collection, this);
 		},
 
 		doSearchDropdown: function(tags, view) {
-			/*console.log("Found matches: " + tags);*/
-			$('.waypoint-info').empty();
-			$('.waypoint-info').addClass("btn-group-vertical");
-			$('.waypoint-info').attr("role", "group");
+
 			$('.waypoint-info').css({display: "block"});
-
-			//htmlContainer = '<ul>';
-
-
-				//console.log(obj.get("location")["latitude"]);
-				Map.panTo(new google.maps.LatLng(obj.get("location")["latitude"], obj.get("location")["longitude"]))
-				var name = '<h4>' + obj.get("name") + '</h4>';
-			   	var description = obj.get("description");
-			   	var buttonHTML;
-			   	if(obj.get("canJoin")){
-			   		buttonHTML = '<button type="button" class="btn btn-success waypoint-join" data-name= "' +  obj.get("name") +'">Join</button>';
-			   	} else {
-			   		buttonHTML = '<button type="button" class="btn btn-success waypoint-join" disabled="disabled" data-name= "' +  obj.get("name") +'">Out of Range</button>'
-			   	}
-
-			    $('.waypoint-info').css({display: "block"});
-			    $('.waypoint-info').stop().animate({height: "250px"}, 500);
-
-
 			
-			//console.log("Found match: " + tag.tag + " to object " + tag.model.get("name"));
+			var addTags = [];
+
+			_.each(tags, function(tag) {
+				if(self.collection.where({name: tag.name}).length === 0)
+					addTags.push(new Thorax.Model({name: tag.name}));
+			});
+
+			if(addTags.length > 0) {
+				self.collection.add(addTags);
+				self.trigger("showResults");
+			}
+
+			// TODO: Pan map when clicking a button
+			//Map.panTo(new google.maps.LatLng(obj.get("location")["latitude"], obj.get("location")["longitude"]))
 		},
 
 		getValue: function(callback, collection, searchCallback){
+
+			var searchQuery = $('#search-content').val();
+
 			if(timer !== undefined){
 				clearTimeout(timer);
 				timer = undefined;
 			}
 			timer = setTimeout(function() {
-				searchQuery = $('#search-content').val();
 				callback(searchQuery, collection, searchCallback);
 				$("#searchbar").val("");
 			},500);
@@ -129,6 +178,7 @@ define([
 		updateMarkerInfo: function(locale) {
 			var Locale = locale.attributes;
 
+			self.searchResults.collection.reset();
 			self.model.set({name: Locale.name, description: Locale.description, canJoin: Locale.canJoin});
 
 		    $('.waypoint-info').css({display: "block"});
