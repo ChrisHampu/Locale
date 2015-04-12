@@ -27,7 +27,7 @@ define([
 		collection: undefined, // Our collection will point to the main view's collection
 
 		template: SearchResTemplate,
-		itemTemplate: Handlebars.compile('<button class="btn btn-default searchelement">{{name}}</button>')
+		itemTemplate: Handlebars.compile('{{#button trigger="viewSearchResult" class="btn btn-default searchelement"}}{{name}}{{/button}}')
 	});
 
 	var LocaleSearchView = Thorax.View.extend({
@@ -58,6 +58,7 @@ define([
 			// Listen to events on the helper view but call our own function
 			this.listenTo(this.searchResults, 'click .waypoint-join', this.join);
 			this.listenTo(this.searchResults, 'click .waypoint-info-dismiss', this.dismiss);
+			this.listenTo(this.searchResults, 'viewSearchResult', this.searchResult);
 
 			// Let this view's collection manage the helper view
 			this.searchResults.setCollection(self.collection);
@@ -97,6 +98,15 @@ define([
 			$('.waypoint-info').stop().animate({height: "0px"}, function(){
 				$('.waypoint-info').css("display", "none");
 			});
+		},
+
+		// Called when a search result is clicked
+		searchResult: function(e) {
+			var model = this.parent.getListView().collection.findWhere({name: $(e.target).model().get("name")});
+			this.updateMarkerInfo(model);
+
+			// TODO: Pan map when clicking a button
+			//Map.panTo(new google.maps.LatLng(obj.get("location")["latitude"], obj.get("location")["longitude"]))
 		},
 
 		search: function() {
@@ -156,9 +166,6 @@ define([
 				self.collection.add(addTags);
 				self.trigger("showResults");
 			}
-
-			// TODO: Pan map when clicking a button
-			//Map.panTo(new google.maps.LatLng(obj.get("location")["latitude"], obj.get("location")["longitude"]))
 		},
 
 		getValue: function(callback, collection, searchCallback){
