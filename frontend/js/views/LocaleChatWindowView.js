@@ -4,11 +4,12 @@ define([
 	'bootstrapjs',
 	'LocaleChatMessageModel',
 	'LocaleChatUserModel',
+	'LocaleChatroomMessageCollection',
 	'LocaleAuth',
 	'LocaleSocket',
 	'hbs!templates/LocaleWindow',
 	'hbs!templates/LocaleWindowMessage'
-], function($, Thorax, Bootstrap, LocaleChatMessageModel, LocaleChatUserModel, LocaleAuth, LocaleSocket, WindowTemplate, MessageTemplate){
+], function($, Thorax, Bootstrap, LocaleChatMessageModel, LocaleChatUserModel, LocaleChatroomMessageCollection, LocaleAuth, LocaleSocket, WindowTemplate, MessageTemplate){
 
 	var Weekdays = new Array("Sun","Mon","Tue","Wed","Thu","Fri","Sat");
 
@@ -26,9 +27,12 @@ define([
 	};
 
 	var LocaleChatWindowView = Thorax.CollectionView.extend({
+
 		tagName: 'div',
 
 		className: 'chatbox-container', //Change this to chatbox-container and defuckulate it all.
+
+		name: "ChatWindowwView",
 
 		events: {
 			'click .chatbox-minimize' : 'minimize',
@@ -37,13 +41,12 @@ define([
 			'click .send-message' : 'send',
 			'keypress .chatbox-input' : 'sendMessage',
 			'click .chatbox-settings' : 'toggleSettings',
-			'click .close-settings' : 'toggleSettings'
+			'click .close-settings' : 'toggleSettings',
+			'rendered': 'rendered'
 		},
 
 		initialize: function(options) {
-			this.parent = options.parent;
-			this.ChatUserModel = options.UserModel;
-			this.$el.children(".chatbox").html(""); // Remove dummy data
+			this.collection = new LocaleChatroomMessageCollection();
 		},
 
 		template: WindowTemplate,
@@ -51,8 +54,7 @@ define([
 		itemTemplate: MessageTemplate,
 
 		context: function() {
-			var atts = this.ChatUserModel.attributes;
-			atts.users = this.parent.model.attributes.users;
+			var atts = this.model.attributes;
 			return atts;
 		},
 
@@ -71,25 +73,47 @@ define([
 			return atts;
 		},
 
-		add: function(message) {
-			this.$el.children(".chatbox").find(".messages-wrapper").scrollTop(1000000);
+		rendered: function() {
+			if(this.model.get("joined") === true) {
+				if(this.$el.children(".chatbox").css("bottom") != "384px" && this.$el.children(".chatbox").css("bottom") != "42px") {
+
+					this.$el.css({display: "inline-block"});
+					this.$el.stop().animate({"bottom" :"384px"}, 400);
+				}
+				
+				if(this.$el.children(".chatbox").css("bottom") == "42px"){
+					this.$el.children(".chatbox").stop().animate({"bottom" :"384px"}, 400);
+				}
+			}
 		},
 
-		minimize: function(){
-			var checkState = this.$el.children(".chatbox").css("bottom");
-			var chatWindow = this.$el.children(".chatbox");
-			if (checkState == "42px"){
-				this.$el.children(".chatbox-content").css({display: "block"});
+		addMessage: function(newMessage, callback) {
+			this.collection.add( new LocaleChatMessageModel( { firstName: newMessage.firstName, lastInitial: newMessage.lastInitial, 
+				profilePicture: newMessage.profilePicture, message: newMessage.message, timestamp: newMessage.timestamp, 
+				room: newMessage.room, profileUrl: newMessage.profileUrl } ) );
+
+			this.$el.children(".chatbox").find(".messages-wrapper").scrollTop(1000000);
+
+			if(callback !== undefined)
+				callback(this.model.get("location"), this.model.get("radius"));
+		},
+
+		minimize: function(e){
+			var checkState = this.$el.css("bottom");
+
+			if (checkState === "42px")
+
 				this.$el.stop().animate({"bottom" :"384px"}, 400);
-			} else {
+			else
 				this.$el.stop().animate({"bottom" :"42px"}, 400);
-			}
+
+			e.stopPropagation();
 		},
 
 		maximize: function(){
 			var checkState = this.$el.css("bottom");
-			if (checkState == "42px"){
-				this.$el.css({display: "block"});
+			if (checkState === "42px"){
+				this.$el.css({display: "inline-block"});
 				this.$el.stop().animate({"bottom" :"384px"}, 400);
 			}
 		},
@@ -107,21 +131,19 @@ define([
 		},
 
 		exit: function(e){
-			var room = this.$el.children(".chatbox").find(".room-title").text();
+			var model = this.model;
 			var chatWindow = this.$el;
+
 			chatWindow.stop().animate({"bottom" :"0px"}, 400, function(){
-				chatWindow.css({display: "none"});
-				chatWindow.remove();
+
+				model.set("joined", false);
+				LocaleSocket.Emit('leaveroom', model.get("name"));
 			});
-			this.parent.model.set("joined", false);
-			e.stopPropagation();
-			LocaleSocket.Emit('leaveroom', room);
 		},
 
 		sendMessage:function(e){
-			if(e.which === 13){
+			if(e.which === 13)
 				this.send();
-			}
 		},
 
 		toggleSettings:function(){

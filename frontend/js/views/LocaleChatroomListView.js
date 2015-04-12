@@ -3,23 +3,28 @@ define([
 	'thorax',
 	'bootstrapjs',
 	'LocaleChatroomView',
+	'LocaleChatWindowView',
+	'LocaleChatroomCollection',
 	'LocaleSocket',
-	'LocaleAuth'
-], function($, Thorax, Bootstrap, LocaleChatroomView, LocaleSocket, LocaleAuth){
+	'LocaleAuth',
+	'hbs!templates/LocaleListView'
+], function($, Thorax, Bootstrap, LocaleChatroomView, LocaleChatWindowView, LocaleChatroomCollection, LocaleSocket, LocaleAuth, ListTemplate){
 
-	var LocaleChatroomListView = Thorax.View.extend({
+	var LocaleChatroomListView = Thorax.CollectionView.extend({
 		el: '#my-rooms',
 
 		events: {
-			'click #add-locale' : 'createLocale'
+			'click #add-locale' : 'createLocale',
+			'helper:collection': 'ChatWindowHelperCreated'
 		},
 
+		name: "ListView",
+
+		collection: new LocaleChatroomCollection(),
+
+		chatWindowCollection: new LocaleChatroomCollection(),
+
 		initialize: function() {
-			this.$el.find("#my-room-container").html(""); // Remove dummy data
-			$("#chatarea").html("");
-			this.listenTo(this.collection, "add", this.add);
-			this.listenTo(this.collection, "remove", this.remove);
-			this.Rooms = [];
 
 			this.$el.on('click', '.btn-locale-privacy', function() {
 
@@ -30,51 +35,35 @@ define([
 			});
 		},
 
-		render: function() {
-			
-			this.$el.find("#my-room-container").html("");
-			$("#chatarea").html("");
+		template: ListTemplate,
 
-			var parent = this;
-
-			_.each(this.Rooms, function(View) {
-				this.renderSingle(View);
-			}, this);
+		itemView: function(item) {
+			return new LocaleChatroomView( {model: item.model});
 		},
 
-		renderSingle: function(RoomView) {
-			RoomView.render();
-			RoomView.delegateEvents();
-			this.$el.find("#my-room-container").append(RoomView.$el);
-			
+		itemContext: function(model, i) {
+			return model.attributes;
+		},
 
-			if(RoomView.model.get("joined") === true) {
-				RoomView.getRoomWindow().render();
-				$("#chatarea").append(RoomView.getRoomWindow().$el);
-			}
+		itemFilter: function(model, index) {
+			return model.get("canJoin") === true;
+		},
 
-			RoomView.getRoomWindow().delegateEvents();
+		ChatWindowViewFactory: function(item) {
+			return new LocaleChatWindowView({ model: item.model });
+		},
+
+		ChatWindowFilter: function(model, index) {
+			return model.get("joined") === true;
+		},
+
+		ChatWindowHelperCreated: function(collection, view) {
+			this.helper = view;
 		},
 
 		add: function(room) {
-			if(!room.get("canJoin")){
-				return; //Too far away, don't add;
-			}
-			var RoomView = new LocaleChatroomView ( { model: room, parent: this });
-			RoomView.render();
-			RoomView.delegateEvents();
-			this.$el.find("#my-room-container").append(RoomView.$el);
-
-			RoomView.delegateEvents();
-
-			if(room.get("joined") === true) {
-				RoomView.getRoomWindow().render();
-				$("#chatarea").append(RoomView.getRoomWindow().$el);
-			}
-
-			RoomView.getRoomWindow().delegateEvents();
-
-			this.Rooms.push(RoomView);
+			this.collection.add(room);
+			this.chatWindowCollection.add(room);
 		},
 
 		remove: function(room) {
@@ -104,12 +93,18 @@ define([
 		},
 
 		deleteRoom: function(room) {
-			this.Rooms = _.without(this.Rooms, room);
-			this.render();
+			this.collection.remove(room);
+			this.chatWindowCollection.remove(room);
 		},
 
 		getRooms: function() {
-			return this.Rooms;
+			// this.children also containers the helper view for the window views
+			// we omit that and other children which don't have a model, meaning its not a valid ChatroomView
+			return _.omit(this.children, function(value) { return value.model === undefined; });
+		},
+
+		getWindows: function() {
+			return this.helper.children;
 		},
 
 		createLocale: function() {
