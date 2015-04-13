@@ -24,6 +24,9 @@ require.config({
 		  exports: 'Thorax',
 		  deps: ['handlebars', 'backbone']
 		},
+		MarkerClusterer: {
+			exports: 'MarkerClusterer'
+		}
 	},
 	paths: {
 		// Load all of the common modules
@@ -60,7 +63,8 @@ require.config({
 		LocaleChatroomMessageCollection: 'collections/LocaleChatroomMessageCollection',
 		LocaleChatWindowView: 'views/LocaleChatWindowView',
 		LocaleChatMessageModel: 'models/LocaleChatMessageModel',
-		google: 'https://apis.google.com/js/client:platform'
+		google: 'https://apis.google.com/js/client:platform',
+		MarkerClusterer: 'libs/gmaps/marker-clusterer'
 	}
 });
 

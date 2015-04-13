@@ -11,13 +11,17 @@ define([
 	'LocaleSocket',
 	'LocaleAuth',
 	'async!http://maps.google.com/maps/api/js?sensor=false!callback',
+	'MarkerClusterer',
 	'hbs!templates/LocaleMapView'
-], function($, Thorax, Bootstrap, LocaleUtilities, LocaleProfileView, LocaleChatroomListView, LocaleSearchView, LocaleChatModel, LocaleSearchModel, LocaleSocket, LocaleAuth, GMaps, MapTemplate){
+], function($, Thorax, Bootstrap, LocaleUtilities, LocaleProfileView, LocaleChatroomListView, LocaleSearchView, LocaleChatModel, 
+	LocaleSearchModel, LocaleSocket, LocaleAuth, GMaps, MarkerClusterer, MapTemplate) {
 
 	var ProfileView,
 		ChatroomListView;
 
 	var Map,
+		GeoDecoder,
+		Clusterer,
 		CurrentPosition = undefined;
 
 	var mapOptions = {
@@ -44,6 +48,8 @@ define([
 		initialize: function() {
 
 			this._addChild(this.searchView);
+
+			GeoDecoder = new google.maps.Geocoder();
 
 			LocaleSocket.Handle('deletelocale', function(roomName) {
 				_.each(ChatroomListView.getRooms(), function(chat) {
@@ -158,9 +164,11 @@ define([
 		rendered: function() {
 
 			ProfileView = new LocaleProfileView();
-			ChatroomListView = new LocaleChatroomListView();
+			ChatroomListView = new LocaleChatroomListView({parent: this});
 
 			Map = new google.maps.Map(this.$el.find("#map-wrapper")[0], mapOptions);
+
+			Clusterer = new MarkerClusterer(Map, [], {gridSize: 50, maxZoom: 15});
 
 			ProfileView.render();
 			ChatroomListView.render();
@@ -184,6 +192,18 @@ define([
 				  });
 
 	      		Map.setCenter(pos);
+
+				GeoDecoder.geocode({'latLng': pos}, function(results, status) {
+					if (status == google.maps.GeocoderStatus.OK) {
+						if (results[0]) {
+							ProfileView.setLocationText(results[0].formatted_address);
+						} else {
+							ProfileView.setLocationText('Unknown Location');
+						}
+					} else {
+						console.log('Error decoding location. Code: ' + status);
+					}
+				});
 			});
 		},
 
@@ -225,7 +245,6 @@ define([
 
 				    var marker = new google.maps.Marker({
 					      position: pos,
-					      map: Map
 					  });
 
 					google.maps.event.addListener(marker, 'click', function() {
@@ -240,13 +259,14 @@ define([
 						center: pos,
 						radius: parseInt(value.radius), //Measured in meters
 						fillColor: "#AEBDF9",
-						fillOpacity: 0.5,
+						fillOpacity: 0.3,
 						strokeOpacity: 0.0,
 						strokeWidth: 0,
 						map: Map
 					});
 
 					this.removeMarker(value.name);
+					Clusterer.addMarker(marker);
 
 					mapMarkers.push( { name: value.name, map : { circle: circle, marker: marker} });
 
@@ -272,8 +292,11 @@ define([
 			// Reset the markers by deleting their reference
 			if( mapIndex !== -1)
 			{
+
 				var localeMarker = mapMarkers[mapIndex];
 				mapMarkers.splice(mapIndex, 1);
+
+				Clusterer.removeMarker(localeMarker.map.marker);
 
 				localeMarker.map.circle.setMap(null);
 				localeMarker.map.marker.setMap(null);

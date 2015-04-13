@@ -324,6 +324,11 @@ io.sockets.on('connection', function (socket) {
 
 		Couch.getLocaleByName(room, function(locale) {
 
+			if(locale === undefined) {
+				console.log("Deleting non-existant locale");
+				return;
+			}
+
 			var userKey = "user_" + socket.user.id;
 
 			if(locale.owner === userKey) {
@@ -334,6 +339,7 @@ io.sockets.on('connection', function (socket) {
 
 			} else {
 				// TODO: Notify user that deletion failed
+				// This could be because the user is not the real owner
 			}
 		});
 	});
