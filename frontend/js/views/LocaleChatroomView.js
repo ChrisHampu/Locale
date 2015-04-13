@@ -22,7 +22,6 @@ define([
 		},
 
 		initialize: function() {
-
 		},
 
 		template: ButtonTemplate,
@@ -62,15 +61,9 @@ define([
 			});
 		},
 
-		resetMessages: function() {
-			//this.ChatMessages.reset();
-			//this.ChatWindow.renderAllMessages(); // This basically just forces the view to remove all messages
-		},
-
 		updateUsers: function(users) {
 			this.$el.find(".badge").html(users.length);
-			this.model.set("userCount", users.length);
-			this.model.set("users", users);
+			this.model.set({"userCount": users.length, "users": users});
 		},
 
 		join: function() {

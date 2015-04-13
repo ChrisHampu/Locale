@@ -66,35 +66,10 @@ define([
 			this.chatWindowCollection.add(room);
 		},
 
-		remove: function(room) {
-			var idx = -1;
-
-			if(room.attributes === undefined)
-				return;
-
-			for(var i = 0; i < this.Rooms.length; i++) {
-
-				var oldName = this.Rooms[i].model.get("name");
-				var newName = room.attributes.name;
-
-				if(newName === oldName) {
-					idx = i;
-				}
-			};
-
-			if(idx >= 0) {
-				this.Rooms[idx].getRoomWindow().remove();
-				delete this.Rooms[idx].getRoomWindow();
-				this.Rooms[idx].remove();
-				delete this.Rooms[idx];
-
-				this.Rooms.splice(idx, 1);
-			}
-		},
-
 		deleteRoom: function(room) {
 			this.collection.remove(room);
 			this.chatWindowCollection.remove(room);
+			this.parent.removeMarker(room.get("name"));
 		},
 
 		getRooms: function() {

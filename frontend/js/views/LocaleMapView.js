@@ -161,7 +161,7 @@ define([
 		rendered: function() {
 
 			ProfileView = new LocaleProfileView();
-			ChatroomListView = new LocaleChatroomListView();
+			ChatroomListView = new LocaleChatroomListView({parent: this});
 
 			Map = new google.maps.Map(this.$el.find("#map-wrapper")[0], mapOptions);
 
