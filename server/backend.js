@@ -107,6 +107,12 @@ io.sockets.on('connection', function (socket) {
 
 			Couch.getAllLocales( function(locales) {
 
+				// HACK: We need to inform user that
+				//       1. They need to give us their location
+				//       2. They still need to give us their location
+				if(newUser.location === undefined)
+					return;
+
 				Couch.getAllLocalesInRange(newUser, 1000.0, function(localesInRange) {
 
 					var updatedLocales = [];
