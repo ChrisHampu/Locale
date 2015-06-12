@@ -320,6 +320,7 @@ footer
     border: 1px solid #DDD;
     width: 300px;
     position: relative;
+    text-align: left;
     float: right;
     bottom: 0px;
     box-shadow: 2px 2px 2px 0px #a4a7aa;
@@ -335,7 +336,7 @@ footer
     border:1px solid #AAA;
     height:340px;
     top:40px;
-    pointer-events:none; /*DON'T LEAVE THIS IN HERE!*/
+    pointer-events:none;
     z-index:7;
 }
 
